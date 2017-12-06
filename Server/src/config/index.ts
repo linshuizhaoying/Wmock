@@ -1,8 +1,8 @@
 export const config = {
   'app': {
     'root': '/',
-    'port': 8866,
-    'httpsPort': 8877,
+    'port': 9966,
+    'httpsPort': 9977,
     'env': 'development',
     'keys': 'haoqiaoSecret',
     'baseApi': '/api'
