@@ -1,5 +1,6 @@
-import { createStore, applyMiddleware, compose } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import reducers from '../reducers'
+import { composeWithDevTools } from 'redux-devtools-extension';
 import { createEpicMiddleware } from 'redux-observable'
 import epics from '../epics'
 import thunk from 'redux-thunk'
@@ -10,9 +11,9 @@ export function configureStore (preloadState: any = {}) {
   const store = createStore(
     reducers,
     preloadState,
-    compose(
-      applyMiddleware(thunk, logger, epicMiddleware,),
-      (window as any).devToolsExtension && (window as any).devToolsExtension()
+    composeWithDevTools(
+      applyMiddleware(thunk, logger, epicMiddleware,)
+     // (window as any).devToolsExtension && (window as any).devToolsExtension()
     )
   )
 
