@@ -19,7 +19,7 @@ export class InterfaceTest extends React.Component<any, any> {
   render () {
     return(
       <div id="InterfaceTest">
-        InterfaceTest
+        InterfaceTest接口测试
       </div>
     )
   }
