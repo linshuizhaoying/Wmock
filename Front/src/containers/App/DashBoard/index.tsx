@@ -101,7 +101,7 @@ export class DashBoard extends React.Component<any, any> {
                 </div>
                 <Menu  mode="inline" defaultSelectedKeys={['1']}>
                  
-                <SubMenu key="sub0" title={<span onClick = {this.overView}><Icon type="appstore" /><span>总览</span></span>} >
+                <SubMenu key="sub0" title={<span onClick = {this.overView}><Icon type="appstore" /><span>项目概况</span></span>} >
                     <Menu.Item key="1">
                       <Link to='/wmock/messages'>
                         <Icon type="message" />消息中心
@@ -149,7 +149,7 @@ export class DashBoard extends React.Component<any, any> {
       
                   <Menu.Item key="7">
                       <Link to='/wmock/projectSpec'>
-                        <Icon type="eye-o" />工程规范
+                        <Icon type="eye-o" />文档与规范
                       </Link>
                     </Menu.Item>
 
