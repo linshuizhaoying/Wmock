@@ -94,7 +94,7 @@ export class Overview extends React.Component<any, any> {
                 <li>
                   <Col span={8}>
                     <Card hoverable>
-                      <Meta title="3 个项目" avatar={<Icon type="team" />} description="项目总数"/>
+                      <Meta title="3 个项目" avatar={<Icon type="database" />} description="项目总数"/>
                     </Card>
                   </Col>
                 </li>
@@ -104,7 +104,7 @@ export class Overview extends React.Component<any, any> {
                 <li>
                   <Col span={8}>
                   <Card hoverable>
-                      <Meta title="0 个接口" avatar={<Icon type="team" />} description="接口总数"/>
+                      <Meta title="0 个接口" avatar={<Icon type="switcher" />} description="接口总数"/>
                     </Card>
                   </Col>
                 </li>
@@ -114,7 +114,7 @@ export class Overview extends React.Component<any, any> {
                 <li>
                   <Col span={8}>
                     <Card hoverable>
-                      <Meta title="3 个模板" avatar={<Icon type="team" />} description="模板总数"/>
+                      <Meta title="3 个模板" avatar={<Icon type="file-add" />} description="模板总数"/>
                     </Card>
                   </Col>
                 </li>
@@ -134,7 +134,7 @@ export class Overview extends React.Component<any, any> {
                 <li>
                   <Col span={8}>
                     <Card hoverable>
-                      <Meta title="9 个模型" avatar={<Icon type="team" />} description="Mock模型总数"/>
+                      <Meta title="9 个模型" avatar={<Icon type="paper-clip" />} description="Mock模型总数"/>
                     </Card>
                   </Col>
                 </li>
@@ -144,7 +144,7 @@ export class Overview extends React.Component<any, any> {
                 <li>
                   <Col span={8}>
                     <Card hoverable>
-                      <Meta title="6 个文档" avatar={<Icon type="team" />} description="项目文档总数"/>
+                      <Meta title="6 个文档" avatar={<Icon type="file-text" />} description="项目文档总数"/>
                     </Card>
                   </Col>
                 </li>
@@ -154,7 +154,7 @@ export class Overview extends React.Component<any, any> {
                 <li>
                   <Col span={8}>
                     <Card hoverable>
-                      <Meta title="6 个规范" avatar={<Icon type="team" />} description="项目规范总数"/>
+                      <Meta title="6 个规范" avatar={<Icon type="credit-card" />} description="项目规范总数"/>
                     </Card>
                   </Col>
                 </li>
