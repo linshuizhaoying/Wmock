@@ -1,6 +1,4 @@
-// import { userLoginRemote } from '../actions/index'
-// import { AjaxResponse } from 'rxjs/Rx'
-// import { AjaxError } from 'rxjs/Rx'
+
 import { Observable } from 'rxjs/Observable'
 import { combineEpics } from 'redux-observable';
 import { Login, Reg } from '../service/api'
@@ -53,7 +51,6 @@ export const userLogin = (action$:any) =>
       // 登录验证情况
       .map((response: any) => {
         console.log(response);
-        console.log(action.data);
         if(response.code === 1){
           userLoginSuccess();
           return LoginSuccess(action.data);

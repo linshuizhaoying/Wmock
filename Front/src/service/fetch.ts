@@ -46,7 +46,7 @@ export const get = (url: string, headers: any = {}) =>{
   return Observable.ajax.get(url, Object.assign({}, defaultHeaders, headers))
     .map((ajaxResponse: AjaxResponse) => {
       console.log(ajaxResponse);
-      return ajaxResponse.response.state
+      return ajaxResponse.response
     })
     .catch((ajaxErrorData: AjaxError) => {
       console.log('error')
