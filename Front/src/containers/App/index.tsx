@@ -23,6 +23,7 @@ class App extends React.Component<any, any> {
   }
 
   componentDidMount() {
+    // console.log(this.props)
     // const { history } = this.props;
     // console.log(this.props)
     // if(!this.props.isLogin){

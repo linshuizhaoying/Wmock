@@ -8,6 +8,9 @@ body {
 #DashBoard {
   height: 100%;
 }
+#DashBoard .ant-layout-header {
+  z-index: 1!important;
+}
 #DashBoard .aside,
 #DashBoard .ant-layout {
   height: 100%;

@@ -60,7 +60,7 @@ class LoadingBar extends React.Component<any, any> {
               myError: false
             })
     
-            this.props.onErrorDone()
+            // this.props.onErrorDone()
     
             setTimeout(() => {
               this.setState({

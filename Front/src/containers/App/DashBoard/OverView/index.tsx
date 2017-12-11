@@ -9,8 +9,8 @@ import Modal from 'antd/lib/modal';
 import Upload from 'antd/lib/upload';
 import Message from 'antd/lib/message';
 import Button from 'antd/lib/button';
+import TimeAgo from 'timeago-react'
 import { Link } from 'react-router-dom';
-
 const { Meta } = Card;
 const uploadProps = {
   name: 'file',
@@ -35,7 +35,8 @@ export class Overview extends React.Component<any, any> {
     super(props)
     this.state = {
       importProject: false,
-      exportProject: false
+      exportProject: false,
+      messagesListData: []
     };
   }
   componentDidMount() {
@@ -43,6 +44,18 @@ export class Overview extends React.Component<any, any> {
   }
 
   componentWillReceiveProps(nextProps: any) {
+    if(nextProps.messagesList.length > 0 && nextProps.messagesList != this.state.messagesListData){
+      let temp = [];
+      for(let i = 0; i < 6; i++){
+        temp.push(nextProps.messagesList[i]);
+      }
+      console.log(temp)
+      this.setState({
+        messagesListData: temp,
+      },()=>{
+        console.log(this.state.messagesListData)
+      })
+    }
   }
 
   showimportProject = () => {
@@ -180,56 +193,32 @@ export class Overview extends React.Component<any, any> {
         </div>
         <div className="content-right"> 
          <h4>动态</h4> 
+         
+
+ 
+
+         
          <Timeline pending={ 
                       <Link to='/wmock/messages' >
                         查看更多
                       </Link>}>
-          <Timeline.Item dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />} color="red">
-            <div className="timeline">
-              <p className="date">2个小时前</p>
-              <div>
-                <div className="user">用户X</div>
-                <div className="content">创建了项目X</div> 
-              </div>
-             
-            </div>
-          </Timeline.Item>
-          <Timeline.Item dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />} color="red">
-            <div className="timeline">
-              <p className="date">6小时前</p>
-              <div>
-                <div className="user">用户y</div>
-                <div className="content">更新了 项目:企业级项目 接口:getList</div> 
-              </div> 
-            </div>
-          </Timeline.Item>
-          <Timeline.Item dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />} color="red">
-            <div className="timeline">
-              <p className="date">10小时前</p>
-              <div>
-                <div className="user">用户z</div>
-                <div className="content">更新了 项目:Web项目 接口:updateList</div> 
-              </div> 
-            </div>
-          </Timeline.Item>
-          <Timeline.Item dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />} color="red">
-            <div className="timeline">
-              <p className="date">10小时前</p>
-              <div>
-                <div className="user">用户z</div>
-                <div className="content">更新了 项目:Web项目 接口:updateList</div> 
-              </div> 
-            </div>
-          </Timeline.Item>
-          <Timeline.Item dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />} color="red">
-            <div className="timeline">
-              <p className="date">10小时前</p>
-              <div>
-                <div className="user">用户z</div>
-                <div className="content">更新了 项目:Web项目 接口:updateList</div> 
-              </div> 
-            </div>
-          </Timeline.Item>
+            {
+              this.state.messagesListData.map((item: any, index: any) =>{
+               return <Timeline.Item dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />} color="red" key={index} >
+                    <div className="timeline">
+                      <p className="date"><TimeAgo
+                              datetime={item.time} 
+                              locale='zh_CN' /></p>
+                      <div>
+                        <div className="user">用户: {item.operator}</div>
+                        <div className="content">{item.desc}</div> 
+                      </div>
+                    
+                    </div>
+                  </Timeline.Item>
+              })
+            }
+       
         </Timeline>
         </div>
 

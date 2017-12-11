@@ -20,6 +20,7 @@ import Template from './Template/index';
 import TeamManage from './TeamManage/index';
 import LoadingBar from '../../../components/LoadingBar';
 import { userLogout } from '../../../actions/user';
+import { fetchMessages } from '../../../actions/index';
 const { Header, Sider, Content, Footer } = Layout;
 const SubMenu = Menu.SubMenu;
 export class DashBoard extends React.Component<any, any> {
@@ -29,7 +30,8 @@ export class DashBoard extends React.Component<any, any> {
     this.state = {
       collapsed: false,
       progress: 0,
-      error: false
+      error: false,
+      messagesList: []
     };
   }
   toggle = () => {
@@ -46,7 +48,8 @@ export class DashBoard extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    
+    this.getMessagesList()
+   // console.log(this.props)
   }
 
   componentWillReceiveProps(nextProps: any) {
@@ -64,6 +67,13 @@ export class DashBoard extends React.Component<any, any> {
         progress: 100
       })
     }
+    if(nextProps.messagesList.length > 0 && nextProps.messagesList != this.state.messagesList){
+      this.setState({
+        messagesList:nextProps.messagesList
+      },()=>{
+       // console.log(this.state.messagesList)
+      })
+    }
   }
 
   overView = () =>{
@@ -77,6 +87,11 @@ export class DashBoard extends React.Component<any, any> {
       history.push('/login')
     }
   }
+  getMessagesList = () => {
+    const { dispatch } = this.props;
+    dispatch(fetchMessages()) 
+  }
+
 
   render () {
     return(
@@ -103,7 +118,7 @@ export class DashBoard extends React.Component<any, any> {
                  
                 <SubMenu key="sub0" title={<span onClick = {this.overView}><Icon type="appstore" /><span>项目概况</span></span>} >
                     <Menu.Item key="1">
-                      <Link to='/wmock/messages'>
+                      <Link to='/wmock/messages' onClick = {this.getMessagesList}>
                         <Icon type="message" />消息中心
                       </Link>
                     </Menu.Item>
@@ -179,10 +194,10 @@ export class DashBoard extends React.Component<any, any> {
               <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
                   <Switch>
                     <Route path="/wmock/InterfaceTest" component={InterfaceTest}/>
-                    <Route path="/wmock/Messages" component={Messages}/>
+                    <Route path="/wmock/Messages" render={() => <Messages data={this.state.messagesList}></Messages>}/>
                     <Route path="/wmock/MockModel" component={MockModel}/>
                     <Route path="/wmock/MyProject" component={MyProject}/>
-                    <Route path="/wmock/OverView" component={OverView}/>
+                    <Route path="/wmock/OverView" render={() => <OverView messagesList={this.state.messagesList}></OverView>}/>
                     <Route path="/wmock/ProjectDemo" component={ProjectDemo}/>
                     <Route path="/wmock/ProjectManage" component={ProjectManage}/>
                     <Route path="/wmock/ProjectSpec" component={ProjectSpec}/>
@@ -202,7 +217,8 @@ export class DashBoard extends React.Component<any, any> {
 
 const mapStateToProps = (state: any) => ({
   username: state.user.username,
-  loadingState: state.loading.loadingState
+  loadingState: state.loading.loadingState,
+  messagesList: state.messages.data
 })
 
 
