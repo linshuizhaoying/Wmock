@@ -1,0 +1,87 @@
+#ProjectDemo{
+  display: flex;
+  .ant-card-body{
+    padding-left: 0px;
+    min-height: 500px;
+    max-height: 640px;
+    overflow-y: scroll;
+  }
+  .addProject{
+    cursor:pointer;
+    font-size:18px;
+    margin-bottom:5px;
+  }
+  .projectType{
+    display:flex;
+    width: 240px;
+  }
+  .interfaceType{
+    display:flex;
+    width: 220px;
+  }
+  .projectOperate,.interfaceOperate{
+    display:none;
+    
+    position: absolute;
+    right: 0;
+    font-weight: 400;
+    transition: all .2s;
+    .operate-icon{
+      position: relative;
+      right: 0;
+      float: right;
+      line-height: 24px;
+      width: 24px;
+      font-weight: 700
+    }
+  }
+  .ant-tree-node-content-wrapper .projectOperate{
+    background-color: #E6F7FE;
+  }
+  .ant-tree-node-selected .projectOperate{
+    background-color:#BBE7FE;
+  }
+
+  .ant-tree-node-content-wrapper .interfaceOperate{
+    background-color: #E6F7FE;
+  }
+  .ant-tree-node-selected .interfaceOperate{
+    background-color:#BBE7FE;
+  }
+
+  .projectName,.interfaceName{
+    margin-left: 5px;
+    max-width: 220px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    i{
+      margin-right:5px;
+    }
+  }
+  .projectType:hover{
+    .projectOperate{
+      margin-left: 25px;
+      display:inline-block;
+      i{
+        flex:1;
+        margin-left:10px;
+      }
+    }
+  }
+  .interfaceType:hover{
+    .interfaceOperate{
+      margin-left: 100px;
+      display:inline-block;
+      i{
+        flex:1;
+        margin-left:10px;
+      }
+    }
+  }
+  .projectContent{
+    margin-left:20px;
+    flex:2;
+  }
+}

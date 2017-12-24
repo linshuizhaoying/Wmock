@@ -52,7 +52,7 @@ class App extends React.Component<any, any> {
       this.setState({
         login: true
       })
-      history.push('/wmock')
+      history.push('/wmock/OverView')
     }
 
   }
