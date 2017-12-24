@@ -1,0 +1,86 @@
+#ProjectDetail{
+  .title{
+    font-size: 18px;
+    color: #333;
+    margin: 20px 40px;
+  }
+  .editable-cell {
+    position: relative;
+    border: 1px solid #E7E7E7;
+    margin: 15px 0;
+  }
+  
+  .editable-cell-input-wrapper,
+  .editable-cell-text-wrapper {
+    padding-right: 24px;
+  }
+  
+  .editable-cell-text-wrapper {
+    padding: 5px 24px 5px 5px;
+  }
+  
+  .editable-cell-icon,
+  .editable-cell-icon-check {
+    position: absolute;
+    right: 0;
+    width: 20px;
+    cursor: pointer;
+  }
+  
+  .editable-cell-icon {
+    line-height: 18px;
+    display: none;
+  }
+  
+  .editable-cell-icon-check {
+    line-height: 28px;
+  }
+  
+  .editable-cell:hover .editable-cell-icon {
+    display: inline-block;
+    margin-right: 15px;
+  }
+  
+  .editable-cell-icon:hover,
+  .editable-cell-icon-check:hover {
+    color: #108ee9;
+  }
+  
+  .editable-add-btn {
+    margin-bottom: 8px;
+  }
+
+  .projectUrl{
+    display:block;
+    margin: 15px 0;
+    width:100%;
+  }
+
+  .userList{
+    display: flex;
+    padding: 0px;
+    margin-top: 10px;
+    li{
+      margin-left:10px;
+      cursor:pointer;
+    }
+    li:hover{
+      .projectUserDelete{
+        visibility: visible;
+      }
+    }
+    .projectUserDelete{
+      font-size: 12px;
+      text-align: center;
+      visibility: hidden;
+    }
+    .addProjectUser{
+      border: 1px solid #F5F5F5;
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+  }
+}
