@@ -33,7 +33,7 @@ action$.ofType(FETCH_MESSAGES)
     .catch((e: any): any => {
       // console.log(e)
       return Observable.of(({ type: ERROR_MESSAGES })).startWith(loadingError())
-    }).startWith(loadingSuccess()).delay(300).startWith(loadingStart())
+    }).startWith(loadingSuccess()).delay(200).startWith(loadingStart())
 
   });
 

@@ -70,7 +70,7 @@ class Reg extends React.Component<any, any> {
       if (!err && username.length > 0 && password.length > 0) {
         if(this.state.currentRole){
           const user = {
-            username: username,
+            username: username.toLowerCase(),
             password: password,
             role: this.state.currentRole,
             email: email

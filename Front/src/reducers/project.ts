@@ -1,25 +1,25 @@
-import { RECEIVE_MESSAGES, 
-         ERROR_MESSAGES
+import { RECEIVE_PROJECT, 
+         ERROR_PROJECT
           // ADD_MESSAGE
-        } from '../constants/messages';
+        } from '../constants/project';
 const initialState = {
    data:[]
 }
 
-const messages = (state = initialState, action: any) => {
+const project = (state = initialState, action: any) => {
   // console.log(action)
   switch (action.type) {
-    case RECEIVE_MESSAGES:
+    case RECEIVE_PROJECT:
       return{
         ...state,
         data: action.data.data,
       }
-    case ERROR_MESSAGES:
+    case ERROR_PROJECT:
       return{
         ...state,
         data: []
       }
-    // case ADD_MESSAGE:
+    // case ADD_PROJECT:
     //   return{
     //     ...state,
     //     data: [...state.data, action.data]
@@ -29,4 +29,4 @@ const messages = (state = initialState, action: any) => {
   }
 }
 
-export default messages;
+export default project;

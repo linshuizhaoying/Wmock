@@ -58,7 +58,7 @@ export const get = (url: string, headers: any = {}) =>{
 export const post = (url: string, body: any, headers: any = {} ): Observable<AjaxResponse> => { 
   return Observable.ajax.post(url, body, Object.assign({}, defaultHeaders, headers)).map((ajaxResponse: AjaxResponse) => {
       console.log(ajaxResponse);
-      return ajaxResponse.response.state
+      return ajaxResponse.response
     })
     .catch((ajaxErrorData: AjaxError) => {
       console.log('error')
