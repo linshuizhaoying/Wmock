@@ -10,7 +10,9 @@ import Upload from 'antd/lib/upload';
 import Message from 'antd/lib/message';
 import Button from 'antd/lib/button';
 import TimeAgo from 'timeago-react'
+import Avatar from 'antd/lib/avatar';
 import { Link } from 'react-router-dom';
+// import timeago from '../../../../util/timeago'
 const { Meta } = Card;
 const uploadProps = {
   name: 'file',
@@ -204,11 +206,12 @@ export class Overview extends React.Component<any, any> {
                       </Link>}>
             {
               this.state.messagesListData.map((item: any, index: any) =>{
-               return <Timeline.Item dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />} color="red" key={index} >
+               return <Timeline.Item dot={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />} color="red" key={index} >
                     <div className="timeline">
                       <p className="date"><TimeAgo
                               datetime={item.time} 
                               locale='zh_CN' /></p>
+                 
                       <div>
                         <div className="user">用户: {item.operator}</div>
                         <div className="content">{item.desc}</div> 

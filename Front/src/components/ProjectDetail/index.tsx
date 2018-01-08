@@ -7,7 +7,8 @@ import Button from 'antd/lib/button';
 import Tooltip from 'antd/lib/tooltip';
 import Avatar from 'antd/lib/avatar';
 import Popover from 'antd/lib/popover';
-
+import Timeline from 'antd/lib/timeline';
+import TimeAgo from 'timeago-react'
 const TabPane = Tabs.TabPane;
 
 class EditableCell extends React.Component<any, any> {
@@ -67,6 +68,7 @@ export class ProjectDetail extends React.Component<any, any> {
     super(props)
     this.state = {
       selectUserId:'', // 从项目选择的用户ID
+      projectMessagesList:[], // 项目的动态信息
     };
   }
   componentDidMount() {
@@ -162,7 +164,31 @@ export class ProjectDetail extends React.Component<any, any> {
                   />
               </div>
             </TabPane>
-            <TabPane tab="项目动态" key="2">Content of Tab Pane 2</TabPane>
+            <TabPane tab="接口列表" key="2">Content of Tab Pane 2</TabPane>
+            <TabPane tab="项目动态" key="3"> 
+                <Timeline pending={ 
+                      <div>已经是全部信息了~</div>}>
+            {
+              this.state.projectMessagesList.map((item: any, index: any) =>{
+               return <Timeline.Item dot={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />} color="red" key={index} >
+                    <div className="timeline">
+                      <p className="date"><TimeAgo
+                              datetime={item.time} 
+                              locale='zh_CN' /></p>
+                 
+                      <div>
+                        <div className="user">用户: {item.operator}</div>
+                        <div className="content">{item.desc}</div> 
+                      </div>
+                    
+                    </div>
+                  </Timeline.Item>
+              })
+            }
+       
+        </Timeline>
+            </TabPane>
+            <TabPane tab="项目文档" key="4">Content of Tab Pane 2</TabPane>
           </Tabs>
       </div>
     )

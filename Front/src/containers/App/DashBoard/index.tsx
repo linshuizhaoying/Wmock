@@ -20,7 +20,7 @@ import Template from './Template/index';
 import TeamManage from './TeamManage/index';
 import LoadingBar from '../../../components/LoadingBar';
 import { userLogout } from '../../../actions/user';
-import { fetchMessages } from '../../../actions/index';
+import { fetchMessages, fetchProject } from '../../../actions/index';
 const { Header, Sider, Content, Footer } = Layout;
 const SubMenu = Menu.SubMenu;
 export class DashBoard extends React.Component<any, any> {
@@ -31,7 +31,8 @@ export class DashBoard extends React.Component<any, any> {
       collapsed: false,
       progress: 0,
       error: false,
-      messagesList: []
+      messagesList: [],
+      projectList: []
     };
   }
   toggle = () => {
@@ -67,6 +68,7 @@ export class DashBoard extends React.Component<any, any> {
         progress: 100
       })
     }
+    // 获取最新消息列表
     if(nextProps.messagesList.length > 0 && nextProps.messagesList != this.state.messagesList){
       this.setState({
         messagesList:nextProps.messagesList
@@ -74,6 +76,15 @@ export class DashBoard extends React.Component<any, any> {
        // console.log(this.state.messagesList)
       })
     }
+    // 获取最新项目列表
+    if(nextProps.projectList.length > 0 && nextProps.projectList != this.state.projectList){
+      this.setState({
+        projectList:nextProps.projectList
+      },()=>{
+       // console.log(this.state.projectList)
+      })
+    }
+
   }
 
   overView = () =>{
@@ -90,6 +101,15 @@ export class DashBoard extends React.Component<any, any> {
   getMessagesList = () => {
     const { dispatch } = this.props;
     dispatch(fetchMessages()) 
+  }
+  
+  getProjectList = (user:any) =>{
+    const { dispatch } = this.props;
+    dispatch(fetchProject(user)) 
+  }
+
+  getProjectDemo = () =>{
+    this.getProjectList({username:'demo'})
   }
 
 
@@ -141,7 +161,7 @@ export class DashBoard extends React.Component<any, any> {
 
                   <SubMenu key="sub1" title={<span><Icon type="laptop" /><span>项目管理</span></span>}>
                     <Menu.Item key="5">
-                      <Link to='/wmock/projectDemo'>
+                      <Link to='/wmock/projectDemo' onClick={this.getProjectDemo}>
                         <Icon type="credit-card" />项目示例
                       </Link>
                     </Menu.Item>
@@ -164,13 +184,19 @@ export class DashBoard extends React.Component<any, any> {
       
                   <Menu.Item key="7">
                       <Link to='/wmock/projectSpec'>
-                        <Icon type="eye-o" />文档与规范
+                        <Icon type="eye-o" />
+                        <span>
+                          文档与规范
+                        </span>
                       </Link>
                     </Menu.Item>
 
                   <Menu.Item key="8">
                       <Link to='/wmock/projectStruct'>
-                        <Icon type="folder-open" />工程结构
+                        <Icon type="folder-open" />
+                        <span>
+                          工程结构
+                        </span>
                       </Link>
                     </Menu.Item>
                 </Menu>
@@ -187,6 +213,7 @@ export class DashBoard extends React.Component<any, any> {
                   onClick={this.logout}
                 >
                   <SubMenu title={<span><Icon type="user" />{this.props.username}</span>}>
+                      <Menu.Item key="userinfo">个人信息</Menu.Item>
                       <Menu.Item key="logout">退出登录</Menu.Item>
                   </SubMenu>
                 </Menu>
@@ -198,7 +225,9 @@ export class DashBoard extends React.Component<any, any> {
                     <Route path="/wmock/MockModel" component={MockModel}/>
                     <Route path="/wmock/MyProject" component={MyProject}/>
                     <Route path="/wmock/OverView" render={() => <OverView messagesList={this.state.messagesList}></OverView>}/>
-                    <Route path="/wmock/ProjectDemo" component={ProjectDemo}/>
+
+                    <Route path="/wmock/ProjectDemo" render={() => <ProjectDemo projectList={this.state.projectList}></ProjectDemo>}/>
+
                     <Route path="/wmock/ProjectManage" component={ProjectManage}/>
                     <Route path="/wmock/ProjectSpec" component={ProjectSpec}/>
                     <Route path="/wmock/ProjectStruct" component={ProjectStruct}/>
@@ -218,7 +247,8 @@ export class DashBoard extends React.Component<any, any> {
 const mapStateToProps = (state: any) => ({
   username: state.user.username,
   loadingState: state.loading.loadingState,
-  messagesList: state.messages.data
+  messagesList: state.messages.data,
+  projectList: state.project.data
 })
 
 

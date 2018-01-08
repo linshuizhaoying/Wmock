@@ -12,6 +12,7 @@ export const Router = (app: any) => {
           login,
           userInfo,
           messagesList,
+          projectList
         } = Service
 
   router.post('/reg', Service.reg)
@@ -20,7 +21,8 @@ export const Router = (app: any) => {
         // 用于持久化登录,只要auth头有未过期的token验证就能证明用户的登录状态
         .get('/token', tokenPermission, Service.token)
         .get('/messagesList', Service.messagesList)
-
+        // 获取项目列表
+        .post('/projectList', Service.projectList)
   router.all('/*',  async (ctx, next) => {
     ctx.body = '404'
   })

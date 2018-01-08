@@ -1,0 +1,4 @@
+export const FETCH_PROJECT = 'FETCH_PROJECT'
+export const ADD_PROJECT = 'ADD_PROJECT'
+export const RECEIVE_PROJECT = 'RECEIVE_PROJECT'
+export const ERROR_PROJECT = 'ERROR_PROJECT'

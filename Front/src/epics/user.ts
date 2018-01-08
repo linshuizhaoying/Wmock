@@ -26,11 +26,11 @@ export const userReg  = (action$:any) =>
     .map((response: any) => {
       console.log(response);
       console.log(action.data);
-      if(response.code === 1){
+      if(response.state.code === 1){
         userRegSuccess();
         return RegSuccess(action.data);
       }else{
-        userRegError(response.msg);
+        userRegError(response.state.msg);
         return RegError();
       }
     })
@@ -51,11 +51,11 @@ export const userLogin = (action$:any) =>
       // 登录验证情况
       .map((response: any) => {
         console.log(response);
-        if(response.code === 1){
+        if(response.state.code === 1){
           userLoginSuccess();
           return LoginSuccess(action.data);
         }else{
-          userLoginError(response.msg);
+          userLoginError(response.state.msg);
           return LoginError();
         }
       })
