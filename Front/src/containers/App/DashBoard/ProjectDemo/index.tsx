@@ -23,9 +23,10 @@ export class ProjectDemo extends React.Component<any, any> {
 
   componentWillReceiveProps(nextProps: any) {
      // 每次只更新变动的内容
+     console.log(nextProps.projectList)
      if(nextProps.projectList.length > 0 &&  differenceWith( nextProps.projectList,this.state.data, isEqual).length !== 0){
       this.setState({
-        data: nextProps.projectList
+        data: nextProps.projectList.data
       },()=>{
         console.log(this.state.data)
       })
@@ -35,6 +36,12 @@ export class ProjectDemo extends React.Component<any, any> {
 
   onSelect = (selectedKeys: any, info: any) => {
     console.log('selected', selectedKeys, info);
+  }
+  renderTreeNodes = (data: any) =>{
+    return data.map((project: any, key: any) =>{
+      console.log(key);
+
+    })
   }
 
   render () {
@@ -52,8 +59,62 @@ export class ProjectDemo extends React.Component<any, any> {
             </div>
             <Card style={{ width: 280 }}>
 
-              <Tree defaultExpandedKeys={['1']} onSelect={this.onSelect}>
-                <TreeNode title={
+                <Tree>
+                {
+                  this.props.projectList.map((project: any) =>{
+                  return(
+                    <TreeNode title={
+                      <div className="projectType">
+                        
+                        <div className="projectName"><Icon type="folder-open" />{
+                          project.projectName
+                        }</div> 
+                        <div className="projectOperate">
+
+                          <Tooltip placement="top" title={'删除项目'}>
+                              <Icon type="delete" className="operate-icon"/>
+                            </Tooltip>
+
+                            <Tooltip placement="top" title={'复制项目'}>
+                              <Icon type="copy" className="operate-icon"/>
+                            </Tooltip>
+
+                            <Tooltip placement="top" title={'导入接口'}>
+                              <Icon type="file-add" className="operate-icon"/>
+                            </Tooltip>
+
+                        </div>
+                      </div>
+                        } key={project._id} >
+                            {
+                              project.interfaceList.length > 0 ? 
+                                project.interfaceList.map((item: any) =>{
+                                  return  (<TreeNode title={ 
+                                    <div className="interfaceType">
+                                        
+                                        <div className="interfaceName"><Icon type="file" /> {item.interfaceName} </div> 
+                                        <div className="interfaceOperate">
+                                            <Tooltip placement="top" title={'删除接口'}>
+                                              <Icon type="delete" className="operate-icon"/>
+                                            </Tooltip>
+
+                                            <Tooltip placement="top" title={'复制接口'} >
+                                              <Icon type="copy" className="operate-icon"/>
+                                            </Tooltip>        
+                                        </div>
+                                    </div>
+                                  }  key={item._id} />
+                                  )
+                                })
+                              
+                              
+                              : <div></div>
+                            }
+                  </TreeNode>
+                 )
+              })
+          }
+                {/* <TreeNode title={
                   <div className="projectType">
                     
                     <div className="projectName"><Icon type="folder-open" />REST接口示例超长字符串测试asd123</div> 
@@ -81,17 +142,14 @@ export class ProjectDemo extends React.Component<any, any> {
                           
                           <div className="interfaceName"><Icon type="file" /> 获取 </div> 
                           <div className="interfaceOperate">
-
                               <Tooltip placement="top" title={'删除接口'}>
                                 <Icon type="delete" className="operate-icon"/>
                               </Tooltip>
 
                               <Tooltip placement="top" title={'复制接口'} >
                                 <Icon type="copy" className="operate-icon"/>
-                              </Tooltip>
-
-                                
-                        </div>
+                              </Tooltip>        
+                          </div>
                       </div>
                     }  key="2" />
                     <TreeNode  title={ 
@@ -239,7 +297,7 @@ export class ProjectDemo extends React.Component<any, any> {
                         </div>
                       </div>
                     }  key="12" />
-                </TreeNode>
+                </TreeNode> */}
 
               </Tree>
           
