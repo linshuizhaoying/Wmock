@@ -5,32 +5,12 @@ import  Col  from 'antd/lib/col';
 // import  Row  from 'antd/lib/row';
 import Timeline from 'antd/lib/timeline';
 import Icon from 'antd/lib/icon';
-import Modal from 'antd/lib/modal';
-import Upload from 'antd/lib/upload';
-import Message from 'antd/lib/message';
-import Button from 'antd/lib/button';
 import TimeAgo from 'timeago-react'
 import Avatar from 'antd/lib/avatar';
 import { Link } from 'react-router-dom';
 // import timeago from '../../../../util/timeago'
 const { Meta } = Card;
-const uploadProps = {
-  name: 'file',
-  action: '//haoqiao.me/posts/',
-  headers: {
-    authorization: 'authorization-text',
-  },
-  onChange(info: any) {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === 'done') {
-      Message.success(`${info.file.name} 文件上传成功!`);
-    } else if (info.file.status === 'error') {
-      Message.error(`${info.file.name} 文件上传失败.`);
-    }
-  },
-};
+
 
 export class Overview extends React.Component<any, any> {
   constructor (props: any) {
@@ -58,44 +38,6 @@ export class Overview extends React.Component<any, any> {
         console.log(this.state.messagesListData)
       })
     }
-  }
-
-  showimportProject = () => {
-    this.setState({
-      importProject: true,
-    });
-  }
-  showexportProject = () => {
-    this.setState({
-      exportProject: true,
-    });
-  }
-
-
-  importProjectOk = (e:any) => {
-    console.log(e);
-    this.setState({
-      importProject: false,
-    });
-  }
-  importProjectCancel = (e:any) => {
-    console.log(e);
-    this.setState({
-      importProject: false,
-    });
-  }
-
-  exportProjectOk = (e:any) => {
-    console.log(e);
-    this.setState({
-      exportProject: false,
-    });
-  }
-  exportProjectCancel = (e:any) => {
-    console.log(e);
-    this.setState({
-      exportProject: false,
-    });
   }
 
   render () {
@@ -176,7 +118,7 @@ export class Overview extends React.Component<any, any> {
               </Link>
           </ul>
          </div> 
-         <div className="advance">
+         {/* <div className="advance">
            <h4>特色功能</h4>
            <ul>
               <li onClick={this.showimportProject}>
@@ -190,7 +132,7 @@ export class Overview extends React.Component<any, any> {
                 </Col>
               </li>
             </ul>
-         </div>
+         </div> */}
    
         </div>
         <div className="content-right"> 
@@ -225,48 +167,7 @@ export class Overview extends React.Component<any, any> {
         </Timeline>
         </div>
 
-        <div>
-        <Modal
-          title="导入项目"
-          visible={this.state.importProject}
-          onOk={this.importProjectOk}
-          onCancel={this.importProjectCancel}
-          okText="确认"
-          cancelText="取消"
-        >
-          <Upload {...uploadProps}>
-          <Button>
-            <Icon type="upload" /> 点击上传
-          </Button>
-        </Upload>
-        </Modal>
-
-        <Modal
-          title="导出项目"
-          visible={this.state.exportProject}
-          onOk={this.exportProjectOk}
-          onCancel={this.exportProjectCancel}
-          okText="确认"
-          cancelText="取消"
-          width="600px"
-        >
-         <div className="export">
-            <h4>导出格式</h4>
-            <ul>
-              <li>
-                <img className="json" src={require('./json.png')}/>
-              </li>
-              <li>
-                <img className="markdown" src={require('./markdown.png')}/>
-              </li>
-              <li>
-                <img className="word" src={require('./word.png')}/>
-              </li>
-            </ul>
-         </div>
-
-        </Modal>
-      </div>
+      
       </div>
     )
   }

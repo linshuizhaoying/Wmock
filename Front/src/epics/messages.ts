@@ -12,6 +12,7 @@ export const loadingSuccess = () => ({type: LOADING_SUCCESS});
 
 export const messagesReceive = (data:any) => ({type: RECEIVE_MESSAGES, data: data});
 
+// 获取用户所有相关的消息
 export const fetchMessages = (action$:any) =>
 action$.ofType(FETCH_MESSAGES)
   .mergeMap((action: any) => {
@@ -37,4 +38,7 @@ action$.ofType(FETCH_MESSAGES)
 
   });
 
+  // 获取指定项目动态
+
+  
   export default combineEpics(fetchMessages);

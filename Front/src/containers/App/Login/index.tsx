@@ -8,6 +8,7 @@ import  Validator  from '../../../util/validator';
 import { connect } from 'react-redux';
 import { userLogin } from '../../../actions';
 import { Link } from 'react-router-dom';
+import md5 from 'md5'
 const FormItem = Form.Item
 class Login extends React.Component<any, any> {
 
@@ -59,7 +60,7 @@ class Login extends React.Component<any, any> {
        
           const user = {
             username: username,
-            password: password
+            password: md5(password)
           }
           dispatch(userLogin(user))
           console.log(user)

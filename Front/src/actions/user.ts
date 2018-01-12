@@ -1,4 +1,4 @@
-import { USER_LOGIN, USER_LOGOUT, USER_REG } from '../constants/user'
+import { USER_LOGIN, USER_LOGOUT, USER_REG, USER_TOKEN } from '../constants/user'
 import  notification  from 'antd/lib/notification';
 interface USER {
   username: String,
@@ -20,16 +20,25 @@ const reg = (data: RegUser) => ({
   data: data
 })
 
+const token = (data: any) => ({
+  type: USER_TOKEN,
+  data: data
+})
 
 const logout = () => ({
   type: USER_LOGOUT
 })
 
-
-
 export function userLogin (user:USER) {
   return (dispatch: any) => {
     dispatch(login(user))
+  }
+}
+
+
+export function userToken (t:any) {
+  return (dispatch: any) => {
+    dispatch(token(t))
   }
 }
 
@@ -71,7 +80,13 @@ export function userRegError (msg: string) {
   })
 }
 
-
+export function userTokenError (msg: string) {
+  notification.error({
+    message:' Token无效!',
+    description: msg,
+    duration: 2
+  })
+}
 
 export function userLogout () {
   return (dispatch: any) => {

@@ -49,4 +49,8 @@ exports.LoginUser = (user) => __awaiter(this, void 0, void 0, function* () {
     console.log(user);
     return User.findOne({ 'username': username });
 });
+exports.FindUserById = (id) => __awaiter(this, void 0, void 0, function* () {
+    console.log('正在查找Id:');
+    return User.findOne({ _id: id });
+});
 //# sourceMappingURL=user.js.map
