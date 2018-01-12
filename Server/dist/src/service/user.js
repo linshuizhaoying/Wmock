@@ -83,7 +83,7 @@ exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
         // 用户提交数据异常
         return ctx.body = error({
             code: 2,
-            msg: '用户数据不正常'
+            msg: '用户名或者密码错误!'
         });
     }
 });
@@ -158,17 +158,40 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
 exports.userInfo = (ctx) => __awaiter(this, void 0, void 0, function* () {
     return ctx.body = { userInfo: '{username:test110,password:nopass,email:test}' };
 });
-exports.token = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    // 根据接口规范返回数据
-    return ctx.body = {
-        'state': {
-            'code': 1,
-            'msg': '登录成功'
-        },
-        'data': {
-            'userId': ctx.tokenContent.userId,
-            'userName': ctx.tokenContent.userName
+exports.tokenLogin = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    console.log('token校验Ing:');
+    console.log(ctx.request.body);
+    const { token } = ctx.request.body;
+    let hadUser = '';
+    if (!token) {
+        return ctx.body = error({
+            code: 2,
+            msg: '请重新登录!'
+        });
+    }
+    try {
+        let decode = '';
+        yield jwt.verify(token, config_1.config.app.keys, function (err, result) {
+            decode = result;
+        });
+        const userId = JSON.parse(JSON.stringify(decode)).userId;
+        const userName = JSON.parse(JSON.stringify(decode)).userName;
+        hadUser = yield controllers_1.FindUserById(userId);
+        if (hadUser !== null) {
+            return ctx.body = success({ userName, userId, token, msg: '登录成功!' });
         }
-    };
+        else {
+            return ctx.body = error({
+                code: 2,
+                msg: '验证失败!'
+            });
+        }
+    }
+    catch (err) {
+        return ctx.body = error({
+            code: 2,
+            msg: '会话过期!'
+        });
+    }
 });
 //# sourceMappingURL=user.js.map

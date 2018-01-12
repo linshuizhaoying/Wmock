@@ -8,6 +8,9 @@ export const Login = baseUrl + '/api/login';
 export const Reg = baseUrl + '/api/reg';
 export const Logout = baseUrl + '/api/logout';
 
+// 授权用户
+
+export const Token = baseUrl + '/api/token';
 // 消息列表
 
 export const messagesList =  baseUrl + '/api/messagesList';

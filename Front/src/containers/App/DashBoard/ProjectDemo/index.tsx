@@ -6,15 +6,44 @@ import Card from 'antd/lib/card';
 import Tree  from 'antd/lib/tree';
 import Icon  from 'antd/lib/icon';
 import Tooltip  from 'antd/lib/tooltip';
-// import Button from 'antd/lib/button';
+import notification from 'antd/lib/notification'
+import Message from 'antd/lib/message';
 import ProjectDetail from '../../../../components/ProjectDetail';
+import NewProject from '../../../../components/NewProject';
+import Modal from 'antd/lib/modal';
+import Upload from 'antd/lib/upload';
+import Button from 'antd/lib/button';
 const TreeNode = Tree.TreeNode;
+const uploadProps = {
+  name: 'file',
+  action: '//haoqiao.me/posts/',
+  headers: {
+    authorization: 'authorization-text',
+  },
+  onChange(info: any) {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      Message.success(`${info.file.name} 文件上传成功!`);
+    } else if (info.file.status === 'error') {
+      Message.error(`${info.file.name} 文件上传失败.`);
+    }
+  },
+};
+
 
 export class ProjectDemo extends React.Component<any, any> {
   constructor (props: any) {
     super(props)
     this.state = {
-     data: []
+     allData: [],
+     allMessages:[],
+     currentProjectMessages:[],
+     currentProjectData: '',
+     newProject: false,
+     importProject: false,
+     exportProject: false,
     };
   }
   componentDidMount() {
@@ -22,26 +51,148 @@ export class ProjectDemo extends React.Component<any, any> {
   }
 
   componentWillReceiveProps(nextProps: any) {
-     // 每次只更新变动的内容
-     console.log(nextProps.projectList)
-     if(nextProps.projectList.length > 0 &&  differenceWith( nextProps.projectList,this.state.data, isEqual).length !== 0){
+     // 每次只更新变动的项目内容
+     console.log(nextProps)
+     if(nextProps.projectList.length > 0 &&  differenceWith( nextProps.projectList,this.state.allData, isEqual).length !== 0){
       this.setState({
-        data: nextProps.projectList.data
+        allData: nextProps.projectList
       },()=>{
-        console.log(this.state.data)
+        console.log(this.state.allData)
       })
+     }
+     // 每次只更新变动的项目动态
+     if(nextProps.messagesList.length > 0 &&  differenceWith( nextProps.messagesList,this.state.allMessages, isEqual).length !== 0){
+      this.setState({
+        allMessages: nextProps.messagesList
+      },()=>{
+        console.log(this.state.allMessages)
+      })
+     }
+
+  }
+
+  selectProject = (id:string) => {
+    console.log(id)
+    console.log(this.state.allData)
+    this.state.allData.map((project: any) => {
+      if(project._id === id){
+        this.setState({
+          currentProjectData: project
+        }, ()=>{
+          console.log(this.state.currentProjectData)
+        })
+      }
+    })
+     // 筛选出对应项目的动态
+    console.log(this.state.currentProjectMessages)
+    let arr:any[] = []
+    this.state.allMessages.map((item: any) =>{
+      if(item.projectId === id){
+        arr.push(item)
+      }
+    })
+    this.setState({
+      currentProjectMessages: arr
+    },()=>{
+      console.log(this.state.currentProjectMessages)
+    })
+  }
+
+  // 新建项目
+
+  handleOk = (projectName:any,url:any,desc:any) => {
+    console.log(projectName,url,desc)
+    if(projectName ===''){
+       notification['error']({
+        message: '出错啦!',
+        description: '项目名称必须填写不能为空.',
+      });
+    }
+    if(url ===''){
+       notification['error']({
+        message: '出错啦!',
+        description: '项目URL必须填写不能为空.',
+      });
+    }
+    if(desc === ''){
+      desc = projectName;
+    }
+    if(projectName && url && desc){
+      console.log(projectName,url,desc)
+      Message.success('项目添加成功!');
+      this.setState({
+        newProject: false,
+      });
     }
 
   }
-
-  onSelect = (selectedKeys: any, info: any) => {
-    console.log('selected', selectedKeys, info);
+  handleCancel = (e:any) => {
+    console.log(e);
+    this.setState({
+      newProject: false,
+    });
   }
-  renderTreeNodes = (data: any) =>{
-    return data.map((project: any, key: any) =>{
-      console.log(key);
+  toggleNewProject = ()=>{
+    this.setState({
+      newProject: true,
+    });
+  }
 
-    })
+  // 导入导出项目 
+
+
+  showimportProject = () => {
+    this.setState({
+      importProject: true,
+    });
+  }
+  showexportProject = () => {
+    this.setState({
+      exportProject: true,
+    });
+  }
+
+
+  importProjectOk = (e:any) => {
+    console.log(e);
+    Message.success('项目导入成功!');
+    this.setState({
+      importProject: false,
+    });
+  }
+  importProjectCancel = (e:any) => {
+    console.log(e);
+    this.setState({
+      importProject: false,
+    });
+  }
+
+  exportJson = () => {
+    console.log(this.state.currentProjectData);
+    Message.success('项目导出成功!');
+    this.setState({
+      exportProject: false,
+    });
+  }
+  exportMarkdown = () => {
+    console.log(this.state.currentProjectData);
+    Message.success('项目导出成功!');
+    this.setState({
+      exportProject: false,
+    });
+  }
+   exportWord = () => {
+    console.log(this.state.currentProjectData);
+    Message.success('项目导出成功!');
+    this.setState({
+      exportProject: false,
+    });
+  }
+  exportProjectCancel = (e:any) => {
+    console.log(e);
+    this.setState({
+      exportProject: false,
+    });
   }
 
   render () {
@@ -53,258 +204,83 @@ export class ProjectDemo extends React.Component<any, any> {
             <div className="projectTree">
             <div className="addProject">
               <Tooltip placement="right" title={'添加项目'}>
-                <Icon type="plus-circle" />
+                <Icon type="plus-circle" onClick={this.toggleNewProject}/>
               </Tooltip>
-            
+               <Tooltip placement="right" title={'导入项目'}>
+                <Icon type="left-circle" onClick={this.showimportProject}/>
+              </Tooltip>
             </div>
             <Card style={{ width: 280 }}>
-
-                <Tree>
-                {
-                  this.props.projectList.map((project: any) =>{
-                  return(
-                    <TreeNode title={
-                      <div className="projectType">
-                        
-                        <div className="projectName"><Icon type="folder-open" />{
-                          project.projectName
-                        }</div> 
-                        <div className="projectOperate">
-
-                          <Tooltip placement="top" title={'删除项目'}>
-                              <Icon type="delete" className="operate-icon"/>
-                            </Tooltip>
-
-                            <Tooltip placement="top" title={'复制项目'}>
-                              <Icon type="copy" className="operate-icon"/>
-                            </Tooltip>
-
-                            <Tooltip placement="top" title={'导入接口'}>
-                              <Icon type="file-add" className="operate-icon"/>
-                            </Tooltip>
-
-                        </div>
-                      </div>
-                        } key={project._id} >
-                            {
-                              project.interfaceList.length > 0 ? 
-                                project.interfaceList.map((item: any) =>{
-                                  return  (<TreeNode title={ 
-                                    <div className="interfaceType">
-                                        
-                                        <div className="interfaceName"><Icon type="file" /> {item.interfaceName} </div> 
-                                        <div className="interfaceOperate">
-                                            <Tooltip placement="top" title={'删除接口'}>
-                                              <Icon type="delete" className="operate-icon"/>
-                                            </Tooltip>
-
-                                            <Tooltip placement="top" title={'复制接口'} >
-                                              <Icon type="copy" className="operate-icon"/>
-                                            </Tooltip>        
-                                        </div>
-                                    </div>
-                                  }  key={item._id} />
-                                  )
-                                })
-                              
-                              
-                              : <div></div>
-                            }
-                  </TreeNode>
-                 )
-              })
-          }
-                {/* <TreeNode title={
-                  <div className="projectType">
-                    
-                    <div className="projectName"><Icon type="folder-open" />REST接口示例超长字符串测试asd123</div> 
-                    <div className="projectOperate">
-
-                      <Tooltip placement="top" title={'删除项目'}>
-                          <Icon type="delete" className="operate-icon"/>
-                        </Tooltip>
-
-                        <Tooltip placement="top" title={'复制项目'}>
-                          <Icon type="copy" className="operate-icon"/>
-                        </Tooltip>
-
-                        <Tooltip placement="top" title={'导入接口'}>
-                          <Icon type="file-add" className="operate-icon"/>
-                        </Tooltip>
-
-                  
-                        
-                    </div>
-                  </div>
-                } key="1">
-                    <TreeNode title={ 
-                      <div className="interfaceType">
+              <Tree>
+                  {
+                    this.props.projectList.map((project: any) =>{
+                    return(
+                      <TreeNode title={
+                        <div className="projectType">
                           
-                          <div className="interfaceName"><Icon type="file" /> 获取 </div> 
-                          <div className="interfaceOperate">
-                              <Tooltip placement="top" title={'删除接口'}>
+                          <div className="projectName" onClick = {()=>{this.selectProject(project._id)}}><Icon type="folder-open"  />{
+                            project.projectName
+                          }</div> 
+                          <div className="projectOperate">
+
+                            <Tooltip placement="top" title={'删除项目'}>
                                 <Icon type="delete" className="operate-icon"/>
                               </Tooltip>
 
-                              <Tooltip placement="top" title={'复制接口'} >
+                              <Tooltip placement="top" title={'复制项目'}>
                                 <Icon type="copy" className="operate-icon"/>
-                              </Tooltip>        
+                              </Tooltip>
+
                           </div>
-                      </div>
-                    }  key="2" />
-                    <TreeNode  title={ 
-                      <div className="interfaceType">
-                  
-                          <div className="interfaceName"><Icon type="file" /> 增加 </div>
-                          <div className="interfaceOperate">
-
-                              <Tooltip placement="top" title={'删除接口'}>
-                                <Icon type="delete" className="operate-icon"/>
-                              </Tooltip>
-                                
-
-                              <Tooltip placement="top" title={'复制接口'}>
-                                <Icon type="copy" className="operate-icon" />
-                              </Tooltip>
-
-                          
                         </div>
-                      </div>
-                    }  key="3" />
-                    <TreeNode  title={ 
-                      <div className="interfaceType">
+                          } key={project._id} >
+                              {
+                                project.interfaceList.length > 0 ? 
+                                  project.interfaceList.map((item: any) =>{
+                                    return  (<TreeNode title={ 
+                                      <div className="interfaceType">
+                                          
+                                          <div className="interfaceName"><Icon type="file" /> {item.interfaceName} </div> 
+                                          <div className="interfaceOperate">
+                                              <Tooltip placement="top" title={'删除接口'}>
+                                                <Icon type="delete" className="operate-icon"/>
+                                              </Tooltip>
+
+                                              <Tooltip placement="top" title={'复制接口'} >
+                                                <Icon type="copy" className="operate-icon"/>
+                                              </Tooltip>        
+                                          </div>
+                                      </div>
+                                    }  key={item._id} />
+                                    )
+                                  })
+                                
+                                
+                                : <div></div>
+                              }
+                    </TreeNode>
+                  )
+                  })
+                  }
                     
-                          <div className="interfaceName"><Icon type="file" /> 删除 </div>  
-                          <div className="interfaceOperate">
-                              <Tooltip placement="top" title={'删除接口'}>
-                                <Icon type="delete" className="operate-icon"/>
-                              </Tooltip>
-
-                              <Tooltip placement="top" title={'复制接口'}>
-                                <Icon type="copy" className="operate-icon"/>
-                              </Tooltip>
-
-                    
-                                
-                        </div>
-                      </div>
-                    }   key="0-0-0-1" />
-                    <TreeNode  title={ 
-                      <div className="interfaceType">
-                    
-                          <div className="interfaceName"><Icon type="file" /> 更新 </div>
-                          <div className="interfaceOperate">
-
-
-                              <Tooltip placement="top" title={'删除接口'}>
-                                <Icon type="delete" className="operate-icon"/>
-                              </Tooltip>
-
-                              <Tooltip placement="top" title={'复制接口'}>
-                                <Icon type="copy" className="operate-icon"/>
-                              </Tooltip>
-
-                                
-                        </div>
-                      </div>
-                    }  key="0-0-0-2" />
-                </TreeNode>
-                
-                <TreeNode title={
-                  <div className="projectType">
-                  
-                    <div className="projectName"><Icon type="folder-open" />基本操作接口示例</div>
-                    <div className="projectOperate">
-
-
-                        <Tooltip placement="top" title={'删除项目'}>
-                          <Icon type="delete" className="operate-icon" />
-                        </Tooltip>
-
-                        <Tooltip placement="top" title={'Copy'}>
-                          <Icon type="copy" className="operate-icon"/>
-                        </Tooltip>
-
-                        <Tooltip placement="top" title={'新增接口'}>
-                          <Icon type="file-add" className="operate-icon"/>
-                        </Tooltip>
-
-                        
-                    </div>
-                  </div>
-                }  key="8">
-                  <TreeNode title={ 
-                      <div className="interfaceType">
-                          
-                          <div className="interfaceName"><Icon type="file" /> 注册</div> 
-                          <div className="interfaceOperate">
-                              <Tooltip placement="top" title={'复制接口'} >
-                                <Icon type="copy" className="operate-icon"/>
-                              </Tooltip>
-
-                              <Tooltip placement="top" title={'删除接口'}>
-                                <Icon type="delete" className="operate-icon"/>
-                              </Tooltip>
-                                
-                        </div>
-                      </div>
-                    }  key="9" />
-                    <TreeNode  title={ 
-                      <div className="interfaceType">
-                  
-                          <div className="interfaceName"><Icon type="file" /> 登录 </div>
-                          <div className="interfaceOperate">
-                              <Tooltip placement="top" title={'复制接口'}>
-                                <Icon type="copy" className="operate-icon" />
-                              </Tooltip>
-
-                              <Tooltip placement="top" title={'删除接口'}>
-                                <Icon type="delete" className="operate-icon"/>
-                              </Tooltip>
-                                
-                        </div>
-                      </div>
-                    }  key="10" />
-                    <TreeNode  title={ 
-                      <div className="interfaceType">
-                    
-                          <div className="interfaceName"><Icon type="file" /> token </div>  
-                          <div className="interfaceOperate">
-                              <Tooltip placement="top" title={'复制接口'}>
-                                <Icon type="copy" className="operate-icon"/>
-                              </Tooltip>
-
-                              <Tooltip placement="top" title={'删除接口'}>
-                                <Icon type="delete" className="operate-icon"/>
-                              </Tooltip>
-                                
-                        </div>
-                      </div>
-                    }   key="11" />
-                    <TreeNode  title={ 
-                      <div className="interfaceType">
-                    
-                          <div className="interfaceName"><Icon type="file" /> 退出 </div>
-                          <div className="interfaceOperate">
-                              <Tooltip placement="top" title={'复制接口'}>
-                                <Icon type="copy" className="operate-icon"/>
-                              </Tooltip>
-
-                              <Tooltip placement="top" title={'删除接口'}>
-                                <Icon type="delete" className="operate-icon"/>
-                              </Tooltip>
-                                
-                        </div>
-                      </div>
-                    }  key="12" />
-                </TreeNode> */}
-
               </Tree>
           
             </Card>
             </div>
             <div className="projectContent">
-              <ProjectDetail/>
+              {
+                this.state.currentProjectData ?
+                <ProjectDetail data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showexportProject={this.showexportProject}/> :
+                <div>
+                  <h2>
+                    项目示例说明
+                  </h2>
+                  <div className="demoDesc">
+                    <h3>项目示例仅作为演示项目,如果需要可以复制到自己账号上,基于模板进行开发。</h3>
+                  </div>
+                </div>
+              }
+              
             </div> 
          </div>
       
@@ -316,7 +292,54 @@ export class ProjectDemo extends React.Component<any, any> {
        
        }
       
-        
+      <NewProject visible={this.state.newProject} handleOk={this.handleOk} handleCancel={this.handleCancel}/>
+      <div>
+        <Modal
+          title="导入项目"
+          visible={this.state.importProject}
+          onOk={this.importProjectOk}
+          onCancel={this.importProjectCancel}
+          okText="确认"
+          cancelText="取消"
+        >
+          <Upload {...uploadProps}>
+          <Button>
+            <Icon type="upload" /> 点击上传
+          </Button>
+        </Upload>
+        </Modal>
+
+        <Modal
+          title="导出项目"
+          visible={this.state.exportProject}
+          width="600px"
+          onCancel={this.exportProjectCancel}
+          footer={null}
+        >
+         <div className="export">
+            <h4>导出格式</h4>
+            <ul>
+              <li>
+                <Tooltip placement="top" title={'导出项目为JSON格式'}>
+                  <img className="json" src={require('./json.png')} onClick={this.exportJson}/>
+                </Tooltip>
+              </li>
+              <li>
+                <Tooltip placement="top" title={'导出项目为MarkDown格式'}>
+                  <img className="markdown" src={require('./markdown.png')}  onClick={this.exportMarkdown}/>
+                </Tooltip>
+              </li>
+              <li>
+                <Tooltip placement="top" title={'导出项目为Word格式'}>
+                  <img className="word" src={require('./word.png')}  onClick={this.exportWord}/>
+                </Tooltip>
+              </li>
+            </ul>
+         </div>
+
+        </Modal>
+      </div>
+
       </div>
     )
   }

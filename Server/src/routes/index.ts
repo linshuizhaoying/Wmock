@@ -10,6 +10,7 @@ const router = new Irouter({prefix: config.app.baseApi})
 export const Router = (app: any) => {
   const { reg,
           login,
+          tokenLogin,
           userInfo,
           messagesList,
           projectList
@@ -19,7 +20,7 @@ export const Router = (app: any) => {
         .post('/login', Service.login)
         .get('/userInfo', tokenPermission, Service.userInfo)
         // 用于持久化登录,只要auth头有未过期的token验证就能证明用户的登录状态
-        .get('/token', tokenPermission, Service.token)
+        .post('/token', Service.tokenLogin)
         .get('/messagesList', Service.messagesList)
         // 获取项目列表
         .post('/projectList', Service.projectList)

@@ -1,5 +1,6 @@
 export const USER_LOGIN = 'USER_LOGIN'
 export const USER_REG = 'USER_REG'
+export const USER_TOKEN = 'USER_TOKEN'
 
 export const USER_REGSUCCESS = 'USER_REGSUCCESS'
 export const USER_REGERROR = 'USER_REGERROR'

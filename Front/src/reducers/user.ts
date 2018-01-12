@@ -8,9 +8,11 @@ const user = (state = initialState, action: any) => {
   // console.log(action)
   switch (action.type) {
     case USER_REGSUCCESS:
+      // 本地缓存token
+      localStorage.setItem('token',action.data.token)
       return{
         ...state,
-        username: action.data.username,
+        username: action.data.userName,
         isLogin: true
       }
     
@@ -22,9 +24,11 @@ const user = (state = initialState, action: any) => {
       }
 
     case USER_LOGINSUCCESS:
+      // 本地缓存token
+      localStorage.setItem('token',action.data.token)
       return{
         ...state,
-        username: action.data.username,
+        username: action.data.userName,
         isLogin: true
       }
 
@@ -36,6 +40,7 @@ const user = (state = initialState, action: any) => {
       }
 
     case USER_LOGOUT:
+      localStorage.setItem('token','');
       return {
         ...state,
         username: '',

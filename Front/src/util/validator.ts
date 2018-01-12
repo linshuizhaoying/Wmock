@@ -10,7 +10,7 @@ const RULES = {
   phone: /^(1[0-9]{2})[0-9]{8}$/,
   zipcode: /^\d{6}$/,
   username: /^\w{4,12}$/,
-  password: /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,12}$/,
+  password: /^\w{6,32}$/,
   required: (value: any) => { return value !== undefined && value.length !== 0 }
 }
 export class Validator {

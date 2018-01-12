@@ -11,44 +11,48 @@ export const AllProject = async(username: string) => {
         teamMember: [
           {
             _id: 'user001',
-            avatar: '/xx.jpg'
+            username: '2333',
+            role: '前端工程师',
+            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
           },
           {
             _id: 'user002',
-            avatar: '/xx2.jpg'
+            username: '宋青树',
+            role: '后端工程师',
+            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
           },
         ],
         interfaceList: [
           {
             _id: 'interface001',
             interfaceName: '获取',
-            interfaceUrl: '/getAll',
+            url: '/getAll',
             method: 'get',
-            interfaceDesc: '接口描述',
+            desc: '接口描述',
             mode: '{data: 1 || 2}'
           },
           {
             _id: 'interface002',
             interfaceName: '增加',
-            interfaceUrl: '/add',
+            url: '/add',
             method: 'post',
-            interfaceDesc: '接口描述',
+            desc: '接口描述',
             mode: '{data: 1 || 2}'
           },
           {
             _id: 'interface003',
             interfaceName: '删除',
-            interfaceUrl: '/delete',
-            method: 'post',
-            interfaceDesc: '接口描述',
+            url: '/delete',
+            method: 'delete',
+            desc: '接口描述',
             mode: '{data: 1 || 2}'
           },
           {
             _id: 'interface004',
             interfaceName: '更新',
-            interfaceUrl: '/update',
-            method: 'post',
-            interfaceDesc: '接口描述',
+            url: '/update',
+            method: 'put',
+            desc: '接口描述',
             mode: '{data: 1 || 2}'
           }
         ]
@@ -58,52 +62,58 @@ export const AllProject = async(username: string) => {
         projectName: '基本操作示例',
         projectUrl: '/project002',
         projectDesc: '项目描述',
-        version: 'v1.0',
+        version: 'v2.0',
         teamMember: [
           {
             _id: 'user001',
-            avatar: '/xx.jpg'
+            username: '2333',
+            role: '前端工程师',
+            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
           },
           {
             _id: 'user002',
-            avatar: '/xx2.jpg'
+            username: '妮妮',
+            role: '前端工程师',
+            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
           },
           {
             _id: 'user003',
-            avatar: '/xx3.jpg'
+            username: '苏苏',
+            role: '后端工程师',
+            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
           },
         ],
         interfaceList: [
           {
             _id: 'interface005',
             interfaceName: '注册',
-            interfaceUrl: '/reg',
-            method: 'reg',
-            interfaceDesc: '接口描述',
+            url: '/reg',
+            method: 'post',
+            desc: '接口描述',
             mode: '{data: 1 || 2}'
           },
           {
             _id: 'interface006',
             interfaceName: '登录',
-            interfaceUrl: '/login',
+            url: '/login',
             method: 'post',
-            interfaceDesc: '接口描述',
+            desc: '接口描述',
             mode: '{data: 1 || 2}'
           },
           {
             _id: 'interface007',
             interfaceName: 'token',
-            interfaceUrl: '/token',
+            url: '/token',
             method: 'post',
-            interfaceDesc: '接口描述',
+            desc: '接口描述',
             mode: '{data: 1 || 2}'
           },
           {
             _id: 'interface008',
             interfaceName: '退出',
-            interfaceUrl: '/logout',
+            url: '/logout',
             method: 'post',
-            interfaceDesc: '接口描述',
+            desc: '接口描述',
             mode: '{data: 1 || 2}'
           }
         ]

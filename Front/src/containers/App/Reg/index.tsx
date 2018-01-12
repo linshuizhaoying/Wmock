@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import  notification  from 'antd/lib/notification';
 import { Link } from 'react-router-dom';
 import { userReg } from '../../../actions';
+import md5 from 'md5'
 const FormItem = Form.Item
 const RadioGroup = Radio.Group;
 class Reg extends React.Component<any, any> {
@@ -71,7 +72,7 @@ class Reg extends React.Component<any, any> {
         if(this.state.currentRole){
           const user = {
             username: username.toLowerCase(),
-            password: password,
+            password: md5(password),
             role: this.state.currentRole,
             email: email
           }

@@ -60,3 +60,8 @@ export const LoginUser = async(user: LoginUser) => {
 
   return User.findOne({'username': username})
 }
+
+export const FindUserById = async(id: string) => {
+  console.log('正在查找Id:')
+  return User.findOne({_id: id})
+}

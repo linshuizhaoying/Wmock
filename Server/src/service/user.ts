@@ -1,11 +1,11 @@
 import * as jwt from 'jsonwebtoken'
 import Validator from '../utils/validator'
-import { AddRegUser, LoginUser } from '../db/controllers'
+import { AddRegUser, LoginUser, FindUserById } from '../db/controllers'
 import { config } from '../config'
 interface UserData  {
   userId: string,
   userName: string,
-  token: string,
+  token: any,
   msg: string
 }
 
@@ -97,7 +97,7 @@ export const reg = async(ctx: any) => {
   return ctx.body =  error(
     {
       code: 2,
-      msg: '用户数据不正常'
+      msg: '用户名或者密码错误!'
     })
   }
 }
@@ -174,16 +174,38 @@ export const login = async(ctx: any) => {
 export const userInfo = async(ctx: any) => {
   return ctx.body = { userInfo: '{username:test110,password:nopass,email:test}' }
 }
-export const token = async(ctx: any) => {
-  // 根据接口规范返回数据
-  return ctx.body = {
-    'state': {
-          'code': 1,
-          'msg': '登录成功'
-      },
-      'data': {
-          'userId': ctx.tokenContent.userId,
-          'userName': ctx.tokenContent.userName
-      }
+
+export const tokenLogin = async(ctx: any) => {
+  console.log('token校验Ing:')
+  console.log(ctx.request.body)
+  const { token } = ctx.request.body;
+  let hadUser = '';
+  if ( !token ) {
+    return ctx.body = error({
+      code: 2,
+      msg: '请重新登录!'
+    })
+  }
+  try {
+    let decode = '';
+    await jwt.verify(token, config.app.keys, function(err: any, result: any) {
+      decode = result
+    })
+    const userId = JSON.parse(JSON.stringify(decode)).userId;
+    const userName = JSON.parse(JSON.stringify(decode)).userName;
+    hadUser  = await FindUserById(userId);
+    if ( hadUser !== null) {
+      return ctx.body = success({ userName, userId, token,  msg: '登录成功!' })
+    } else {
+      return ctx.body = error({
+        code: 2,
+        msg: '验证失败!'
+      })
+    }
+  } catch ( err ) {
+    return ctx.body = error({
+      code: 2,
+      msg: '会话过期!'
+    })
   }
 }
