@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as copy from 'copy-to-clipboard';
 import './index.less';
 import Tabs from 'antd/lib/tabs';
 import Input from 'antd/lib/input';
@@ -7,9 +8,12 @@ import Button from 'antd/lib/button';
 import Tooltip from 'antd/lib/tooltip';
 import Avatar from 'antd/lib/avatar';
 import Popover from 'antd/lib/popover';
+import Message from 'antd/lib/message';
 import Timeline from 'antd/lib/timeline';
+import Popconfirm from 'antd/lib/popconfirm';
 import TimeAgo from 'timeago-react'
 import InterfaceList from '../InterfaceList';
+
 const TabPane = Tabs.TabPane;
 
 class EditableCell extends React.Component<any, any> {
@@ -37,6 +41,7 @@ class EditableCell extends React.Component<any, any> {
   edit = () => {
     this.setState({ editable: true });
   }
+  
   render() {
     const { value, editable } = this.state;
     return (
@@ -84,7 +89,7 @@ export class ProjectDetail extends React.Component<any, any> {
   }
 
   componentWillReceiveProps(nextProps: any) {
-    console.log(nextProps)
+    // console.log(nextProps)
   }
   changeProjectName = (origin: any, id: any) => {
     return (value: any) => {
@@ -101,6 +106,22 @@ export class ProjectDetail extends React.Component<any, any> {
       console.log(id,value)
     };
   }
+
+  copyToClipBoard = (text:string) => {    
+    if(copy(text)){
+       Message.success('复制成功!');
+    }else{
+       Message.error('复制失败!'); 
+    }
+  }
+
+  deleteInterface = (userId:string ,projectId:string) =>{
+    console.log(userId)
+    console.log(projectId)
+  }
+
+
+  
   render () {
     return(
       <div id="ProjectDetail">
@@ -123,7 +144,7 @@ export class ProjectDetail extends React.Component<any, any> {
                 Mock地址
                 
               <Tooltip placement="top" title={'点击复制到粘贴板'}>
-                <Button type="dashed" className="projectUrl">
+                <Button type="dashed" className="projectUrl" onClick = { ()=> this.copyToClipBoard(this.props.data.projectUrl)}>
                   {this.props.data.projectUrl}
                 </Button>
               </Tooltip>
@@ -148,7 +169,10 @@ export class ProjectDetail extends React.Component<any, any> {
                             <Avatar src={user.avatar} />
                       </Popover>   
                       <div className="projectUserDelete">
-                        <Icon type="close" />
+                      <Popconfirm title="确定删除该项目么?" onConfirm={()=>{this.deleteInterface(user._id,this.props.data._id)}} okText="确定删除" cancelText="取消">
+                         <Icon type="close" />
+                      </Popconfirm>
+                        
                       </div>
                     </li>
                   )
@@ -156,7 +180,7 @@ export class ProjectDetail extends React.Component<any, any> {
                   <div>  </div>
                  }
                   <li className="addProjectUser">
-                    <Icon type="plus" />
+                    <Icon type="plus" onClick={this.props.showInviteGroupMember}/>
                   </li>
             
                  </ul>
@@ -177,7 +201,7 @@ export class ProjectDetail extends React.Component<any, any> {
               </div>
             </TabPane>
             <TabPane tab="接口列表" key="2">
-              <InterfaceList data={this.props.data.interfaceList} key={this.props.data._id}/>
+              <InterfaceList data={this.props.data.interfaceList} projectId={this.props.data._id}/>
             </TabPane>
             <TabPane tab="项目动态" key="3" > 
                 <div className="projectTimeline">

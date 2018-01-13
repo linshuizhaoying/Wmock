@@ -7,6 +7,7 @@ import * as https from 'https';
 import * as fs from 'fs';
 import { Router } from './routes'
 import { config } from './config'
+const restc = require('restc');
 const app = new Koa()
 // 如果是开发者模式
 if (process.env.NODE_ENV === 'production') {
@@ -26,6 +27,7 @@ mongoose.connect(config.mongo.url, { useMongoClient: true }).catch((err: any) =>
 });
 
 app.use(bodyParser())
+app.use(restc.koa2());
 
 Router(app)
 const port = config.app.port

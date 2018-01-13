@@ -4,6 +4,7 @@ import Table from 'antd/lib/table'
 import { ColumnProps } from "antd/lib/table/";
 import Button from 'antd/lib/button';
 import Popover from 'antd/lib/popover';
+import { MockUrl } from '../../service/api'
 class MyTable extends Table<any>{}
 
 
@@ -22,6 +23,12 @@ export class InterfaceList extends React.Component<any, any> {
 
   componentWillReceiveProps(nextProps: any) {
     console.log(nextProps)
+  }
+
+  preview  = (item:any) => {
+    console.log(this.props)
+    console.log(item)
+    window.open(MockUrl + this.props.projectId + item.url + '#!method=' + item.method)
   }
   
   render () {
@@ -94,10 +101,10 @@ export class InterfaceList extends React.Component<any, any> {
       dataIndex: 'operate',
       key: 'operate',
       width: '20%',
-      render: () => (
+      render: (value:any, item:any) => (
         <span className="interface-operation">
           <Popover content={<div>预览接口</div>}>
-              <Button shape="circle" icon="eye" />
+              <Button shape="circle" icon="eye" onClick={()=>this.preview(item)}/>
           </Popover>   
           <Popover content={<div>编辑接口</div>}>
               <Button shape="circle" icon="edit" />

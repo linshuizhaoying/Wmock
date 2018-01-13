@@ -55,7 +55,7 @@ export class DashBoard extends React.Component<any, any> {
 
   componentWillReceiveProps(nextProps: any) {
     // loadingbar处理过程
-    
+
     if (nextProps.loadingState === 'start'){
       this.setState({
         progress: 75,
@@ -228,7 +228,7 @@ export class DashBoard extends React.Component<any, any> {
                     <Route path="/wmock/MyProject" component={MyProject}/>
                     <Route path="/wmock/OverView" render={() => <OverView messagesList={this.state.messagesList}></OverView>}/>
 
-                    <Route path="/wmock/ProjectDemo" render={() => <ProjectDemo projectList={this.state.projectList} messagesList={this.state.messagesList}></ProjectDemo>}/>
+                    <Route path="/wmock/ProjectDemo" render={() => <ProjectDemo projectList={this.state.projectList} messagesList={this.state.messagesList} userid={this.props.userid}></ProjectDemo>}/>
 
                     <Route path="/wmock/ProjectManage" component={ProjectManage}/>
                     <Route path="/wmock/ProjectSpec" component={ProjectSpec}/>
@@ -248,6 +248,7 @@ export class DashBoard extends React.Component<any, any> {
 
 const mapStateToProps = (state: any) => ({
   username: state.user.username,
+  userid: state.user.userid,
   loadingState: state.loading.loadingState,
   messagesList: state.messages.data,
   projectList: state.project.data

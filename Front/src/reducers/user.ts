@@ -1,6 +1,7 @@
 import { USER_LOGINSUCCESS, USER_LOGINERROR, USER_LOGOUT, USER_REGSUCCESS, USER_REGERROR } from '../constants/user';
 const initialState = {
    username: '',
+   userid:'',
    isLogin: false,
 }
 
@@ -29,6 +30,7 @@ const user = (state = initialState, action: any) => {
       return{
         ...state,
         username: action.data.userName,
+        userid: action.data.userId,
         isLogin: true
       }
 
@@ -36,6 +38,7 @@ const user = (state = initialState, action: any) => {
       return {
         ...state,
         username: '',
+        userid:'',
         isLogin: false,
       }
 
@@ -44,6 +47,7 @@ const user = (state = initialState, action: any) => {
       return {
         ...state,
         username: '',
+        userid:'',
         isLogin: false,
       }
       

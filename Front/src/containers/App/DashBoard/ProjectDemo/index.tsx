@@ -5,6 +5,7 @@ import isEqual from 'lodash/isEqual'
 import Card from 'antd/lib/card';
 import Tree  from 'antd/lib/tree';
 import Icon  from 'antd/lib/icon';
+import Input  from 'antd/lib/input';
 import Tooltip  from 'antd/lib/tooltip';
 import notification from 'antd/lib/notification'
 import Message from 'antd/lib/message';
@@ -13,7 +14,10 @@ import NewProject from '../../../../components/NewProject';
 import Modal from 'antd/lib/modal';
 import Upload from 'antd/lib/upload';
 import Button from 'antd/lib/button';
+import Popconfirm from 'antd/lib/popconfirm';
+import Validator from '../../../../util/validator'
 const TreeNode = Tree.TreeNode;
+let inviteMemberEmailInput:any;
 const uploadProps = {
   name: 'file',
   action: '//haoqiao.me/posts/',
@@ -44,6 +48,9 @@ export class ProjectDemo extends React.Component<any, any> {
      newProject: false,
      importProject: false,
      exportProject: false,
+     inviteGroupMember: false,
+     inviteMemberEmail:'',
+     inviteMemberEmailInput:''
     };
   }
   componentDidMount() {
@@ -146,7 +153,7 @@ export class ProjectDemo extends React.Component<any, any> {
       importProject: true,
     });
   }
-  showexportProject = () => {
+  showExportProject = () => {
     this.setState({
       exportProject: true,
     });
@@ -195,7 +202,61 @@ export class ProjectDemo extends React.Component<any, any> {
     });
   }
 
+  cloneProject = (projectId:string) =>{
+    console.log(projectId)
+    console.log(this.props.userid)
+  }
+  deleteProject = (projectId:string) =>{
+    console.log(projectId)
+    console.log(this.props.userid)
+  }
+  
+  // 邀请成员
+  
+  showInviteGroupMember = () =>{
+   this.setState({
+      inviteGroupMember: true,
+    });
+  }
+
+  inviteGroupMemberOk = (e:any) => {
+    console.log(this.props.userid)
+    console.log(this.state.inviteMemberEmail);
+    if(Validator.emailCheck(this.state.inviteMemberEmail)){
+      Message.success('发送邀请成功!');
+      this.setState({
+        inviteGroupMember: false,
+      });
+    }else{
+      notification['error']({
+        message: '出错啦!',
+        description: '邮箱地址格式错误!',
+      });
+    }
+
+  }
+  inviteGroupMemberCancel = (e:any) => {
+    console.log(e);
+    this.setState({
+      inviteGroupMember: false,
+    });
+  }
+
+  inviteMemberEmailEmpty = () =>{
+    inviteMemberEmailInput.focus();
+    this.setState({
+      inviteMemberEmail: ''
+    });
+  }
+   
+  onChangeinviteMemberEmail = (e: any) => {
+    this.setState({ inviteMemberEmail: e.target.value });
+  }
+
+
   render () {
+     const suffix = this.state.inviteMemberEmail ? <Icon type="close-circle" onClick={this.inviteMemberEmailEmpty} /> : null;
+
     return(
       <div>
        {
@@ -221,15 +282,18 @@ export class ProjectDemo extends React.Component<any, any> {
                           <div className="projectName" onClick = {()=>{this.selectProject(project._id)}}><Icon type="folder-open"  />{
                             project.projectName
                           }</div> 
-                          <div className="projectOperate">
-
-                            <Tooltip placement="top" title={'删除项目'}>
+                          <div className="projectOperate">                          
+                            <Popconfirm title="确定删除该项目么?" onConfirm={()=>{this.deleteProject(project._id)}} okText="确定删除" cancelText="取消">
+                              <Tooltip placement="right" title={'删除项目'}>
                                 <Icon type="delete" className="operate-icon"/>
                               </Tooltip>
-
-                              <Tooltip placement="top" title={'复制项目'}>
+                            </Popconfirm>
+                            
+                             <Popconfirm title="确定克隆该项目么?" onConfirm={()=>{this.cloneProject(project._id)}} okText="确定克隆" cancelText="取消">
+                              <Tooltip placement="right" title={'克隆项目'}>
                                 <Icon type="copy" className="operate-icon"/>
                               </Tooltip>
+                             </Popconfirm>
 
                           </div>
                         </div>
@@ -270,7 +334,7 @@ export class ProjectDemo extends React.Component<any, any> {
             <div className="projectContent">
               {
                 this.state.currentProjectData ?
-                <ProjectDetail data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showexportProject={this.showexportProject}/> :
+                <ProjectDetail data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showExportProject={this.showExportProject} showInviteGroupMember={this.showInviteGroupMember}/> :
                 <div>
                   <h2>
                     项目示例说明
@@ -337,6 +401,24 @@ export class ProjectDemo extends React.Component<any, any> {
             </ul>
          </div>
 
+        </Modal>
+
+        <Modal
+          title="邀请开发成员"
+          visible={this.state.inviteGroupMember}
+          onOk={this.inviteGroupMemberOk}
+          onCancel={this.inviteGroupMemberCancel}
+          okText="邀请"
+          cancelText="取消"
+        >
+           <Input
+            placeholder="输入邀请成员的邮箱地址 example: xxx@qq.com"
+            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+            suffix={suffix}
+            value={this.state.inviteMemberEmail}
+            onChange={this.onChangeinviteMemberEmail}
+            ref={node => inviteMemberEmailInput = node}
+          />
         </Modal>
       </div>
 
