@@ -6,6 +6,7 @@ const Logger = require("koa-logger");
 const bodyParser = require("koa-bodyparser");
 const routes_1 = require("./routes");
 const config_1 = require("./config");
+const restc = require('restc');
 const app = new Koa();
 // 如果是开发者模式
 if (process.env.NODE_ENV === 'production') {
@@ -23,6 +24,7 @@ mongoose.connect(config_1.config.mongo.url, { useMongoClient: true }).catch((err
     process.exit(1);
 });
 app.use(bodyParser());
+app.use(restc.koa2());
 routes_1.Router(app);
 const port = config_1.config.app.port;
 console.log('server start:');

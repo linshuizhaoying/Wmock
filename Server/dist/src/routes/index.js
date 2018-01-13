@@ -11,19 +11,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Irouter = require("koa-router");
 const token_1 = require("../middleware/token");
 const Service = require("../service");
-const config_1 = require("../config");
-// 前缀路由 /api
-const router = new Irouter({ prefix: config_1.config.app.baseApi });
+const router = new Irouter();
 exports.Router = (app) => {
-    const { reg, login, tokenLogin, userInfo, messagesList, projectList } = Service;
-    router.post('/reg', Service.reg)
-        .post('/login', Service.login)
-        .get('/userInfo', token_1.default, Service.userInfo)
-        .post('/token', Service.tokenLogin)
-        .get('/messagesList', Service.messagesList)
-        .post('/projectList', Service.projectList);
+    const { reg, login, tokenLogin, userInfo, messagesList, projectList, mock } = Service;
+    router.post('/api/reg', Service.reg)
+        .post('/api/login', Service.login)
+        .get('/api/userInfo', token_1.default, Service.userInfo)
+        .post('/api/token', Service.tokenLogin)
+        .get('/api/messagesList', Service.messagesList)
+        .post('/api/projectList', Service.projectList);
+    // 根据对应请求返回 mock数据
+    router.use('/mock/:project/:interface', Service.mock);
     router.all('/*', (ctx, next) => __awaiter(this, void 0, void 0, function* () {
-        ctx.body = '404';
+        ctx.body = {
+            'state': {
+                'code': 404,
+                'msg': 'error'
+            },
+            'data': undefined
+        };
     }));
     app.use(router.routes());
 };
