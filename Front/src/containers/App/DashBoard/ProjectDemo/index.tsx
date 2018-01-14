@@ -16,6 +16,8 @@ import Upload from 'antd/lib/upload';
 import Button from 'antd/lib/button';
 import Popconfirm from 'antd/lib/popconfirm';
 import Validator from '../../../../util/validator'
+import InterfaceMode from '../../../../components/InterfaceMode'
+
 const TreeNode = Tree.TreeNode;
 let inviteMemberEmailInput:any;
 const uploadProps = {
@@ -45,12 +47,14 @@ export class ProjectDemo extends React.Component<any, any> {
      allMessages:[],
      currentProjectMessages:[],
      currentProjectData: '',
+     currentInterfaceData:'',
      newProject: false,
      importProject: false,
      exportProject: false,
      inviteGroupMember: false,
      inviteMemberEmail:'',
-     inviteMemberEmailInput:''
+     inviteMemberEmailInput:'',
+     interfaceModeVisible:false
     };
   }
   componentDidMount() {
@@ -188,7 +192,7 @@ export class ProjectDemo extends React.Component<any, any> {
       exportProject: false,
     });
   }
-   exportWord = () => {
+  exportWord = () => {
     console.log(this.state.currentProjectData);
     Message.success('项目导出成功!');
     this.setState({
@@ -252,7 +256,33 @@ export class ProjectDemo extends React.Component<any, any> {
   onChangeinviteMemberEmail = (e: any) => {
     this.setState({ inviteMemberEmail: e.target.value });
   }
+  
+  showInterfaceMode = () => {
+    console.log('showInterfaceMode')
+    this.setState({
+      interfaceModeVisible:true
+    })
+  }
+  hideInterfaceMode = () => {
+    console.log('showInterfaceMode')
+    this.setState({
+      interfaceModeVisible:false
+    })
+  }
 
+  selectCurrentInterface = (data:any) =>{
+    console.log(data)
+    this.setState({
+      currentInterfaceData:data
+    })
+  }
+
+  addInterFace = () =>{
+    this.setState({
+      currentInterfaceData:'',
+      interfaceModeVisible:true
+    })
+  }
 
   render () {
      const suffix = this.state.inviteMemberEmail ? <Icon type="close-circle" onClick={this.inviteMemberEmailEmpty} /> : null;
@@ -334,7 +364,7 @@ export class ProjectDemo extends React.Component<any, any> {
             <div className="projectContent">
               {
                 this.state.currentProjectData ?
-                <ProjectDetail data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showExportProject={this.showExportProject} showInviteGroupMember={this.showInviteGroupMember}/> :
+                <ProjectDetail addInterFace={this.addInterFace} data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showExportProject={this.showExportProject} showInviteGroupMember={this.showInviteGroupMember} showInterfaceMode={this.showInterfaceMode} selectCurrentInterface={this.selectCurrentInterface}/> :
                 <div>
                   <h2>
                     项目示例说明
@@ -420,6 +450,8 @@ export class ProjectDemo extends React.Component<any, any> {
             ref={node => inviteMemberEmailInput = node}
           />
         </Modal>
+
+        <InterfaceMode projectId={this.state.currentProjectData._id} data={this.state.currentInterfaceData} visible={this.state.interfaceModeVisible} hideInterfaceMode={this.hideInterfaceMode}/>
       </div>
 
       </div>

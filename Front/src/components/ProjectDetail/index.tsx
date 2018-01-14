@@ -13,7 +13,7 @@ import Timeline from 'antd/lib/timeline';
 import Popconfirm from 'antd/lib/popconfirm';
 import TimeAgo from 'timeago-react'
 import InterfaceList from '../InterfaceList';
-
+import { MockUrl } from '../../service/api'
 const TabPane = Tabs.TabPane;
 
 class EditableCell extends React.Component<any, any> {
@@ -108,7 +108,7 @@ export class ProjectDetail extends React.Component<any, any> {
   }
 
   copyToClipBoard = (text:string) => {    
-    if(copy(text)){
+    if(copy(MockUrl + text)){
        Message.success('复制成功!');
     }else{
        Message.error('复制失败!'); 
@@ -145,7 +145,7 @@ export class ProjectDetail extends React.Component<any, any> {
                 
               <Tooltip placement="top" title={'点击复制到粘贴板'}>
                 <Button type="dashed" className="projectUrl" onClick = { ()=> this.copyToClipBoard(this.props.data.projectUrl)}>
-                  {this.props.data.projectUrl}
+                  {MockUrl + this.props.data.projectUrl}
                 </Button>
               </Tooltip>
               
@@ -199,9 +199,23 @@ export class ProjectDetail extends React.Component<any, any> {
                     onChange={this.changeProjectVersion(this.props.data.version, this.props.data._id)}
                   />
               </div>
-            </TabPane>
+            </TabPane> 
             <TabPane tab="接口列表" key="2">
-              <InterfaceList data={this.props.data.interfaceList} projectId={this.props.data._id}/>
+            <div>
+              <h3>后台转发地址</h3>
+              <EditableCell
+                    value={'http://xxx.com/get'}
+                    // onChange={this.changeProjectName(this.props.data.projectName, this.props.data._id)}
+                  />
+              <Button>接口转发</Button>
+              <Button>自动校验</Button>
+            </div>
+             <div className="addInterFace">
+                <Tooltip placement="right" title={'添加接口'}>
+                   <Icon type="plus-circle-o" onClick={this.props.addInterFace}/>
+                </Tooltip>
+              </div>
+              <InterfaceList copyToClipBoard={this.copyToClipBoard} selectCurrentInterface={this.props.selectCurrentInterface} showInterfaceMode={this.props.showInterfaceMode} data={this.props.data.interfaceList} projectId={this.props.data._id}/>
             </TabPane>
             <TabPane tab="项目动态" key="3" > 
                 <div className="projectTimeline">

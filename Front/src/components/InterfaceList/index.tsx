@@ -4,7 +4,9 @@ import Table from 'antd/lib/table'
 import { ColumnProps } from "antd/lib/table/";
 import Button from 'antd/lib/button';
 import Popover from 'antd/lib/popover';
+import Popconfirm from 'antd/lib/popconfirm';
 import { MockUrl } from '../../service/api'
+
 class MyTable extends Table<any>{}
 
 
@@ -31,6 +33,9 @@ export class InterfaceList extends React.Component<any, any> {
     window.open(MockUrl + this.props.projectId + item.url + '#!method=' + item.method)
   }
   
+  deleteInterface = (id:string) =>{
+    console.log(id)
+  }
   render () {
 
     const columns:ColumnProps<any>[] = [
@@ -81,10 +86,10 @@ export class InterfaceList extends React.Component<any, any> {
       width: '20%',
       defaultSortOrder: 'descend',
       sorter: (a: any, b: any) => a.url.length - b.url.length,
-      render : (url: any)=> (
+      render : (url: any, item: any)=> (
         <div className="interfaceUrl">
           <Popover content={<div>复制接口地址</div>}>
-              {url}
+              <span onClick={()=>this.props.copyToClipBoard( '/' + item._id + url)}>{url}</span>
           </Popover>   
         </div>
       )
@@ -107,11 +112,14 @@ export class InterfaceList extends React.Component<any, any> {
               <Button shape="circle" icon="eye" onClick={()=>this.preview(item)}/>
           </Popover>   
           <Popover content={<div>编辑接口</div>}>
-              <Button shape="circle" icon="edit" />
+              <Button shape="circle" icon="edit" onClick={()=> {this.props.selectCurrentInterface(item);this.props.showInterfaceMode();}}/>
           </Popover>   
-          <Popover content={<div>删除接口</div>}>
-              <Button shape="circle" icon="close" />
-          </Popover>   
+          <Popconfirm title="确定删除该接口么?" onConfirm={()=>{this.deleteInterface(item._id)}} okText="确定删除" cancelText="取消">
+            <Popover content={<div>删除接口</div>}>
+                <Button shape="circle" icon="close" />
+            </Popover>  
+          </Popconfirm>
+                            
         </span>
       ),
     }
@@ -132,6 +140,8 @@ export class InterfaceList extends React.Component<any, any> {
           }
          >
          </MyTable>
+
+  
     
     )
   }
