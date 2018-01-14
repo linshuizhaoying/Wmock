@@ -5,7 +5,7 @@
 
 const baseUrl = "http://localhost:9966"
 // mock数据访问地址
-export const MockUrl = baseUrl + "/mock/"
+export const MockUrl = baseUrl + "/mock"
 
 // 未授权用户操作
 export const Login = baseUrl + '/api/login';
