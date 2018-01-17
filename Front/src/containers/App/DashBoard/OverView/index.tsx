@@ -67,7 +67,7 @@ export class Overview extends React.Component<any, any> {
                 </li>
               </Link>
 
-              <Link to='/wmock/template' >
+              {/* <Link to='/wmock/template' >
                 <li>
                   <Col span={8}>
                     <Card hoverable>
@@ -75,7 +75,7 @@ export class Overview extends React.Component<any, any> {
                     </Card>
                   </Col>
                 </li>
-              </Link>
+              </Link> */}
 
               <Link to='/wmock/teamManage' >
                 <li>
@@ -107,7 +107,7 @@ export class Overview extends React.Component<any, any> {
                 </li>
               </Link>
 
-              <Link to='/wmock/projectSpec' >
+              {/* <Link to='/wmock/projectSpec' >
                 <li>
                   <Col span={8}>
                     <Card hoverable>
@@ -115,7 +115,7 @@ export class Overview extends React.Component<any, any> {
                     </Card>
                   </Col>
                 </li>
-              </Link>
+              </Link> */}
           </ul>
          </div> 
          {/* <div className="advance">

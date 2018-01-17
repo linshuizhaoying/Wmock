@@ -1,5 +1,6 @@
 
 export const AllProject = async(username: string) => {
+  console.log(username)
   if (username === 'demo') {
     const data = [
        {
@@ -8,6 +9,8 @@ export const AllProject = async(username: string) => {
         projectUrl: '/project001',
         projectDesc: '项目描述',
         version: 'v1.0',
+        transferUrl: 'http://haoqiao.me/api/project',
+        status: 'transfer',
         teamMember: [
           {
             _id: 'user001',
@@ -63,6 +66,8 @@ export const AllProject = async(username: string) => {
         projectUrl: '/project002',
         projectDesc: '项目描述',
         version: 'v2.0',
+        transferUrl: 'http://haoqiao.me/api/project',
+        status: 'mock',
         teamMember: [
           {
             _id: 'user001',
@@ -121,7 +126,7 @@ export const AllProject = async(username: string) => {
   ]
     return await data
   } else {
-    const data = [ username, '2333' ]
+    const data: any = new Array
     return await data
   }
 

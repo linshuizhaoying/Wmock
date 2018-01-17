@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AllProject = (username) => __awaiter(this, void 0, void 0, function* () {
+    console.log(username);
     if (username === 'demo') {
         const data = [
             {
@@ -17,6 +18,8 @@ exports.AllProject = (username) => __awaiter(this, void 0, void 0, function* () 
                 projectUrl: '/project001',
                 projectDesc: '项目描述',
                 version: 'v1.0',
+                transferUrl: 'http://haoqiao.me/api/project',
+                status: 'transfer',
                 teamMember: [
                     {
                         _id: 'user001',
@@ -72,6 +75,8 @@ exports.AllProject = (username) => __awaiter(this, void 0, void 0, function* () 
                 projectUrl: '/project002',
                 projectDesc: '项目描述',
                 version: 'v2.0',
+                transferUrl: 'http://haoqiao.me/api/project',
+                status: 'mock',
                 teamMember: [
                     {
                         _id: 'user001',
@@ -131,7 +136,7 @@ exports.AllProject = (username) => __awaiter(this, void 0, void 0, function* () 
         return yield data;
     }
     else {
-        const data = [username, '2333'];
+        const data = new Array;
         return yield data;
     }
 });

@@ -1,0 +1,104 @@
+#DocumentMode{
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  .editor{
+    flex: 4 1;
+    /* background: black; */
+    background: #F5F5F5;
+    padding: 10px 20px;
+    border: 1px solid #979CA8;
+    height: 100%;
+    .editorContent{
+      border: 1px solid #979CA8;
+      height: 100%;
+      overflow: auto;
+      box-sizing: border-box;
+    }
+    .wrapper{
+      height: 100%;
+    }
+  }
+  .config{
+    flex: 2 1;
+    background: #32C0FF;
+    /* flex: 1 1; */
+    padding: 10% 20px;
+    overflow: auto;
+    display: -ms-flexbox;
+    /* display: flex; */
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-shadow: 0 0 3px #000;
+    box-shadow: 0 0 3px #000;
+            h2{
+                color: #fff;
+                font-size: 13px;
+                text-align: center;
+                padding: 6px;
+                background: rgba(0,0,0,.5);
+                border-radius: 30px;
+                margin-bottom: 20px;
+            }
+            .form{
+                padding: 20px 20px 1px;
+                background: #fff;
+                -webkit-box-shadow: 0 2px 3px #777;
+                box-shadow: 0 2px 3px #777;
+                border-radius: 4px;
+                margin-bottom: 20px;
+                .item{
+                    margin-bottom:10px;
+                    .update,.add{
+                        width: 100%;
+                    }
+                    
+                }
+              
+            }
+            .switcher{
+                border-radius: 4px;
+                margin-bottom: 20px;
+                color: #fff;
+                -webkit-box-shadow: 0 2px 3px #111;
+                box-shadow: 0 2px 3px #111;
+                font-size: 13px;
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                ul{
+                    list-style: none;
+                    display: table;
+                    table-layout: fixed;
+                    width: 100%;
+                    padding: 0px;
+                }
+                li{
+                    background: #252d47;
+                    padding: 15px 0;
+                    text-align: center;
+                    display: table-cell;
+                    cursor: pointer;
+                    -webkit-transition: all .3s;
+                    transition: all .3s;
+                    padding: 10px 0;
+                }
+                li:first-child {
+                    border-top-left-radius: 4px;
+                    border-bottom-left-radius: 4px;
+                }
+                li:last-child {
+                    border-top-right-radius: 4px;
+                    border-bottom-right-radius: 4px;
+                }
+              }
+  }
+}
+.hide{
+    display:none;
+}
+.show{
+    display:flex;
+}

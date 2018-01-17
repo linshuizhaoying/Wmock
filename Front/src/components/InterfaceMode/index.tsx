@@ -19,7 +19,7 @@ export class InterfaceMode extends React.Component<any, any> {
       status:'add',
       visible:false,
       editorContent: '',
-      method:'get',
+      method:'post',
       url:'',
       desc:'',
       id:''
@@ -159,7 +159,7 @@ export class InterfaceMode extends React.Component<any, any> {
             <div className="form">
               <div className="item">
                 <h3>Method</h3>
-                <Select defaultValue={this.state.method} style={{ width: '100%' }} onChange={this.selectedMethod}>
+                <Select value={this.state.method} style={{ width: '100%' }} onChange={this.selectedMethod}>
                   <Option value="get">Get</Option>
                   <Option value="post">Post</Option>
                   <Option value="put">Put</Option>

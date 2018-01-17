@@ -79,7 +79,7 @@ export class DashBoard extends React.Component<any, any> {
       })
     }
     // 获取最新项目列表
-    if(nextProps.projectList.length > 0 && nextProps.projectList != this.state.projectList){
+    if(nextProps.projectList  !== undefined && nextProps.projectList != this.state.projectList){
       this.setState({
         projectList:nextProps.projectList
       },()=>{
@@ -111,7 +111,7 @@ export class DashBoard extends React.Component<any, any> {
   }
 
   getProjectDemo = () =>{
-    this.getProjectList({username:'demo'})
+    this.getProjectList({'username':this.props.username})
   }
 
 
@@ -144,11 +144,11 @@ export class DashBoard extends React.Component<any, any> {
                         <Icon type="message" />消息中心
                       </Link>
                     </Menu.Item>
-                    <Menu.Item key="2">
+                    {/* <Menu.Item key="2">
                       <Link to='/wmock/template' >
                         <Icon type="copy" />前后端模板
                       </Link>
-                    </Menu.Item>
+                    </Menu.Item> */}
                     <Menu.Item key="3">
                       <Link to='/wmock/teamManage' >
                         <Icon type="team" />团队管理
@@ -173,7 +173,7 @@ export class DashBoard extends React.Component<any, any> {
                       </Link>
                     </Menu.Item>
                   </SubMenu>
-
+{/* 
                   <Menu.Item key="6">
                     <Link to='/wmock/interfaceTest'>
                       <Icon type="rocket" />
@@ -181,26 +181,26 @@ export class DashBoard extends React.Component<any, any> {
                         接口测试
                         </span>
                     </Link>
-                  </Menu.Item>
+                  </Menu.Item> */}
 
       
                   <Menu.Item key="7">
                       <Link to='/wmock/projectSpec'>
-                        <Icon type="eye-o" />
+                        <Icon type="folder-open" />
                         <span>
                           文档与规范
                         </span>
                       </Link>
                     </Menu.Item>
 
-                  <Menu.Item key="8">
+                  {/* <Menu.Item key="8">
                       <Link to='/wmock/projectStruct'>
                         <Icon type="folder-open" />
                         <span>
                           工程结构
                         </span>
                       </Link>
-                    </Menu.Item>
+                  </Menu.Item> */}
                 </Menu>
               </Sider>
             <Layout>
