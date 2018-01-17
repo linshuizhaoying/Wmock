@@ -54,7 +54,8 @@ export class ProjectDemo extends React.Component<any, any> {
      inviteGroupMember: false,
      inviteMemberEmail:'',
      inviteMemberEmailInput:'',
-     interfaceModeVisible:false
+     interfaceModeVisible:false,
+     autoCheckVisible:false,
     };
   }
   componentDidMount() {
@@ -64,7 +65,8 @@ export class ProjectDemo extends React.Component<any, any> {
   componentWillReceiveProps(nextProps: any) {
      // 每次只更新变动的项目内容
      console.log(nextProps)
-     if(nextProps.projectList.length > 0 &&  differenceWith( nextProps.projectList,this.state.allData, isEqual).length !== 0){
+     console.log(nextProps.projectList.length)
+     if(nextProps.projectList.length >0 &&  differenceWith( nextProps.projectList,this.state.allData, isEqual).length !== 0){
       this.setState({
         allData: nextProps.projectList
       },()=>{
@@ -284,6 +286,19 @@ export class ProjectDemo extends React.Component<any, any> {
     })
   }
 
+  showAutoCheckVisible = (projectId:string)=>{
+    console.log(projectId)
+    this.setState({
+      autoCheckVisible:true
+    })
+  }
+
+  hideAutoCheckVisible = ()=>{
+    this.setState({
+      autoCheckVisible:false
+    })
+  }
+
   render () {
      const suffix = this.state.inviteMemberEmail ? <Icon type="close-circle" onClick={this.inviteMemberEmailEmpty} /> : null;
 
@@ -334,7 +349,7 @@ export class ProjectDemo extends React.Component<any, any> {
                                     return  (<TreeNode title={ 
                                       <div className="interfaceType">
                                           
-                                          <div className="interfaceName"><Icon type="file" /> {item.interfaceName} </div> 
+                                          <div className="interfaceName" onClick={()=>{this.selectCurrentInterface(item);this.showInterfaceMode();}}><Icon type="file" /> {item.interfaceName} </div> 
                                           <div className="interfaceOperate">
                                               <Tooltip placement="top" title={'删除接口'}>
                                                 <Icon type="delete" className="operate-icon"/>
@@ -364,7 +379,7 @@ export class ProjectDemo extends React.Component<any, any> {
             <div className="projectContent">
               {
                 this.state.currentProjectData ?
-                <ProjectDetail addInterFace={this.addInterFace} data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showExportProject={this.showExportProject} showInviteGroupMember={this.showInviteGroupMember} showInterfaceMode={this.showInterfaceMode} selectCurrentInterface={this.selectCurrentInterface}/> :
+                <ProjectDetail showAutoCheckVisible={this.showAutoCheckVisible} addInterFace={this.addInterFace} data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showExportProject={this.showExportProject} showInviteGroupMember={this.showInviteGroupMember} showInterfaceMode={this.showInterfaceMode} selectCurrentInterface={this.selectCurrentInterface}/> :
                 <div>
                   <h2>
                     项目示例说明
@@ -381,6 +396,7 @@ export class ProjectDemo extends React.Component<any, any> {
          :
          <div className="nodata">
            <img src={require('./nodata.jpg')} alt="no Data" />
+            <Button onClick={()=>this.toggleNewProject()}> 去添加新项目</Button>
          </div>
 
        
@@ -449,6 +465,16 @@ export class ProjectDemo extends React.Component<any, any> {
             onChange={this.onChangeinviteMemberEmail}
             ref={node => inviteMemberEmailInput = node}
           />
+        </Modal>
+
+        <Modal
+          title="自动校验"
+          visible={this.state.autoCheckVisible}
+
+          onCancel={this.hideAutoCheckVisible}
+          footer={null}
+        >
+          
         </Modal>
 
         <InterfaceMode projectId={this.state.currentProjectData._id} data={this.state.currentInterfaceData} visible={this.state.interfaceModeVisible} hideInterfaceMode={this.hideInterfaceMode}/>

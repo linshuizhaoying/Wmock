@@ -13,6 +13,8 @@ import Timeline from 'antd/lib/timeline';
 import Popconfirm from 'antd/lib/popconfirm';
 import TimeAgo from 'timeago-react'
 import InterfaceList from '../InterfaceList';
+import Divider from 'antd/lib/divider'
+import Alert from 'antd/lib/alert'
 import { MockUrl } from '../../service/api'
 const TabPane = Tabs.TabPane;
 
@@ -107,6 +109,12 @@ export class ProjectDetail extends React.Component<any, any> {
     };
   }
 
+  changeTransferUrl= (origin: any, id: any) => {
+    return (value: any) => {
+      console.log(id,value)
+    };
+  }
+
   copyToClipBoard = (text:string) => {    
     if(copy(MockUrl + text)){
        Message.success('复制成功!');
@@ -120,7 +128,13 @@ export class ProjectDetail extends React.Component<any, any> {
     console.log(projectId)
   }
 
+  toggleTransfer = () =>{
+    console.log('start transfer')
+  }
 
+  toggleMock = () =>{
+    console.log('start mock')
+  }
   
   render () {
     return(
@@ -201,21 +215,36 @@ export class ProjectDetail extends React.Component<any, any> {
               </div>
             </TabPane> 
             <TabPane tab="接口列表" key="2">
-            <div>
-              <h3>后台转发地址</h3>
-              <EditableCell
-                    value={'http://xxx.com/get'}
-                    // onChange={this.changeProjectName(this.props.data.projectName, this.props.data._id)}
-                  />
-              <Button>接口转发</Button>
-              <Button>自动校验</Button>
-            </div>
-             <div className="addInterFace">
-                <Tooltip placement="right" title={'添加接口'}>
-                   <Icon type="plus-circle-o" onClick={this.props.addInterFace}/>
-                </Tooltip>
+              
+              <div>
+                {
+                this.props.data.status === 'mock' ?
+                <Divider>  <Alert message="当前状态: 数据代理Mock中..." type="info"/> </Divider>
+                : <Divider> <Alert message="当前状态: 后台接口转发中..." type="info" /> </Divider>
+                }
+                <div className="backOperate">
+                      <EditableCell
+                        value={this.props.data.transferUrl}
+                        onChange={this.changeTransferUrl(this.props.data.transferUrl, this.props.data._id)}
+                      />
+                        {
+                        this.props.data.status === 'mock' ?
+                        <Button  onClick={()=>this.toggleTransfer()}>接口转发<Icon type="retweet" /></Button>
+                        : <Button  onClick={()=>this.toggleMock()}>Mock代理<Icon type="retweet" /></Button>
+                        }
+                      
+                      <Button  onClick={()=>this.props.showAutoCheckVisible(this.props.data._id)}>自动校验<Icon type="check-circle-o" /></Button>
+                </div>
+      
+                <Divider />
+                <div className="addInterFace">
+                  <Tooltip placement="right" title={'添加接口'}>
+                    <Icon type="plus-circle-o" onClick={this.props.addInterFace}/>
+                  </Tooltip>
+                </div>
+                <InterfaceList copyToClipBoard={this.copyToClipBoard} selectCurrentInterface={this.props.selectCurrentInterface} showInterfaceMode={this.props.showInterfaceMode} data={this.props.data.interfaceList} projectId={this.props.data._id}/>
               </div>
-              <InterfaceList copyToClipBoard={this.copyToClipBoard} selectCurrentInterface={this.props.selectCurrentInterface} showInterfaceMode={this.props.showInterfaceMode} data={this.props.data.interfaceList} projectId={this.props.data._id}/>
+           
             </TabPane>
             <TabPane tab="项目动态" key="3" > 
                 <div className="projectTimeline">
