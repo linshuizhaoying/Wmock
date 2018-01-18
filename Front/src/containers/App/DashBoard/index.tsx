@@ -20,7 +20,7 @@ import Template from './Template/index';
 import TeamManage from './TeamManage/index';
 import LoadingBar from '../../../components/LoadingBar';
 import { userLogout } from '../../../actions/user';
-import { fetchMessages, fetchProject } from '../../../actions/index';
+import { fetchMessages, fetchProject, fetchDocument } from '../../../actions/index';
 const { Header, Sider, Content, Footer } = Layout;
 const SubMenu = Menu.SubMenu;
 export class DashBoard extends React.Component<any, any> {
@@ -32,7 +32,8 @@ export class DashBoard extends React.Component<any, any> {
       progress: 0,
       error: false,
       messagesList: [],
-      projectList: []
+      projectList: [],
+      documentList: []
     };
   }
   toggle = () => {
@@ -87,6 +88,15 @@ export class DashBoard extends React.Component<any, any> {
       })
     }
 
+      // 获取最新文档列表
+      if(nextProps.documentList.length > 0 && nextProps.documentList != this.state.documentList){
+        this.setState({
+          documentList:nextProps.documentList
+        },()=>{
+          // console.log(this.state.projectList)
+        })
+      }
+
   }
 
   overView = () =>{
@@ -112,6 +122,10 @@ export class DashBoard extends React.Component<any, any> {
 
   getProjectDemo = () =>{
     this.getProjectList({'username':this.props.username})
+  }
+  getDocumentList = () =>{
+    const { dispatch } = this.props;
+    dispatch(fetchDocument()) 
   }
 
 
@@ -185,7 +199,7 @@ export class DashBoard extends React.Component<any, any> {
 
       
                   <Menu.Item key="7">
-                      <Link to='/wmock/projectSpec'>
+                      <Link to='/wmock/projectSpec' onClick={this.getDocumentList}>
                         <Icon type="folder-open" />
                         <span>
                           文档与规范
@@ -231,7 +245,7 @@ export class DashBoard extends React.Component<any, any> {
                     <Route path="/wmock/ProjectDemo" render={() => <ProjectDemo projectList={this.state.projectList} messagesList={this.state.messagesList} userid={this.props.userid}></ProjectDemo>}/>
 
                     <Route path="/wmock/ProjectManage" component={ProjectManage}/>
-                    <Route path="/wmock/ProjectSpec" component={ProjectSpec}/>
+                    <Route path="/wmock/ProjectSpec" render={() => <ProjectSpec documentList={this.state.documentList} userid={this.props.userid}></ProjectSpec>}/>
                     <Route path="/wmock/ProjectStruct" component={ProjectStruct}/>
                     <Route path="/wmock/Template" component={Template}/>
                     <Route path="/wmock/TeamManage" component={TeamManage}/>
@@ -251,7 +265,8 @@ const mapStateToProps = (state: any) => ({
   userid: state.user.userid,
   loadingState: state.loading.loadingState,
   messagesList: state.messages.data,
-  projectList: state.project.data
+  projectList: state.project.data,
+  documentList: state.document.data
 })
 
 
