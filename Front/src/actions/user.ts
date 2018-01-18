@@ -86,6 +86,7 @@ export function userTokenError (msg: string) {
     description: msg,
     duration: 2
   })
+  window.location.reload();
 }
 
 export function userLogout () {

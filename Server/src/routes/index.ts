@@ -14,7 +14,8 @@ export const Router = (app: any) => {
           userInfo,
           messagesList,
           projectList,
-          mock
+          mock,
+          documentList
         } = Service
 
   router.post('/api/reg', Service.reg)
@@ -25,6 +26,8 @@ export const Router = (app: any) => {
         .get('/api/messagesList', Service.messagesList)
         // 获取项目列表
         .post('/api/projectList', Service.projectList)
+        // 获取文档列表
+        .post('/api/documentList', Service.documentList)
   // 根据对应请求返回 mock数据
   router.use('/mock/:project/:interface', Service.mock)
   router.all('/*',  async (ctx, next) => {

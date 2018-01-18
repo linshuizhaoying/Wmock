@@ -13,13 +13,14 @@ const token_1 = require("../middleware/token");
 const Service = require("../service");
 const router = new Irouter();
 exports.Router = (app) => {
-    const { reg, login, tokenLogin, userInfo, messagesList, projectList, mock } = Service;
+    const { reg, login, tokenLogin, userInfo, messagesList, projectList, mock, documentList } = Service;
     router.post('/api/reg', Service.reg)
         .post('/api/login', Service.login)
         .get('/api/userInfo', token_1.default, Service.userInfo)
         .post('/api/token', Service.tokenLogin)
         .get('/api/messagesList', Service.messagesList)
-        .post('/api/projectList', Service.projectList);
+        .post('/api/projectList', Service.projectList)
+        .post('/api/documentList', Service.documentList);
     // 根据对应请求返回 mock数据
     router.use('/mock/:project/:interface', Service.mock);
     router.all('/*', (ctx, next) => __awaiter(this, void 0, void 0, function* () {

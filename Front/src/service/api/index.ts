@@ -40,3 +40,13 @@ export const addInterFace =  baseUrl + '/api/addInterFace';
 export const editInterFace =  baseUrl + '/api/editInterFace';
 
 export const removeInterFace =  baseUrl + '/api/removeInterFace';
+
+// 文档列表
+
+export const documentList =  baseUrl + '/api/documentList';
+
+export const addDocument =  baseUrl + '/api/addDocument';
+
+export const editDocument =  baseUrl + '/api/editDocument';
+
+export const removeDocument =  baseUrl + '/api/removeDocument';
