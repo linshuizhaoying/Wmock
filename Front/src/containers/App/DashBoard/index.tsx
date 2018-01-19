@@ -126,6 +126,7 @@ export class DashBoard extends React.Component<any, any> {
   getDocumentList = () =>{
     const { dispatch } = this.props;
     dispatch(fetchDocument()) 
+    this.getProjectList({'username':this.props.username})
   }
 
 
@@ -245,7 +246,7 @@ export class DashBoard extends React.Component<any, any> {
                     <Route path="/wmock/ProjectDemo" render={() => <ProjectDemo projectList={this.state.projectList} messagesList={this.state.messagesList} userid={this.props.userid}></ProjectDemo>}/>
 
                     <Route path="/wmock/ProjectManage" component={ProjectManage}/>
-                    <Route path="/wmock/ProjectSpec" render={() => <ProjectSpec documentList={this.state.documentList} userid={this.props.userid}></ProjectSpec>}/>
+                    <Route path="/wmock/ProjectSpec" render={() => <ProjectSpec refresh={this.getDocumentList} projectList={this.state.projectList} documentList={this.state.documentList} userid={this.props.userid}></ProjectSpec>}/>
                     <Route path="/wmock/ProjectStruct" component={ProjectStruct}/>
                     <Route path="/wmock/Template" component={Template}/>
                     <Route path="/wmock/TeamManage" component={TeamManage}/>
