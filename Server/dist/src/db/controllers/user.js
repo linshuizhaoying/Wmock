@@ -16,9 +16,13 @@ exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
     let hadUser = '';
     const result = {
         status: '',
-        userId: '',
-        userName: '',
-        msg: ''
+        userid: '',
+        username: '',
+        msg: '',
+        avatar: '',
+        email: '',
+        role: '',
+        regDate: undefined
     };
     // 先对用户名进行重复校验
     hadUser = yield User.findOne({ 'username': username }, (err, data) => {
@@ -36,8 +40,12 @@ exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
             console.log(data);
             result.msg = '用户注册成功!';
             result.status = 'success';
-            result.userId = data._id;
-            result.userName = data.username;
+            result.userid = data._id;
+            result.username = data.username;
+            result.avatar = data.avatar;
+            result.email = data.email;
+            result.regDate = data.regDate;
+            result.role = data.role;
             console.log(result);
         });
         return result;

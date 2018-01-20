@@ -1,4 +1,4 @@
-import { USER_LOGIN, USER_LOGOUT, USER_REG, USER_TOKEN } from '../constants/user'
+import { USER_LOGIN, USER_LOGOUT, USER_REG, USER_TOKEN, USER_INFO } from '../constants/user'
 import  notification  from 'antd/lib/notification';
 interface USER {
   username: String,
@@ -25,6 +25,11 @@ const token = (data: any) => ({
   data: data
 })
 
+const info = (data: any) => ({
+  type: USER_INFO,
+  data: data
+})
+
 const logout = () => ({
   type: USER_LOGOUT
 })
@@ -41,6 +46,13 @@ export function userToken (t:any) {
     dispatch(token(t))
   }
 }
+
+export function userInfo (i:any) {
+  return (dispatch: any) => {
+    dispatch(info(i))
+  }
+}
+
 
 export function userReg (user:RegUser) {
   return (dispatch: any) => {

@@ -1,7 +1,11 @@
-import { USER_LOGINSUCCESS, USER_LOGINERROR, USER_LOGOUT, USER_REGSUCCESS, USER_REGERROR } from '../constants/user';
+import { USER_LOGINSUCCESS, USER_LOGINERROR, USER_LOGOUT, USER_REGSUCCESS, USER_REGERROR, USER_INFO } from '../constants/user';
 const initialState = {
    username: '',
    userid:'',
+   email:'',
+   avatar:'',
+   regDate:'',
+   role:'',
    isLogin: false,
 }
 
@@ -13,7 +17,12 @@ const user = (state = initialState, action: any) => {
       localStorage.setItem('token',action.data.token)
       return{
         ...state,
-        username: action.data.userName,
+        username: action.data.username,
+        userid: action.data.userid,
+        email: action.data.email,
+        avatar: action.data.avatar,
+        regDate: action.data.regDate,
+        role: action.data.role,
         isLogin: true
       }
     
@@ -21,6 +30,11 @@ const user = (state = initialState, action: any) => {
       return{
         ...state,
         username: '',
+        userid:'',
+        email:'',
+        avatar:'',
+        regDate:'',
+        role:'',
         isLogin: false
       }
 
@@ -29,16 +43,34 @@ const user = (state = initialState, action: any) => {
       localStorage.setItem('token',action.data.token)
       return{
         ...state,
-        username: action.data.userName,
-        userid: action.data.userId,
+        username: action.data.username,
+        userid: action.data.userid,
+        email: action.data.email,
+        avatar: action.data.avatar,
+        regDate: action.data.regDate,
+        role: action.data.role,
         isLogin: true
       }
-
+    
+    case USER_INFO:
+      return{
+        ...state,
+        username: action.data.username,
+        userid: action.data.userid,
+        email: action.data.email,
+        avatar: action.data.avatar,
+        regDate: action.data.regDate,
+        role: action.data.role,
+      }
     case USER_LOGINERROR:
       return {
         ...state,
         username: '',
         userid:'',
+        email:'',
+        avatar:'',
+        regDate:'',
+        role:'',
         isLogin: false,
       }
 
@@ -48,6 +80,10 @@ const user = (state = initialState, action: any) => {
         ...state,
         username: '',
         userid:'',
+        email:'',
+        avatar:'',
+        regDate:'',
+        role: '',
         isLogin: false,
       }
       

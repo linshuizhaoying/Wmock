@@ -70,13 +70,13 @@ exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
             });
         }
         else {
-            const { userName, userId, msg } = result;
+            const { username, userid, msg, avatar, regDate, email } = result;
             const token = jwt.sign({
-                userId: userId,
-                userName: userName,
+                userid: userid,
+                username: username,
                 exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
             }, config_1.config.app.keys);
-            return ctx.body = success({ userName, userId, token, msg });
+            return ctx.body = success({ username, userid, token, msg, avatar, regDate, email, role });
         }
     }
     else {
@@ -112,9 +112,13 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
         // 查询数据库
         const result = {
             status: '',
-            userId: '',
-            userName: '',
-            msg: ''
+            userid: '',
+            username: '',
+            avatar: '',
+            email: '',
+            msg: '',
+            role: '',
+            regDate: undefined
         };
         const hadUser = yield controllers_1.LoginUser({ username, password });
         console.log('登录用户状况:\n', result);
@@ -127,8 +131,8 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
             console.log(hadUser);
             result.msg = '用户登录成功!';
             result.status = 'success';
-            result.userId = hadUser._id;
-            result.userName = hadUser.username;
+            result.userid = hadUser._id;
+            result.username = hadUser.username;
         }
         if (result.status === 'error') {
             // 用户不存在 或者 用户密码错误
@@ -138,13 +142,13 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
             });
         }
         else {
-            const { userName, userId, msg } = result;
+            const { username, userid, msg, avatar, regDate, email, role } = result;
             const token = jwt.sign({
-                userId: userId,
-                userName: userName,
+                userid: userid,
+                username: username,
                 exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
             }, config_1.config.app.keys);
-            return ctx.body = success({ userName, userId, token, msg });
+            return ctx.body = success({ username, userid, token, msg, avatar, regDate, email, role });
         }
     }
     else {
@@ -156,13 +160,17 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
     }
 });
 exports.userInfo = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    return ctx.body = { userInfo: '{username:test110,password:nopass,email:test}' };
+    const { userid, token } = ctx.request.body;
+    let hadUser = undefined;
+    hadUser = yield controllers_1.FindUserById(userid);
+    const { username, avatar, regDate, email, role } = hadUser;
+    return ctx.body = success({ username, userid, avatar, token, regDate, email, role, msg: '获取成功!' });
 });
 exports.tokenLogin = (ctx) => __awaiter(this, void 0, void 0, function* () {
     console.log('token校验Ing:');
     console.log(ctx.request.body);
     const { token } = ctx.request.body;
-    let hadUser = '';
+    let hadUser = undefined;
     if (!token) {
         return ctx.body = error({
             code: 2,
@@ -174,11 +182,12 @@ exports.tokenLogin = (ctx) => __awaiter(this, void 0, void 0, function* () {
         yield jwt.verify(token, config_1.config.app.keys, function (err, result) {
             decode = result;
         });
-        const userId = JSON.parse(JSON.stringify(decode)).userId;
-        const userName = JSON.parse(JSON.stringify(decode)).userName;
-        hadUser = yield controllers_1.FindUserById(userId);
+        const userid = JSON.parse(JSON.stringify(decode)).userid;
+        const username = JSON.parse(JSON.stringify(decode)).username;
+        hadUser = yield controllers_1.FindUserById(userid);
+        const { avatar, regDate, email, role } = hadUser;
         if (hadUser !== null) {
-            return ctx.body = success({ userName, userId, token, msg: '登录成功!' });
+            return ctx.body = success({ username, userid, token, avatar, regDate, email, role, msg: '登录成功!' });
         }
         else {
             return ctx.body = error({
