@@ -3,11 +3,6 @@ import * as React from 'react';
 import Table from 'antd/lib/table';
 import './index.less';
 const columns = [{
-  title: '发布时间',
-  dataIndex: 'time',
-  key:'time',
-  render: (time: any) => `${time}`,
-}, {
   title: '操作者',
   key:'operator',
   dataIndex: 'operator',
@@ -23,6 +18,11 @@ const columns = [{
   title: '描述',
   dataIndex: 'desc',
   key:'desc',
+},{
+  title: '发布时间',
+  dataIndex: 'time',
+  key:'time',
+  render: (time: any) => `${time}`,
 }];
 
 export class Message extends React.Component<any, any> {

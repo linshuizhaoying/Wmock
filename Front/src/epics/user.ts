@@ -1,9 +1,9 @@
 
 import { Observable } from 'rxjs/Observable'
 import { combineEpics } from 'redux-observable';
-import { Login, Reg, Token } from '../service/api'
+import { Login, Reg, Token, UserInfo } from '../service/api'
 import * as fetch from '../service/fetch';
-import { USER_LOGIN, USER_LOGINSUCCESS, USER_LOGINERROR, USER_REG, USER_REGSUCCESS, USER_REGERROR, USER_TOKEN, USER_LOGOUT } from '../constants/user';
+import { USER_LOGIN, USER_INFO ,USER_LOGINSUCCESS, USER_LOGINERROR, USER_REG, USER_REGSUCCESS, USER_REGERROR, USER_TOKEN, USER_LOGOUT } from '../constants/user';
 import { LOADING_START, LOADING_ERROR, LOADING_SUCCESS } from '../constants/loading';
 import { userRegSuccess, userRegError, userLoginSuccess, userLoginError, userTokenError } from '../actions/user'
 
@@ -15,6 +15,8 @@ export const RegSuccess = (data:any) => ({type: USER_REGSUCCESS, data: data});
 export const RegError = () => ({type: USER_REGERROR});
 
 export const LoginSuccess = (data:any) => ({type: USER_LOGINSUCCESS, data: data});
+export const SetUserInfo = (data:any) => ({type: USER_INFO, data: data});
+
 export const LoginError = () => ({type: USER_LOGINERROR});
 export const TokenOut = () => ({type: USER_LOGOUT});
 
@@ -89,5 +91,28 @@ export const userToken  = (action$:any) =>
 
   });
 
-export default combineEpics(userLogin, userReg, userToken);
+  export const userInfo  = (action$:any) =>
+  action$.ofType(USER_INFO)
+  .mergeMap((action: any) => {
+    return fetch.post(UserInfo, action.data)
+    // 登录验证情况
+    .map((response: any) => {
+      console.log(response);
+      if(response.state.code === 1){
+        return SetUserInfo(response.data.data);
+      }else{
+        console.log('token error')
+        userTokenError(response.state.msg);
+        return TokenOut();
+      }
+    })
+    // 只有服务器崩溃才捕捉错误
+    .catch((e: any): any => {
+      // console.log(e)
+      return Observable.of(({ type: USER_LOGINERROR })).startWith(loadingError())
+    }).startWith(loadingSuccess()).delay(300).startWith(loadingStart())
+
+  });
+
+export default combineEpics(userLogin, userReg, userToken, userInfo);
     

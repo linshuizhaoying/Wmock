@@ -19,8 +19,12 @@ import ProjectStruct from './ProjectStruct/index';
 import Template from './Template/index';
 import TeamManage from './TeamManage/index';
 import LoadingBar from '../../../components/LoadingBar';
-import { userLogout } from '../../../actions/user';
+import { userLogout, userInfo } from '../../../actions/user';
 import { fetchMessages, fetchProject, fetchDocument } from '../../../actions/index';
+import UserInfo from '../../../components/UserInfo'
+import Modal from 'antd/lib/modal';
+// import Upload from 'antd/lib/upload';
+
 const { Header, Sider, Content, Footer } = Layout;
 const SubMenu = Menu.SubMenu;
 export class DashBoard extends React.Component<any, any> {
@@ -33,7 +37,8 @@ export class DashBoard extends React.Component<any, any> {
       error: false,
       messagesList: [],
       projectList: [],
-      documentList: []
+      documentList: [],
+      userInfoVisible:false
     };
   }
   toggle = () => {
@@ -109,6 +114,9 @@ export class DashBoard extends React.Component<any, any> {
       dispatch(userLogout()) 
       history.push('/login')
     }
+    if(e.key === 'userinfo'){
+      this.showUserInfoVisible()
+    }
   }
   getMessagesList = () => {
     const { dispatch } = this.props;
@@ -129,6 +137,21 @@ export class DashBoard extends React.Component<any, any> {
     this.getProjectList({'username':this.props.username})
   }
 
+  showUserInfoVisible = () =>{
+    this.setState({
+      userInfoVisible:true
+    })
+  }
+
+  hideUserInfoVisible = () =>{
+    this.setState({
+      userInfoVisible:false
+    })
+  }
+  getUserInfo = () =>{
+    const { dispatch } = this.props;
+    dispatch(userInfo({userid:this.props.userid,token:localStorage.getItem('token')})) 
+  }
 
   render () {
     return(
@@ -256,6 +279,17 @@ export class DashBoard extends React.Component<any, any> {
             </Layout>
           </Layout>
         </div>
+        <Modal
+          title="个人信息设置"
+          visible={this.state.userInfoVisible}
+          width={'60%'}
+          onCancel={this.hideUserInfoVisible}
+          onOk={this.getUserInfo}
+          cancelText="取消"
+          okText="刷新载入变更"
+        >
+          <UserInfo getUserInfo={this.getUserInfo} userData={this.props.userData}/>
+        </Modal>
       </div>
     )
   }
@@ -264,6 +298,7 @@ export class DashBoard extends React.Component<any, any> {
 const mapStateToProps = (state: any) => ({
   username: state.user.username,
   userid: state.user.userid,
+  userData: state.user,
   loadingState: state.loading.loadingState,
   messagesList: state.messages.data,
   projectList: state.project.data,

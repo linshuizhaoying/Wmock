@@ -9,18 +9,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Irouter = require("koa-router");
-const token_1 = require("../middleware/token");
 const Service = require("../service");
+const path = require('path');
 const router = new Irouter();
 exports.Router = (app) => {
-    const { reg, login, tokenLogin, userInfo, messagesList, projectList, mock, documentList } = Service;
+    const { reg, login, tokenLogin, userInfo, messagesList, projectList, mock, documentList, uploadFile } = Service;
     router.post('/api/reg', Service.reg)
         .post('/api/login', Service.login)
-        .get('/api/userInfo', token_1.default, Service.userInfo)
+        .get('/api/userInfo', Service.userInfo)
         .post('/api/token', Service.tokenLogin)
         .get('/api/messagesList', Service.messagesList)
         .post('/api/projectList', Service.projectList)
-        .post('/api/documentList', Service.documentList);
+        .post('/api/documentList', Service.documentList)
+        .post('/api/upload', (ctx, next) => __awaiter(this, void 0, void 0, function* () {
+        let result = {};
+        const serverFilePath = path.join(__dirname, '../images');
+        // 上传文件事件
+        result = yield uploadFile(ctx, {
+            fileType: 'up',
+            path: serverFilePath
+        });
+        console.log(result);
+        ctx.body = result;
+    }));
     // 根据对应请求返回 mock数据
     router.use('/mock/:project/:interface', Service.mock);
     router.all('/*', (ctx, next) => __awaiter(this, void 0, void 0, function* () {

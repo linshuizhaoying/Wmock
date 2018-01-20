@@ -7,7 +7,11 @@ import * as https from 'https';
 import * as fs from 'fs';
 import { Router } from './routes'
 import { config } from './config'
+const views = require('koa-views')
 const restc = require('restc');
+const path = require('path');
+const koaStatic = require('koa-static')
+
 const app = new Koa()
 // 如果是开发者模式
 if (process.env.NODE_ENV === 'production') {
@@ -27,6 +31,12 @@ mongoose.connect(config.mongo.url, { useMongoClient: true }).catch((err: any) =>
 });
 
 app.use(bodyParser())
+const staticPath = './'
+app.use(koaStatic(
+  path.join( __dirname,  staticPath)
+))
+
+
 app.use(restc.koa2());
 
 Router(app)

@@ -4,6 +4,7 @@
 // const baseUrl = "http://wmock.haoqiao.me:9966"
 
 const baseUrl = "http://localhost:9966"
+export const imgBaseUrl = baseUrl + '/images/up/'
 // mock数据访问地址
 export const MockUrl = baseUrl + "/mock"
 
@@ -15,6 +16,7 @@ export const Logout = baseUrl + '/api/logout';
 // 授权用户
 
 export const Token = baseUrl + '/api/token';
+export const UserInfo = baseUrl + '/api/userInfo';
 // 消息列表
 
 export const messagesList =  baseUrl + '/api/messagesList';
@@ -50,3 +52,7 @@ export const addDocument =  baseUrl + '/api/addDocument';
 export const editDocument =  baseUrl + '/api/editDocument';
 
 export const removeDocument =  baseUrl + '/api/removeDocument';
+
+// 文件上传
+
+export const upload = baseUrl + '/api/upload'

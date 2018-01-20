@@ -3,9 +3,13 @@ import Validator from '../utils/validator'
 import { AddRegUser, LoginUser, FindUserById } from '../db/controllers'
 import { config } from '../config'
 interface UserData  {
-  userId: string,
-  userName: string,
+  userid: string,
+  username: string,
+  avatar: string,
+  email: string,
+  regDate: Date,
   token: any,
+  role: string,
   msg: string
 }
 
@@ -17,9 +21,13 @@ interface ErrorData  {
 
 interface Result {
   status: string,
-  userId: string,
-  userName: string,
-  msg: string
+  userid: string,
+  username: string,
+  msg: string,
+  avatar: string,
+  email: string,
+  role: string,
+  regDate: Date
 }
 
 
@@ -84,13 +92,13 @@ export const reg = async(ctx: any) => {
         msg: result.msg
       })
     } else {
-      const { userName, userId, msg } = result
+      const { username, userid, msg, avatar, regDate, email } = result
       const token = jwt.sign({
-        userId: userId,
-        userName: userName,
+        userid: userid,
+        username: username,
         exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
       }, config.app.keys)
-      return ctx.body = success({ userName, userId, token, msg })
+      return ctx.body = success({ username, userid, token, msg, avatar, regDate, email, role })
     }
   } else {
     // 用户提交数据异常
@@ -127,9 +135,13 @@ export const login = async(ctx: any) => {
     // 查询数据库
       const result: Result = {
         status: '',
-        userId: '',
-        userName: '',
-        msg: ''
+        userid: '',
+        username: '',
+        avatar: '',
+        email: '',
+        msg: '',
+        role: '',
+        regDate: undefined
       }
       const hadUser = await LoginUser( {username, password} )
       console.log('登录用户状况:\n', result)
@@ -141,8 +153,8 @@ export const login = async(ctx: any) => {
         console.log(hadUser)
         result.msg = '用户登录成功!'
         result.status = 'success'
-        result.userId = hadUser._id
-        result.userName = hadUser.username
+        result.userid = hadUser._id
+        result.username = hadUser.username
       }
 
       if (result.status === 'error') {
@@ -153,13 +165,13 @@ export const login = async(ctx: any) => {
           msg: result.msg
         })
       } else {
-        const { userName, userId, msg } = result
+        const { username, userid, msg, avatar, regDate, email, role  } = result
         const token = jwt.sign({
-          userId: userId,
-          userName: userName,
+          userid: userid,
+          username: username,
           exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
         }, config.app.keys)
-        return ctx.body = success({ userName, userId, token, msg })
+        return ctx.body = success({ username, userid, token, msg, avatar, regDate, email, role  })
       }
     } else {
       // 用户提交数据异常
@@ -172,14 +184,18 @@ export const login = async(ctx: any) => {
 }
 
 export const userInfo = async(ctx: any) => {
-  return ctx.body = { userInfo: '{username:test110,password:nopass,email:test}' }
+  const { userid, token } = ctx.request.body;
+  let hadUser = undefined;
+  hadUser  = await FindUserById(userid);
+  const { username, avatar, regDate, email, role  } = hadUser
+  return ctx.body = success({ username, userid , avatar, token, regDate, email, role, msg: '获取成功!' })
 }
 
 export const tokenLogin = async(ctx: any) => {
   console.log('token校验Ing:')
   console.log(ctx.request.body)
   const { token } = ctx.request.body;
-  let hadUser = '';
+  let hadUser = undefined;
   if ( !token ) {
     return ctx.body = error({
       code: 2,
@@ -191,11 +207,12 @@ export const tokenLogin = async(ctx: any) => {
     await jwt.verify(token, config.app.keys, function(err: any, result: any) {
       decode = result
     })
-    const userId = JSON.parse(JSON.stringify(decode)).userId;
-    const userName = JSON.parse(JSON.stringify(decode)).userName;
-    hadUser  = await FindUserById(userId);
+    const userid = JSON.parse(JSON.stringify(decode)).userid;
+    const username = JSON.parse(JSON.stringify(decode)).username;
+    hadUser  = await FindUserById(userid);
+    const { avatar, regDate, email, role  } = hadUser
     if ( hadUser !== null) {
-      return ctx.body = success({ userName, userId, token,  msg: '登录成功!' })
+      return ctx.body = success({ username, userid, token, avatar, regDate, email, role, msg: '登录成功!' })
     } else {
       return ctx.body = error({
         code: 2,
