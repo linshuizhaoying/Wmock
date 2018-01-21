@@ -25,6 +25,7 @@ action$.ofType(FETCH_MESSAGES)
         temp.data.sort((a:any, b:any)=>{
           return +new Date(b.time) - +new Date(a.time);
         })
+        // 对不同类型消息进行拆分
         return messagesReceive(temp);
       }else{
         return errorMessages(response.state.msg);

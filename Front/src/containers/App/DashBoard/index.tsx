@@ -23,6 +23,7 @@ import { userLogout, userInfo } from '../../../actions/user';
 import { fetchMessages, fetchProject, fetchDocument } from '../../../actions/index';
 import UserInfo from '../../../components/UserInfo'
 import Modal from 'antd/lib/modal';
+import Badge from 'antd/lib/badge';
 // import Upload from 'antd/lib/upload';
 
 const { Header, Sider, Content, Footer } = Layout;
@@ -189,7 +190,7 @@ export class DashBoard extends React.Component<any, any> {
                     </Menu.Item> */}
                     <Menu.Item key="3">
                       <Link to='/wmock/teamManage' >
-                        <Icon type="team" />团队管理
+                        <Icon type="team" /> <Badge count={5}> <span className="header">团队管理</span></Badge>
                       </Link>
                     </Menu.Item>
                     <Menu.Item key="4">
