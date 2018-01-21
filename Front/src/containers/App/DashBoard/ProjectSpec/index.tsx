@@ -86,7 +86,7 @@ export class ProjectSpec extends React.Component<any, any> {
       <div id="ProjectSpec">
         <Row className="documentHeader">
           <Col span={16} className="textleft">文档总数为 <span className="red">{this.state.allDocuments.length}</span> 个</Col>
-          <Col span={8}><Button type="primary" onClick={()=>this.addDocumentMode()}>添加文档</Button></Col>
+          <Col span={8}><Button type="primary" onClick={()=>this.addDocumentMode()}>添加文档</Button> <Button>回收站</Button></Col>
         </Row>
 
          {this.state.isLoaded  &&  this.state.allDocuments.length > 0 ? 
