@@ -1,9 +1,11 @@
 import { RECEIVE_PROJECT, 
-         ERROR_PROJECT
+         ERROR_PROJECT,
+         RECEIVE_UNJOINPROJECT
           // ADD_MESSAGE
         } from '../constants/project';
 const initialState = {
-   data:[]
+   data:[],
+   unJoinList:[]
 }
 
 const project = (state = initialState, action: any) => {
@@ -13,6 +15,11 @@ const project = (state = initialState, action: any) => {
       return{
         ...state,
         data: action.data.data,
+      }
+    case RECEIVE_UNJOINPROJECT:
+      return{
+        ...state,
+        unJoinList: action.data.data,
       }
     case ERROR_PROJECT:
       return{

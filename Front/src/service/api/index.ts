@@ -32,6 +32,17 @@ export const editProject =  baseUrl + '/api/editProject';
 
 export const removeProject =  baseUrl + '/api/removeProject';
 
+export const unJoinProjectList =  baseUrl + '/api/unJoinProjectList';
+
+
+// 团队列表
+export const teamList =  baseUrl + '/api/teamList';
+
+export const addTeamUser =  baseUrl + '/api/addTeamUser';
+
+export const invitedTeamUser =  baseUrl + '/api/invitedTeamUser';
+
+export const removeTeamUser =  baseUrl + '/api/removeTeamUser';
 
 // 接口列表
 

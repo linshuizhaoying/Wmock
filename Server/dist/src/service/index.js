@@ -9,4 +9,5 @@ __export(require("./project"));
 __export(require("./mock"));
 __export(require("./document"));
 __export(require("./upload"));
+__export(require("./team"));
 //# sourceMappingURL=index.js.map

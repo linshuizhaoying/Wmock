@@ -7,4 +7,5 @@ __export(require("./user"));
 __export(require("./messages"));
 __export(require("./project"));
 __export(require("./document"));
+__export(require("./team"));
 //# sourceMappingURL=index.js.map

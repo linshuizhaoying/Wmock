@@ -28,7 +28,8 @@ export class Overview extends React.Component<any, any> {
   componentWillReceiveProps(nextProps: any) {
     if(nextProps.messagesList.length > 0 && nextProps.messagesList != this.state.messagesListData){
       let temp = [];
-      for(let i = 0; i < 6; i++){
+      const len = nextProps.messagesList.length > 6 ? 6 :nextProps.messagesList.length
+      for(let i = 0; i < len; i++){
         temp.push(nextProps.messagesList[i]);
       }
       console.log(temp)
@@ -147,7 +148,7 @@ export class Overview extends React.Component<any, any> {
                         查看更多
                       </Link>}>
             {
-              this.state.messagesListData.map((item: any, index: any) =>{
+             this.state.messagesListData.length > 0 ? this.state.messagesListData.map((item: any, index: any) =>{
                return <Timeline.Item dot={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />} color="red" key={index} >
                     <div className="timeline">
                       <p className="date"><TimeAgo
@@ -162,7 +163,8 @@ export class Overview extends React.Component<any, any> {
                     </div>
                   </Timeline.Item>
               })
-            }
+            :null
+          }
        
         </Timeline>
         </div>

@@ -3,7 +3,8 @@ import { RECEIVE_MESSAGES,
           // ADD_MESSAGE
         } from '../constants/messages';
 const initialState = {
-   data:[]
+   data:[],
+   teamMessages:[],
 }
 
 const messages = (state = initialState, action: any) => {
@@ -12,7 +13,8 @@ const messages = (state = initialState, action: any) => {
     case RECEIVE_MESSAGES:
       return{
         ...state,
-        data: action.data.data,
+        data: action.data[0],
+        teamMessages:action.data[1]
       }
     case ERROR_MESSAGES:
       return{
