@@ -16,7 +16,9 @@ export const Router = (app: any) => {
           projectList,
           mock,
           documentList,
-          uploadFile
+          uploadFile,
+          teamList,
+          unJoinProjectList
         } = Service
 
   router.post('/api/reg', Service.reg)
@@ -28,6 +30,10 @@ export const Router = (app: any) => {
         .get('/api/messagesList', Service.messagesList)
         // 获取项目列表
         .post('/api/projectList', Service.projectList)
+        // 获取未加入的项目列表
+        .post('/api/unJoinProjectList', Service.unJoinProjectList)
+        // 获取团队列表
+        .post('/api/teamList', Service.teamList)
         // 获取文档列表
         .post('/api/documentList', Service.documentList)
         // 图片上传

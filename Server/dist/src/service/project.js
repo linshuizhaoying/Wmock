@@ -38,4 +38,12 @@ exports.projectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // console.log(result)
     return ctx.body = success(result);
 });
+exports.unJoinProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    // console.log('allNews')
+    // console.log(ctx.request.body)
+    const { id } = ctx.request.body;
+    const result = yield index_1.UnJoinProjectList(id);
+    // console.log(result)
+    return ctx.body = success(result);
+});
 //# sourceMappingURL=project.js.map

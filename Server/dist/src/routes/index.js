@@ -13,13 +13,15 @@ const Service = require("../service");
 const path = require('path');
 const router = new Irouter();
 exports.Router = (app) => {
-    const { reg, login, tokenLogin, userInfo, messagesList, projectList, mock, documentList, uploadFile } = Service;
+    const { reg, login, tokenLogin, userInfo, messagesList, projectList, mock, documentList, uploadFile, teamList, unJoinProjectList } = Service;
     router.post('/api/reg', Service.reg)
         .post('/api/login', Service.login)
         .get('/api/userInfo', Service.userInfo)
         .post('/api/token', Service.tokenLogin)
         .get('/api/messagesList', Service.messagesList)
         .post('/api/projectList', Service.projectList)
+        .post('/api/unJoinProjectList', Service.unJoinProjectList)
+        .post('/api/teamList', Service.teamList)
         .post('/api/documentList', Service.documentList)
         .post('/api/upload', (ctx, next) => __awaiter(this, void 0, void 0, function* () {
         let result = {};

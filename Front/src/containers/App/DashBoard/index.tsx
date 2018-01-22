@@ -20,7 +20,7 @@ import Template from './Template/index';
 import TeamManage from './TeamManage/index';
 import LoadingBar from '../../../components/LoadingBar';
 import { userLogout, userInfo } from '../../../actions/user';
-import { fetchMessages, fetchProject, fetchDocument } from '../../../actions/index';
+import { fetchMessages, fetchProject, fetchDocument, fetchTeam, fetchUnJoinProject } from '../../../actions/index';
 import UserInfo from '../../../components/UserInfo'
 import Modal from 'antd/lib/modal';
 import Badge from 'antd/lib/badge';
@@ -37,8 +37,10 @@ export class DashBoard extends React.Component<any, any> {
       progress: 0,
       error: false,
       messagesList: [],
+      teamMessagesList: [],
       projectList: [],
       documentList: [],
+      teamList:[],
       userInfoVisible:false
     };
   }
@@ -85,6 +87,18 @@ export class DashBoard extends React.Component<any, any> {
        // console.log(this.state.messagesList)
       })
     }
+
+    // 获取最新团队消息列表
+    if(nextProps.teamMessagesList.length > 0 && nextProps.teamMessagesList != this.state.teamMessagesList){
+      this.setState({
+        teamMessagesList:nextProps.teamMessagesList
+      },()=>{
+        // console.log(this.state.messagesList)
+      })
+    }
+    
+
+
     // 获取最新项目列表
     if(nextProps.projectList  !== undefined && nextProps.projectList != this.state.projectList){
       this.setState({
@@ -94,14 +108,23 @@ export class DashBoard extends React.Component<any, any> {
       })
     }
 
-      // 获取最新文档列表
-      if(nextProps.documentList.length > 0 && nextProps.documentList != this.state.documentList){
-        this.setState({
-          documentList:nextProps.documentList
-        },()=>{
-          // console.log(this.state.projectList)
-        })
-      }
+    // 获取最新文档列表
+    if(nextProps.documentList.length > 0 && nextProps.documentList != this.state.documentList){
+      this.setState({
+        documentList:nextProps.documentList
+      },()=>{
+        // console.log(this.state.projectList)
+      })
+    }
+
+    // 获取最新团队列表
+    if(nextProps.teamList.length > 0 && nextProps.teamList != this.state.teamList){
+      this.setState({
+        teamList:nextProps.teamList
+      },()=>{
+        // console.log(this.state.projectList)
+      })
+    }
 
   }
 
@@ -138,6 +161,11 @@ export class DashBoard extends React.Component<any, any> {
     this.getProjectList({'username':this.props.username})
   }
 
+  getTeamList = () =>{
+    const { dispatch } = this.props;
+    dispatch(fetchTeam({'id':this.props.userid})) 
+  }
+
   showUserInfoVisible = () =>{
     this.setState({
       userInfoVisible:true
@@ -154,6 +182,11 @@ export class DashBoard extends React.Component<any, any> {
     dispatch(userInfo({userid:this.props.userid,token:localStorage.getItem('token')})) 
   }
 
+  getUnJoinProjectList = () =>{
+    const { dispatch } = this.props;
+    dispatch(fetchUnJoinProject({id:this.props.userid})) 
+
+  }
   render () {
     return(
       <div id="DashBoard">
@@ -189,8 +222,8 @@ export class DashBoard extends React.Component<any, any> {
                       </Link>
                     </Menu.Item> */}
                     <Menu.Item key="3">
-                      <Link to='/wmock/teamManage' >
-                        <Icon type="team" /> <Badge count={5}> <span className="header">团队管理</span></Badge>
+                      <Link to='/wmock/teamManage' onClick={ ()=> {this.getTeamList();this.getUnJoinProjectList()}}>
+                        <Icon type="team" /> <Badge count={this.state.teamMessagesList.length}> <span className="header">团队管理</span></Badge>
                       </Link>
                     </Menu.Item>
                     <Menu.Item key="4">
@@ -273,7 +306,7 @@ export class DashBoard extends React.Component<any, any> {
                     <Route path="/wmock/ProjectSpec" render={() => <ProjectSpec refresh={this.getDocumentList} projectList={this.state.projectList} documentList={this.state.documentList} userid={this.props.userid}></ProjectSpec>}/>
                     <Route path="/wmock/ProjectStruct" component={ProjectStruct}/>
                     <Route path="/wmock/Template" component={Template}/>
-                    <Route path="/wmock/TeamManage" component={TeamManage}/>
+                    <Route path="/wmock/TeamManage" render={() => <TeamManage unJoinprojectList={this.props.unJoinprojectList} userid = {this.props.userid} refresh={ ()=>{this.getTeamList();this.getMessagesList()}} teamList={this.state.teamList} teamMessagesList={this.state.teamMessagesList}></TeamManage>}/>
                   </Switch>
               </Content>
               <Footer>Wmock ©2018 Created by LinShuiZhaoYing</Footer>
@@ -303,7 +336,10 @@ const mapStateToProps = (state: any) => ({
   loadingState: state.loading.loadingState,
   messagesList: state.messages.data,
   projectList: state.project.data,
-  documentList: state.document.data
+  documentList: state.document.data,
+  teamList: state.team.data,
+  teamMessagesList: state.messages.teamMessages,
+  unJoinprojectList: state.project.unJoinList,
 })
 
 
