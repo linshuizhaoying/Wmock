@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./user"));
 __export(require("./messages"));
 __export(require("./project"));
-__export(require("./mock"));
+__export(require("./document"));
 __export(require("./document"));
 __export(require("./upload"));
+__export(require("./mock"));
 __export(require("./team"));
 //# sourceMappingURL=index.js.map
