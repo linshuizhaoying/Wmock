@@ -4,7 +4,7 @@ import * as Service from '../service';
 
 import { config } from '../config'
 const path = require('path');
-
+const middleware = require('../middleware/index')
 const router = new Irouter()
 
 export const Router = (app: any) => {
@@ -14,10 +14,10 @@ export const Router = (app: any) => {
           userInfo,
           messagesList,
           projectList,
-          mock,
           documentList,
           uploadFile,
           teamList,
+          mock,
           unJoinProjectList
         } = Service
 
@@ -50,7 +50,7 @@ export const Router = (app: any) => {
         });
 
   // 根据对应请求返回 mock数据
-  router.use('/mock/:project/:interface', Service.mock)
+  router.use('/mock', middleware.mockFilter, Service.mock)
   router.all('/*',  async (ctx, next) => {
     ctx.body = {
       'state': {

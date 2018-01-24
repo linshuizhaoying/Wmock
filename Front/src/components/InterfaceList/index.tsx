@@ -30,7 +30,7 @@ export class InterfaceList extends React.Component<any, any> {
   preview  = (item:any) => {
     console.log(this.props)
     console.log(item)
-    window.open(MockUrl + this.props.projectId + item.url + '#!method=' + item.method)
+    window.open(MockUrl + "/" +  this.props.projectId + item.url + '#!method=' + item.method)
   }
   
   deleteInterface = (id:string) =>{

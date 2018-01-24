@@ -11,9 +11,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Irouter = require("koa-router");
 const Service = require("../service");
 const path = require('path');
+const middleware = require('../middleware/index');
 const router = new Irouter();
 exports.Router = (app) => {
-    const { reg, login, tokenLogin, userInfo, messagesList, projectList, mock, documentList, uploadFile, teamList, unJoinProjectList } = Service;
+    const { reg, login, tokenLogin, userInfo, messagesList, projectList, documentList, uploadFile, teamList, mock, unJoinProjectList } = Service;
     router.post('/api/reg', Service.reg)
         .post('/api/login', Service.login)
         .get('/api/userInfo', Service.userInfo)
@@ -35,7 +36,7 @@ exports.Router = (app) => {
         ctx.body = result;
     }));
     // 根据对应请求返回 mock数据
-    router.use('/mock/:project/:interface', Service.mock);
+    router.use('/mock', middleware.mockFilter, Service.mock);
     router.all('/*', (ctx, next) => __awaiter(this, void 0, void 0, function* () {
         ctx.body = {
             'state': {
