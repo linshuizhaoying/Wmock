@@ -19,6 +19,7 @@ export class ProjectSpec extends React.Component<any, any> {
     this.state = {
       documentModeVisible: false,
       allDocuments:[],
+      currentInterfaceData:'',
       isLoaded:false // 是否加载过
     };
   }

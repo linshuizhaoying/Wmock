@@ -64,6 +64,10 @@ export const editDocument =  baseUrl + '/api/editDocument';
 
 export const removeDocument =  baseUrl + '/api/removeDocument';
 
+// mock模型
+export const baseModelList =  baseUrl + '/api/baseModelList';
+export const customModelList =  baseUrl + '/api/customModelList';
+
 // 文件上传
 
 export const upload = baseUrl + '/api/upload'

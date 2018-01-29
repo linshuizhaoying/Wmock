@@ -14,7 +14,7 @@ const path = require('path');
 const middleware = require('../middleware/index');
 const router = new Irouter();
 exports.Router = (app) => {
-    const { reg, login, tokenLogin, userInfo, messagesList, projectList, documentList, uploadFile, teamList, mock, unJoinProjectList } = Service;
+    const { reg, login, tokenLogin, userInfo, messagesList, projectList, documentList, uploadFile, teamList, mock, unJoinProjectList, baseModelList, customModelList } = Service;
     router.post('/api/reg', Service.reg)
         .post('/api/login', Service.login)
         .get('/api/userInfo', Service.userInfo)
@@ -24,6 +24,8 @@ exports.Router = (app) => {
         .post('/api/unJoinProjectList', Service.unJoinProjectList)
         .post('/api/teamList', Service.teamList)
         .post('/api/documentList', Service.documentList)
+        .get('/api/baseModelList', Service.baseModelList)
+        .post('/api/customModelList', Service.customModelList)
         .post('/api/upload', (ctx, next) => __awaiter(this, void 0, void 0, function* () {
         let result = {};
         const serverFilePath = path.join(__dirname, '../images');

@@ -11,4 +11,5 @@ __export(require("./document"));
 __export(require("./upload"));
 __export(require("./mock"));
 __export(require("./team"));
+__export(require("./model"));
 //# sourceMappingURL=index.js.map

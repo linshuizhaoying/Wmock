@@ -8,4 +8,5 @@ __export(require("./messages"));
 __export(require("./project"));
 __export(require("./document"));
 __export(require("./team"));
+__export(require("./model"));
 //# sourceMappingURL=index.js.map
