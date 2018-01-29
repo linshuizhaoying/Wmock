@@ -1,4 +1,4 @@
-import { AllProject, UnJoinProjectList } from '../db/controllers/index';
+import { UserProject, DemoProject, UnJoinProjectList } from '../db/controllers/index';
 
 
 // 返回正常数据
@@ -24,11 +24,20 @@ const success = ( data: any) => {
 // }
 
 
-export const projectList = async(ctx: any) => {
+export const userProjectList = async(ctx: any) => {
   // console.log('allNews')
   // console.log(ctx.request.body)
   const { username } = ctx.request.body;
-  const result = await AllProject(username)
+  const result = await UserProject(username)
+  // console.log(result)
+  return ctx.body = success(result)
+}
+
+export const demoProjectList = async(ctx: any) => {
+  // console.log('allNews')
+  // console.log(ctx.request.body)
+  const { username } = ctx.request.body;
+  const result = await DemoProject(username)
   // console.log(result)
   return ctx.body = success(result)
 }

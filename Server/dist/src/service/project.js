@@ -30,11 +30,19 @@ const success = (data) => {
 //     }
 //   }
 // }
-exports.projectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
+exports.userProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // console.log('allNews')
     // console.log(ctx.request.body)
     const { username } = ctx.request.body;
-    const result = yield index_1.AllProject(username);
+    const result = yield index_1.UserProject(username);
+    // console.log(result)
+    return ctx.body = success(result);
+});
+exports.demoProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    // console.log('allNews')
+    // console.log(ctx.request.body)
+    const { username } = ctx.request.body;
+    const result = yield index_1.DemoProject(username);
     // console.log(result)
     return ctx.body = success(result);
 });

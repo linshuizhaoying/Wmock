@@ -1,8 +1,13 @@
-import { FETCH_PROJECT,FETCH_UNJOINPROJECT } from '../constants/project'
+import { FETCH_PROJECT,FETCH_UNJOINPROJECT, FETCH_DEMO } from '../constants/project'
 import  notification  from 'antd/lib/notification';
 
 const fetch_project = (data: any) => ({
   type: FETCH_PROJECT,
+  data: data
+})
+
+const fetch_demo = (data: any) => ({
+  type: FETCH_DEMO,
   data: data
 })
 
@@ -18,6 +23,12 @@ const fetch_unJoinproject = (data: any) => ({
 export function fetchProject (user: any) {
   return (dispatch: any) => {
     dispatch(fetch_project(user))
+  }
+}
+
+export function fetchDemo (user: any) {
+  return (dispatch: any) => {
+    dispatch(fetch_demo(user))
   }
 }
 
