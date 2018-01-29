@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './index.less';
-
+import ProjectBase from '../ProjectBase/index'
 export class MyProject extends React.Component<any, any> {
   constructor (props: any) {
     super(props)
@@ -19,7 +19,7 @@ export class MyProject extends React.Component<any, any> {
   render () {
     return(
       <div id="MyProject">
-        MyProject
+        <ProjectBase projectList={this.props.projectList} messagesList={this.props.messagesList} userid={this.props.userid} type={"user"}></ProjectBase>
       </div>
     )
   }

@@ -34,6 +34,15 @@ export const removeProject =  baseUrl + '/api/removeProject';
 
 export const unJoinProjectList =  baseUrl + '/api/unJoinProjectList';
 
+// 项目示例列表
+// { username:demoId / userId }
+export const demoList =  baseUrl + '/api/demoList';
+
+export const addDemo =  baseUrl + '/api/addDemo';
+
+export const editDemo =  baseUrl + '/api/editDemo';
+
+export const removeDemo =  baseUrl + '/api/removeDemo';
 
 // 团队列表
 export const teamList =  baseUrl + '/api/teamList';

@@ -20,7 +20,7 @@ import Template from './Template/index';
 import TeamManage from './TeamManage/index';
 import LoadingBar from '../../../components/LoadingBar';
 import { userLogout, userInfo } from '../../../actions/user';
-import { fetchMessages, fetchProject, fetchDocument, fetchTeam, fetchUnJoinProject, fetchBaseModel, fetchCustomModel } from '../../../actions/index';
+import { fetchMessages, fetchProject, fetchDemo ,fetchDocument, fetchTeam, fetchUnJoinProject, fetchBaseModel, fetchCustomModel } from '../../../actions/index';
 import UserInfo from '../../../components/UserInfo'
 import Modal from 'antd/lib/modal';
 import Badge from 'antd/lib/badge';
@@ -39,6 +39,7 @@ export class DashBoard extends React.Component<any, any> {
       messagesList: [],
       teamMessagesList: [],
       projectList: [],
+      demoList: [],
       documentList: [],
       teamList:[],
       baseModelList: [],
@@ -60,8 +61,14 @@ export class DashBoard extends React.Component<any, any> {
   }
 
   componentDidMount() {
+    // 初始化拿数据
+    this.getProjectDemo()
     this.getMessagesList()
-   // console.log(this.props)
+    this.getTeamList();
+    this.getUnJoinProjectList()
+    this.getBaseModelList();
+    this.getCustomModelList()
+    this.getDocumentList()
   }
 
   componentWillReceiveProps(nextProps: any) {
@@ -109,6 +116,16 @@ export class DashBoard extends React.Component<any, any> {
        // console.log(this.state.projectList)
       })
     }
+
+    // 获取最新演示项目列表
+    if(nextProps.demoList  !== undefined && nextProps.demoList != this.state.demoList){
+      this.setState({
+        demoList:nextProps.demoList
+      },()=>{
+        // console.log(this.state.projectList)
+      })
+    }
+    
 
     // 获取最新文档列表
     if(nextProps.documentList.length > 0 && nextProps.documentList != this.state.documentList){
@@ -181,7 +198,8 @@ export class DashBoard extends React.Component<any, any> {
   }
 
   getProjectDemo = () =>{
-    this.getProjectList({'username':this.props.username})
+    const { dispatch } = this.props;
+    dispatch(fetchDemo({'username':this.props.username})) 
   }
   getDocumentList = () =>{
     const { dispatch } = this.props;
@@ -335,10 +353,10 @@ export class DashBoard extends React.Component<any, any> {
                     <Route path="/wmock/InterfaceTest" component={InterfaceTest}/>
                     <Route path="/wmock/Messages" render={() => <Messages data={this.state.messagesList}></Messages>}/>
                     <Route path="/wmock/MockModel" render={() => <MockModel baseModelList={this.state.baseModelList} customModelList={this.state.customModelList} userid={this.props.userid}></MockModel>}/>
-                    <Route path="/wmock/MyProject" component={MyProject}/>
+                    <Route path="/wmock/MyProject"render={() => <MyProject projectList={this.state.projectList} messagesList={this.state.messagesList} userid={this.props.userid}></MyProject>}/>
                     <Route path="/wmock/OverView" render={() => <OverView messagesList={this.state.messagesList}></OverView>}/>
 
-                    <Route path="/wmock/ProjectDemo" render={() => <ProjectDemo projectList={this.state.projectList} messagesList={this.state.messagesList} userid={this.props.userid}></ProjectDemo>}/>
+                    <Route path="/wmock/ProjectDemo" render={() => <ProjectDemo projectList={this.state.demoList} messagesList={this.state.messagesList} userid={this.props.userid}></ProjectDemo>}/>
 
                     <Route path="/wmock/ProjectManage" component={ProjectManage}/>
                     <Route path="/wmock/ProjectSpec" render={() => <ProjectSpec refresh={this.getDocumentList} projectList={this.state.projectList} documentList={this.state.documentList} userid={this.props.userid}></ProjectSpec>}/>
@@ -374,6 +392,7 @@ const mapStateToProps = (state: any) => ({
   loadingState: state.loading.loadingState,
   messagesList: state.messages.data,
   projectList: state.project.data,
+  demoList: state.project.demo,
   documentList: state.document.data,
   teamList: state.team.data,
   teamMessagesList: state.messages.teamMessages,

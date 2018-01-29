@@ -127,7 +127,7 @@ export class InterfaceList extends React.Component<any, any> {
 
     return(
       <div id="interfaceList">
-         <MyTable columns={columns} dataSource={this.props.data} rowKey={record => record._id} pagination={false} scroll={{y:480}} size='middle'
+         <MyTable columns={columns} dataSource={this.props.data} rowKey={record => record._id} pagination={false} scroll={{y:300}} size='middle'
           expandedRowRender={ (record: any) => 
               <div className="descMore">
                 <h4>Method</h4>

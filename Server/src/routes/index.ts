@@ -13,7 +13,8 @@ export const Router = (app: any) => {
           tokenLogin,
           userInfo,
           messagesList,
-          projectList,
+          userProjectList,
+          demoProjectList,
           documentList,
           uploadFile,
           teamList,
@@ -30,8 +31,10 @@ export const Router = (app: any) => {
         // 用于持久化登录,只要auth头有未过期的token验证就能证明用户的登录状态
         .post('/api/token', Service.tokenLogin)
         .get('/api/messagesList', Service.messagesList)
-        // 获取项目列表
-        .post('/api/projectList', Service.projectList)
+        // 获取示例项目列表
+        .post('/api/demoList', Service.demoProjectList)
+        // 获取用户项目列表
+        .post('/api/projectList', Service.userProjectList)
         // 获取未加入的项目列表
         .post('/api/unJoinProjectList', Service.unJoinProjectList)
         // 获取团队列表
