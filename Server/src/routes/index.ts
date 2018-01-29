@@ -18,7 +18,9 @@ export const Router = (app: any) => {
           uploadFile,
           teamList,
           mock,
-          unJoinProjectList
+          unJoinProjectList,
+          baseModelList,
+          customModelList
         } = Service
 
   router.post('/api/reg', Service.reg)
@@ -36,6 +38,9 @@ export const Router = (app: any) => {
         .post('/api/teamList', Service.teamList)
         // 获取文档列表
         .post('/api/documentList', Service.documentList)
+        // 获取Mock模型
+        .get('/api/baseModelList', Service.baseModelList)
+        .post('/api/customModelList', Service.customModelList)
         // 图片上传
         .post('/api/upload', async (ctx, next) => {
           let result = {}

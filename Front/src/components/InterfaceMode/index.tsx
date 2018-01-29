@@ -64,6 +64,7 @@ export class InterfaceMode extends React.Component<any, any> {
   "data": {}
 }`
     })
+
   }
   editorOnChange = (newValue:string) =>{
     console.log(newValue)

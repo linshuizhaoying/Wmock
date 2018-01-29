@@ -20,7 +20,7 @@ import Template from './Template/index';
 import TeamManage from './TeamManage/index';
 import LoadingBar from '../../../components/LoadingBar';
 import { userLogout, userInfo } from '../../../actions/user';
-import { fetchMessages, fetchProject, fetchDocument, fetchTeam, fetchUnJoinProject } from '../../../actions/index';
+import { fetchMessages, fetchProject, fetchDocument, fetchTeam, fetchUnJoinProject, fetchBaseModel, fetchCustomModel } from '../../../actions/index';
 import UserInfo from '../../../components/UserInfo'
 import Modal from 'antd/lib/modal';
 import Badge from 'antd/lib/badge';
@@ -41,6 +41,8 @@ export class DashBoard extends React.Component<any, any> {
       projectList: [],
       documentList: [],
       teamList:[],
+      baseModelList: [],
+      customModelList: [],
       userInfoVisible:false
     };
   }
@@ -126,6 +128,32 @@ export class DashBoard extends React.Component<any, any> {
       })
     }
 
+
+    // 获取最新列表
+    if(nextProps.teamList.length > 0 && nextProps.teamList != this.state.teamList){
+      this.setState({
+        teamList:nextProps.teamList
+      },()=>{
+        // console.log(this.state.projectList)
+      })
+    }
+
+    // 获取最新Base Model列表
+    if(nextProps.baseModelList.length > 0 && nextProps.baseModelList != this.state.baseModelList){
+      this.setState({
+        baseModelList:nextProps.baseModelList
+      },()=>{
+        // console.log(this.state.projectList)
+      })
+    }
+    // 获取最新Custom Model列表
+    if(nextProps.customModelList.length > 0 && nextProps.customModelList != this.state.customModelList){
+      this.setState({
+        customModelList:nextProps.customModelList
+      },()=>{
+        // console.log(this.state.projectList)
+      })
+    }
   }
 
   overView = () =>{
@@ -164,6 +192,16 @@ export class DashBoard extends React.Component<any, any> {
   getTeamList = () =>{
     const { dispatch } = this.props;
     dispatch(fetchTeam({'id':this.props.userid})) 
+  }
+
+  getBaseModelList = () =>{
+    const { dispatch } = this.props;
+    dispatch(fetchBaseModel()) 
+  }
+
+  getCustomModelList = () =>{
+    const { dispatch } = this.props;
+    dispatch(fetchCustomModel({'id':this.props.userid})) 
   }
 
   showUserInfoVisible = () =>{
@@ -227,7 +265,7 @@ export class DashBoard extends React.Component<any, any> {
                       </Link>
                     </Menu.Item>
                     <Menu.Item key="4">
-                      <Link to='/wmock/mockModel' >
+                      <Link to='/wmock/mockModel' onClick={ ()=> {this.getBaseModelList();this.getCustomModelList()}}>
                       <Icon type="code" />Mock数据模型
                       </Link>
                     </Menu.Item>
@@ -296,7 +334,7 @@ export class DashBoard extends React.Component<any, any> {
                   <Switch>
                     <Route path="/wmock/InterfaceTest" component={InterfaceTest}/>
                     <Route path="/wmock/Messages" render={() => <Messages data={this.state.messagesList}></Messages>}/>
-                    <Route path="/wmock/MockModel" component={MockModel}/>
+                    <Route path="/wmock/MockModel" render={() => <MockModel baseModelList={this.state.baseModelList} customModelList={this.state.customModelList} userid={this.props.userid}></MockModel>}/>
                     <Route path="/wmock/MyProject" component={MyProject}/>
                     <Route path="/wmock/OverView" render={() => <OverView messagesList={this.state.messagesList}></OverView>}/>
 
@@ -340,6 +378,8 @@ const mapStateToProps = (state: any) => ({
   teamList: state.team.data,
   teamMessagesList: state.messages.teamMessages,
   unJoinprojectList: state.project.unJoinList,
+  baseModelList: state.model.base,
+  customModelList: state.model.custom,
 })
 
 
