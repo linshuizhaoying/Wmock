@@ -202,9 +202,9 @@ export class DashBoard extends React.Component<any, any> {
     dispatch(fetchDemo({'username':this.props.username})) 
   }
   getDocumentList = () =>{
+    this.getProjectList({'username':this.props.username})
     const { dispatch } = this.props;
     dispatch(fetchDocument()) 
-    this.getProjectList({'username':this.props.username})
   }
 
   getTeamList = () =>{
@@ -313,7 +313,7 @@ export class DashBoard extends React.Component<any, any> {
 
       
                   <Menu.Item key="7">
-                      <Link to='/wmock/projectSpec' onClick={this.getDocumentList}>
+                      <Link to='/wmock/projectSpec'  onClick={ ()=> {this.getDocumentList()}}>
                         <Icon type="folder-open" />
                         <span>
                           文档与规范
@@ -359,7 +359,7 @@ export class DashBoard extends React.Component<any, any> {
                     <Route path="/wmock/ProjectDemo" render={() => <ProjectDemo projectList={this.state.demoList} messagesList={this.state.messagesList} userid={this.props.userid}></ProjectDemo>}/>
 
                     <Route path="/wmock/ProjectManage" component={ProjectManage}/>
-                    <Route path="/wmock/ProjectSpec" render={() => <ProjectSpec refresh={this.getDocumentList} projectList={this.state.projectList} documentList={this.state.documentList} userid={this.props.userid}></ProjectSpec>}/>
+                    <Route path="/wmock/ProjectSpec" render={() => <ProjectSpec messagesList={this.state.messagesList} refresh={this.getDocumentList} projectList={this.state.projectList} documentList={this.state.documentList} userid={this.props.userid}></ProjectSpec>}/>
                     <Route path="/wmock/ProjectStruct" component={ProjectStruct}/>
                     <Route path="/wmock/Template" component={Template}/>
                     <Route path="/wmock/TeamManage" render={() => <TeamManage unJoinprojectList={this.props.unJoinprojectList} userid = {this.props.userid} refresh={ ()=>{this.getTeamList();this.getMessagesList()}} teamList={this.state.teamList} teamMessagesList={this.state.teamMessagesList}></TeamManage>}/>

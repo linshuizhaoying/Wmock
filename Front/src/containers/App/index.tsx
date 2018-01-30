@@ -58,8 +58,11 @@ class App extends React.Component<any, any> {
       this.setState({
         login: true
       })
-      console.log(history)
-      history.push(history.location.pathname)
+      if( history.location.pathname === '/'){
+        history.push('/wmock/OverView')
+      } else {
+        history.push(history.location.pathname)
+      }
     }
 
   }
