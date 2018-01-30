@@ -17,6 +17,9 @@ import Select from 'antd/lib/select';
 import { isEqual } from '../../../../util/helper'
 import { ColumnProps } from "antd/lib/table/";
 import { imgBaseUrl } from '../../../../service/api'
+import { sendApply, allowedJoinGroup, rejectJoinGroup } from '../../../../actions'
+import { connect } from 'react-redux';
+
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
 class MyTable extends Table<any>{}
@@ -73,10 +76,17 @@ export class TeamManage extends React.Component<any, any> {
       this.setState({
         joinProjectVisible:false
       })
-      console.log(this.props.userid)
-      console.log(this.state.selectJoinProject)
-  
-      Message.success('发送申请成功!');
+      const { dispatch } = this.props;
+      dispatch(sendApply({
+        operatorId: this.props.userid,
+        operatorName: this.props.username,
+        projectId: this.state.selectJoinProject.split('_')[0],
+        time: new Date(),
+        objectId: this.props.userid,
+        objectName: this.props.username,
+        desc: this.props.username + ' 申请加入 ' + '项目团队 ' +  this.state.selectJoinProject.split('_')[1],
+        type: 'team'
+      })) 
     }else{
       Message.error('请选择一个未加入的项目!');
     }
@@ -129,14 +139,14 @@ export class TeamManage extends React.Component<any, any> {
  
    isMaster = (currentItem: any) =>{
      console.log(this.props.userid)
-     console.log(currentItem.project_id)
+     console.log(currentItem.projectId)
      console.log(this.props.teamList)
      let flag = false;
      this.props.teamList.map((item:any)=>{
        // 匹配项目
-       if(item.project_id === currentItem.project_id){
+       if(item.projectId === currentItem.projectId){
          // 如果当前用户是该项目的创建者
-         if(item.master_id === this.props.userid){
+         if(item.masterId === this.props.userid){
            flag = true;
          }else{
            flag = false;
@@ -147,31 +157,44 @@ export class TeamManage extends React.Component<any, any> {
      return flag
    }
 
-   teamAllowed = (projectId:any, userId:any) =>{
-     
+   teamAllowed = (currentItem: any) =>{
+    console.log(currentItem)
     this.props.teamList.map((item:any)=>{
       // 匹配项目
-      if(item.project_id === projectId){
-        console.log(item._id, userId)
+      if(item.projectId === currentItem.projectId){
+        console.log(item._id, currentItem.userId)
+        const { dispatch } = this.props;
+        dispatch(allowedJoinGroup({
+          userId: currentItem.userId,
+          projectId: currentItem.projectId,
+          messageId: item._id
+        })) 
         Message.success('已成功加入!');
         // 重新刷新信息
-        this.props.refresh();
+        // this.props.refresh();
       }
     })
    }
-   teamReject = (projectId:any, userId:any) =>{
+   teamReject = (currentItem:any) =>{
     this.props.teamList.map((item:any)=>{
       // 匹配项目
-      if(item.project_id === projectId){
-        console.log(item._id, userId)
+      if(item.projectId === currentItem.projectId){
+        console.log(item._id, currentItem.userId)
+        const { dispatch } = this.props;
+        dispatch(rejectJoinGroup({
+          userId: currentItem.userId,
+          projectId: currentItem.projectId,
+          messageId: item._id
+        })) 
         Message.success('拒绝成功!');
         // 重新刷新信息
-        this.props.refresh();
+        // this.props.refresh();
       }
     })
   }
 
-  joinTeam = (value:any) =>{
+  joinTeam = (value:string) =>{
+
     this.setState({
       selectJoinProject:value
     })
@@ -181,11 +204,11 @@ export class TeamManage extends React.Component<any, any> {
     const columns:ColumnProps<any>[] = [
       {
       title: '发起者',
-      dataIndex: 'operator_name',
-      key: 'operator_name',
+      dataIndex: 'operatorName',
+      key: 'operatorName',
       width: '20%',
-      render : (operator_name: any)=> (
-        <div className="organizer">{operator_name}</div>
+      render : (operatorName: any)=> (
+        <div className="organizer">{operatorName}</div>
       )
       },  
       {
@@ -207,8 +230,8 @@ export class TeamManage extends React.Component<any, any> {
         <div className="interface-operation">
             {this.isMaster(item)?
              <div>
-              <Button type="primary" onClick={()=>this.teamAllowed(item.project_id,item.userId)}> 允许 </Button>
-              <Button type="danger" onClick={()=>this.teamReject(item.project_id,item.userId)}> 拒绝 </Button>
+              <Button type="primary" onClick={()=>this.teamAllowed(item)}> 允许 </Button>
+              <Button type="danger" onClick={()=>this.teamReject(item)}> 拒绝 </Button>
              </div>:"请等待创建者处理..."
             }
        
@@ -230,13 +253,13 @@ export class TeamManage extends React.Component<any, any> {
                   { 
                     this.state.allTeams.map((item: any) =>{
                     return(
-                        <div className="teamItem" key={item.project_id}>
-                            <h2>{item.project_name}</h2>
+                        <div className="teamItem" key={item.projectId}>
+                            <h2>{item.projectName}</h2>
                             <ul>
                               <li>
                                 <div className="member">
                                   <div className="avatar">
-                                    <Avatar src={imgBaseUrl + item.master_avatar}  />
+                                    <Avatar src={imgBaseUrl + item.masterAvatar}  />
                                     <div className="operate">
                                     {/* <Popconfirm title="确定移除该用户么?" onConfirm={()=>{this.removeUser()}} okText="确定移除" cancelText="取消">
                                         <div className="removeUser">
@@ -247,7 +270,7 @@ export class TeamManage extends React.Component<any, any> {
                                     </div>
                                   </div>
                                   <div className="desc">
-                                    <div>{item.master_name}</div>
+                                    <div>{item.masterName}</div>
                                     <div>创建者</div>
                                     <div>{item.role === 'front' ? '前端开发' : '后端开发'}</div>
                                   </div>
@@ -282,7 +305,7 @@ export class TeamManage extends React.Component<any, any> {
                                 :
                                 null
                               }
-                              <div className="addUser" onClick={()=>this.showInviteGroupMember(item.project_id)}>
+                              <div className="addUser" onClick={()=>this.showInviteGroupMember(item.projectId)}>
                                 <Icon type="plus"/>
                               </div>
                             </ul>
@@ -319,7 +342,7 @@ export class TeamManage extends React.Component<any, any> {
             this.props.unJoinprojectList.length > 0 ? 
              this.props.unJoinprojectList.map((item: any) =>{
                 return(       
-                    <Option value={item.project_id} key={item.project_id}>{item.project_name}</Option>
+                    <Option value={item.projectId + '_' + item.projectName} key={item.projectId}>{item.projectName}</Option>
                  )
               }) 
             : null
@@ -353,6 +376,4 @@ export class TeamManage extends React.Component<any, any> {
 }
 
 
-
-
-export default TeamManage;
+export default connect()(TeamManage);

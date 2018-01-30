@@ -12,21 +12,21 @@ exports.myTeam = (id) => __awaiter(this, void 0, void 0, function* () {
     console.log(id);
     const data = [{
             _id: 'team001',
-            project_id: 'project001',
-            project_name: 'REST接口示例超长字符串测试asd123',
+            projectId: 'project001',
+            projectName: 'REST接口示例超长字符串测试asd123',
             member: [{
                     userid: 'user002',
                     username: '哈哈哈',
                     role: 'front',
                     avatar: 'default.png'
                 }],
-            master_id: '5a62f8c18eccdb0fce43614b',
-            master_name: '咩咩咩',
-            master_avatar: 'default.png'
+            masterId: '5a62f8c18eccdb0fce43614b',
+            masterName: '咩咩咩',
+            masterAvatar: 'default.png'
         }, {
             _id: 'team002',
-            project_id: 'project002',
-            project_name: '基本操作示例',
+            projectId: 'project002',
+            projectName: '基本操作示例',
             member: [{
                     userid: 'user002',
                     username: '略略略',
@@ -39,17 +39,17 @@ exports.myTeam = (id) => __awaiter(this, void 0, void 0, function* () {
                     avatar: 'default.png'
                 }
             ],
-            master_id: 'user001',
-            master_name: '咩咩咩',
-            master_avatar: 'default.png'
+            masterId: 'user001',
+            masterName: '咩咩咩',
+            masterAvatar: 'default.png'
         }, {
             _id: 'team003',
-            project_id: 'project003',
-            project_name: 'nothing',
+            projectId: 'project003',
+            projectName: 'nothing',
             member: [],
-            master_id: 'user002',
-            master_name: '略略略',
-            master_avatar: 'default.png'
+            masterId: 'user002',
+            masterName: '略略略',
+            masterAvatar: 'default.png'
         }
     ];
     return yield data;
