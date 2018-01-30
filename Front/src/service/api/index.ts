@@ -53,6 +53,18 @@ export const invitedTeamUser =  baseUrl + '/api/invitedTeamUser';
 
 export const removeTeamUser =  baseUrl + '/api/removeTeamUser';
 
+export const sendApply = baseUrl + '/api/sendApply';
+
+export const inviteGroupMember = baseUrl + '/api/inviteGroupMember';
+
+export const removeGroupMember = baseUrl + '/api/removeGroupMember';
+
+export const allowedJoinGroup = baseUrl + '/api/allowedJoinGroup';
+
+export const rejectJoinGroup = baseUrl + '/api/rejectJoinGroup';
+
+
+
 // 接口列表
 
 export const interFaceList =  baseUrl + '/api/interFaceList';

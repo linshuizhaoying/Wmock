@@ -38,4 +38,21 @@ exports.teamList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // console.log(result)
     return ctx.body = success(result);
 });
+exports.sendApply = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const apply = ctx.request.body;
+    console.log(apply);
+    return ctx.body = success('发送成功!');
+});
+exports.rejectJoinGroup = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    return ctx.body = success('');
+});
+exports.removeGroupMember = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    return ctx.body = success('');
+});
+exports.allowedJoinGroup = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    return ctx.body = success('');
+});
+exports.invitedGroupMember = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    return ctx.body = success('');
+});
 //# sourceMappingURL=team.js.map

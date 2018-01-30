@@ -18,6 +18,7 @@ export const Router = (app: any) => {
           documentList,
           uploadFile,
           teamList,
+          sendApply,
           mock,
           unJoinProjectList,
           baseModelList,
@@ -39,6 +40,8 @@ export const Router = (app: any) => {
         .post('/api/unJoinProjectList', Service.unJoinProjectList)
         // 获取团队列表
         .post('/api/teamList', Service.teamList)
+        // 申请加入团队
+        .post('/api/sendApply', Service.sendApply)
         // 获取文档列表
         .post('/api/documentList', Service.documentList)
         // 获取Mock模型

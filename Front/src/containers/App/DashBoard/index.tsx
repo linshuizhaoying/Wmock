@@ -362,7 +362,7 @@ export class DashBoard extends React.Component<any, any> {
                     <Route path="/wmock/ProjectSpec" render={() => <ProjectSpec messagesList={this.state.messagesList} refresh={this.getDocumentList} projectList={this.state.projectList} documentList={this.state.documentList} userid={this.props.userid}></ProjectSpec>}/>
                     <Route path="/wmock/ProjectStruct" component={ProjectStruct}/>
                     <Route path="/wmock/Template" component={Template}/>
-                    <Route path="/wmock/TeamManage" render={() => <TeamManage unJoinprojectList={this.props.unJoinprojectList} userid = {this.props.userid} refresh={ ()=>{this.getTeamList();this.getMessagesList()}} teamList={this.state.teamList} teamMessagesList={this.state.teamMessagesList}></TeamManage>}/>
+                    <Route path="/wmock/TeamManage" render={() => <TeamManage unJoinprojectList={this.props.unJoinprojectList} userid = {this.props.userid} username = {this.props.username} refresh={ ()=>{this.getTeamList();this.getMessagesList()}} teamList={this.state.teamList} teamMessagesList={this.state.teamMessagesList}></TeamManage>}/>
                   </Switch>
               </Content>
               <Footer>Wmock ©2018 Created by LinShuiZhaoYing</Footer>

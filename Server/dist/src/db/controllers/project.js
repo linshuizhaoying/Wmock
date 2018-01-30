@@ -268,16 +268,16 @@ exports.UnJoinProjectList = (id) => __awaiter(this, void 0, void 0, function* ()
     console.log(id);
     const data = [
         {
-            project_id: 'proejct110',
-            project_name: '尚未加入的项目001',
+            projectId: 'proejct110',
+            projectName: '尚未加入的项目001',
         },
         {
-            project_id: 'proejct111',
-            project_name: '尚未加入的项目002',
+            projectId: 'proejct111',
+            projectName: '尚未加入的项目002',
         },
         {
-            project_id: 'proejct112',
-            project_name: '尚未加入的项目003',
+            projectId: 'proejct112',
+            projectName: '尚未加入的项目003',
         }
     ];
     return yield data;
