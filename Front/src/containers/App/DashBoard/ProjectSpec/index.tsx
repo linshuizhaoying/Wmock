@@ -10,7 +10,6 @@ import { isEqual } from '../../../../util/helper'
 // import isEqual from 'lodash/isEqual'
 import Popconfirm from 'antd/lib/popconfirm';
 import { deleteDocument, updateDocument}  from '../../../../actions/document'
-import { connect } from 'react-redux';
 import Message from 'antd/lib/message';
 import './index.less';
 export class ProjectSpec extends React.Component<any, any> {
@@ -28,17 +27,20 @@ export class ProjectSpec extends React.Component<any, any> {
   }
 
   componentWillReceiveProps(nextProps: any) {
-    // 每次只更新变动的文档
-    console.log(nextProps.documentList)
-    console.log(this.state.allDocuments)
-    // &&  differenceWith( nextProps.documentList,this.state.allDocuments, isEqual).length !== 0
+    // 每次只更新变动的文档 
+    console.log(nextProps)
+    // console.log(nextProps.documentList.length)
+    // console.log(nextProps.documentList)
+    // console.log(this.state.allDocuments)
+    // console.log(isEqual(nextProps.documentList,this.state.allDocuments))
     if(nextProps.documentList.length >= 0 && !isEqual(nextProps.documentList,this.state.allDocuments)){
-    this.setState({
-      allDocuments: nextProps.documentList,
-      isLoaded: true
-    },()=>{
-      console.log('update ok')
-    })
+      console.log('233')
+      this.setState({
+        allDocuments: nextProps.documentList,
+        isLoaded: true
+      },()=>{
+        console.log('update ok')
+      })
     }
   }
  
@@ -144,9 +146,7 @@ export class ProjectSpec extends React.Component<any, any> {
 
 
 
-const mapStateToProps = (state: any) => ({
-  documentList: state.document.data
-})
 
 
-export default connect(mapStateToProps)(ProjectSpec);
+
+export default ProjectSpec;

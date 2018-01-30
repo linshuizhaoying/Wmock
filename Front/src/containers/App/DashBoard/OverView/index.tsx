@@ -8,6 +8,7 @@ import Icon from 'antd/lib/icon';
 import TimeAgo from 'timeago-react'
 import Avatar from 'antd/lib/avatar';
 import { Link } from 'react-router-dom';
+import { isEqual } from '../../../../util/helper'
 // import timeago from '../../../../util/timeago'
 const { Meta } = Card;
 
@@ -26,15 +27,15 @@ export class Overview extends React.Component<any, any> {
   }
 
   componentWillReceiveProps(nextProps: any) {
-    if(nextProps.messagesList.length > 0 && nextProps.messagesList != this.state.messagesListData){
-      let temp = [];
-      const len = nextProps.messagesList.length > 6 ? 6 :nextProps.messagesList.length
-      for(let i = 0; i < len; i++){
-        temp.push(nextProps.messagesList[i]);
-      }
-      console.log(temp)
+    if(nextProps.messagesList.length >= 0 && !isEqual(nextProps.messagesList,this.state.messagesListData)){
+      // let temp = [];
+      // const len = nextProps.messagesList.length > 6 ? 6 :nextProps.messagesList.length
+      // for(let i = 0; i < len; i++){
+      //   temp.push(nextProps.messagesList[i]);
+      // }
+      // console.log(temp)
       this.setState({
-        messagesListData: temp,
+        messagesListData: nextProps.messagesList,
       },()=>{
         console.log(this.state.messagesListData)
       })
@@ -88,6 +89,16 @@ export class Overview extends React.Component<any, any> {
                 </li>
              </Link>
 
+             <Link to='/wmock/projectSpec' >
+                <li>
+                  <Col span={8}>
+                    <Card hoverable>
+                      <Meta title="6 个文档" avatar={<Icon type="file-text" />} description="项目文档总数"/>
+                    </Card>
+                  </Col>
+                </li>
+              </Link>
+
              <Link to='/wmock/mockModel' >
                 <li>
                   <Col span={8}>
@@ -98,15 +109,6 @@ export class Overview extends React.Component<any, any> {
                 </li>
              </Link>
 
-             <Link to='/wmock/projectSpec' >
-                <li>
-                  <Col span={8}>
-                    <Card hoverable>
-                      <Meta title="6 个文档" avatar={<Icon type="file-text" />} description="项目文档总数"/>
-                    </Card>
-                  </Col>
-                </li>
-              </Link>
 
               {/* <Link to='/wmock/projectSpec' >
                 <li>
@@ -149,19 +151,23 @@ export class Overview extends React.Component<any, any> {
                       </Link>}>
             {
              this.state.messagesListData.length > 0 ? this.state.messagesListData.map((item: any, index: any) =>{
-               return <Timeline.Item dot={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />} color="red" key={index} >
-                    <div className="timeline">
-                      <p className="date"><TimeAgo
-                              datetime={item.time} 
-                              locale='zh_CN' /></p>
-                 
-                      <div>
-                        <div className="user">用户: {item.operator}</div>
-                        <div className="content">{item.desc}</div> 
-                      </div>
-                    
+               if(index < 6){
+                return <Timeline.Item dot={<Avatar src={item.Avatar} />} color="red" key={index} >
+                  <div className="timeline">
+                    <p className="date"><TimeAgo
+                            datetime={item.time} 
+                            locale='zh_CN' /></p>
+              
+                    <div>
+                      <div className="user">用户: {item.operator}</div>
+                      <div className="content">{item.desc}</div> 
                     </div>
-                  </Timeline.Item>
+                  
+                  </div>
+                </Timeline.Item>
+               }else{
+                 return 
+               }
               })
             :null
           }
