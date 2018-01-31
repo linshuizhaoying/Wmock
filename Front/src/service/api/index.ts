@@ -55,7 +55,7 @@ export const removeTeamUser =  baseUrl + '/api/removeTeamUser';
 
 export const sendApply = baseUrl + '/api/sendApply';
 
-export const inviteGroupMember = baseUrl + '/api/inviteGroupMember';
+export const invitedGroupMember = baseUrl + '/api/invitedGroupMember';
 
 export const removeGroupMember = baseUrl + '/api/removeGroupMember';
 

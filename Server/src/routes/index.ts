@@ -17,8 +17,14 @@ export const Router = (app: any) => {
           demoProjectList,
           documentList,
           uploadFile,
+
           teamList,
           sendApply,
+          allowedJoinGroup,
+          rejectJoinGroup,
+          removeGroupMember,
+          invitedGroupMember,
+
           mock,
           unJoinProjectList,
           baseModelList,
@@ -38,10 +44,21 @@ export const Router = (app: any) => {
         .post('/api/projectList', Service.userProjectList)
         // 获取未加入的项目列表
         .post('/api/unJoinProjectList', Service.unJoinProjectList)
+
         // 获取团队列表
         .post('/api/teamList', Service.teamList)
         // 申请加入团队
         .post('/api/sendApply', Service.sendApply)
+        // 允许加入团队
+        .post('/api/allowedJoinGroup', Service.allowedJoinGroup)
+        // 拒绝加入团队
+        .post('/api/rejectJoinGroup', Service.rejectJoinGroup)
+        // 将用户移除团队
+        .post('/api/removeGroupMember', Service.removeGroupMember)
+        // 邀请用户加入团队
+        .post('/api/invitedGroupMember', Service.invitedGroupMember)
+
+
         // 获取文档列表
         .post('/api/documentList', Service.documentList)
         // 获取Mock模型

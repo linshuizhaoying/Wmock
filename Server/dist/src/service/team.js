@@ -44,15 +44,23 @@ exports.sendApply = (ctx) => __awaiter(this, void 0, void 0, function* () {
     return ctx.body = success('发送成功!');
 });
 exports.rejectJoinGroup = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    return ctx.body = success('');
+    const member = ctx.request.body;
+    console.log(member);
+    return ctx.body = success('拒绝成功!');
 });
 exports.removeGroupMember = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    return ctx.body = success('');
+    const member = ctx.request.body;
+    console.log(member);
+    return ctx.body = success('移除成功!');
 });
 exports.allowedJoinGroup = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    return ctx.body = success('');
+    const member = ctx.request.body;
+    console.log(member);
+    return ctx.body = success('加入成功!');
 });
 exports.invitedGroupMember = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    return ctx.body = success('');
+    const member = ctx.request.body;
+    console.log(member);
+    return ctx.body = success('邀请成功!');
 });
 //# sourceMappingURL=team.js.map

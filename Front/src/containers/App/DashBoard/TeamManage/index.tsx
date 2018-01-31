@@ -17,7 +17,7 @@ import Select from 'antd/lib/select';
 import { isEqual } from '../../../../util/helper'
 import { ColumnProps } from "antd/lib/table/";
 import { imgBaseUrl } from '../../../../service/api'
-import { sendApply, allowedJoinGroup, rejectJoinGroup } from '../../../../actions'
+import { sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember } from '../../../../actions'
 import { connect } from 'react-redux';
 
 const Option = Select.Option;
@@ -56,8 +56,12 @@ export class TeamManage extends React.Component<any, any> {
     }
   }
 
-  removeUser = () =>{
-
+  removeUser = (userId:string, projectId:string) =>{
+    const { dispatch } = this.props;
+    dispatch(removeGroupMember({
+      userId,
+      projectId
+    })) 
   }
 
   showJoinProject = ()=>{
@@ -78,11 +82,11 @@ export class TeamManage extends React.Component<any, any> {
       })
       const { dispatch } = this.props;
       dispatch(sendApply({
-        operatorId: this.props.userid,
+        operatorId: this.props.userId,
         operatorName: this.props.username,
         projectId: this.state.selectJoinProject.split('_')[0],
         time: new Date(),
-        objectId: this.props.userid,
+        objectId: this.props.userId,
         objectName: this.props.username,
         desc: this.props.username + ' 申请加入 ' + '项目团队 ' +  this.state.selectJoinProject.split('_')[1],
         type: 'team'
@@ -106,7 +110,11 @@ export class TeamManage extends React.Component<any, any> {
      console.log(this.state.invitedProjectId)
      console.log(this.state.inviteMemberEmail);
      if(Validator.emailCheck(this.state.inviteMemberEmail)){
-       Message.success('发送邀请成功!');
+        const { dispatch } = this.props;
+        dispatch(invitedGroupMember({
+          userEmail: this.state.inviteMemberEmail,
+          projectId: this.state.invitedProjectId
+        })) 
        this.setState({
          inviteGroupMember: false,
        });
@@ -138,7 +146,7 @@ export class TeamManage extends React.Component<any, any> {
    }
  
    isMaster = (currentItem: any) =>{
-     console.log(this.props.userid)
+     console.log(this.props.userId)
      console.log(currentItem.projectId)
      console.log(this.props.teamList)
      let flag = false;
@@ -146,7 +154,7 @@ export class TeamManage extends React.Component<any, any> {
        // 匹配项目
        if(item.projectId === currentItem.projectId){
          // 如果当前用户是该项目的创建者
-         if(item.masterId === this.props.userid){
+         if(item.masterId === this.props.userId){
            flag = true;
          }else{
            flag = false;
@@ -167,9 +175,8 @@ export class TeamManage extends React.Component<any, any> {
         dispatch(allowedJoinGroup({
           userId: currentItem.userId,
           projectId: currentItem.projectId,
-          messageId: item._id
+          messageId: currentItem._id
         })) 
-        Message.success('已成功加入!');
         // 重新刷新信息
         // this.props.refresh();
       }
@@ -184,9 +191,8 @@ export class TeamManage extends React.Component<any, any> {
         dispatch(rejectJoinGroup({
           userId: currentItem.userId,
           projectId: currentItem.projectId,
-          messageId: item._id
+          messageId: currentItem._id
         })) 
-        Message.success('拒绝成功!');
         // 重新刷新信息
         // this.props.refresh();
       }
@@ -276,15 +282,15 @@ export class TeamManage extends React.Component<any, any> {
                                   </div>
                                 </div>
                               </li>
-                              {item.member.length > 0 ? 
+                              {item.member.length >= 0 ? 
                                   item.member.map((user: any) =>{
                                     return(
-                                      <li key={user.userid}>
+                                      <li key={user.userId}>
                                       <div className="member">
                                         <div className="avatar">
                                           <Avatar src={imgBaseUrl + user.avatar}  />
                                           <div className="operate">
-                                          <Popconfirm title={"确定移除 " + user.username + " 吗?"} onConfirm={()=>{this.removeUser()}} okText="确定移除" cancelText="取消">
+                                          <Popconfirm title={"确定移除 " + user.username + " 吗?"} onConfirm={()=>{this.removeUser(user.userId, item.projectId)}} okText="确定移除" cancelText="取消">
                                               <div className="removeUser">
                                                 <Icon type="close" />
                                               </div>

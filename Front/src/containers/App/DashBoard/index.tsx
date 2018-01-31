@@ -137,6 +137,7 @@ export class DashBoard extends React.Component<any, any> {
     }
 
     // 获取最新团队列表
+    console.log(nextProps.teamList)
     if(nextProps.teamList.length > 0 && nextProps.teamList != this.state.teamList){
       this.setState({
         teamList:nextProps.teamList
