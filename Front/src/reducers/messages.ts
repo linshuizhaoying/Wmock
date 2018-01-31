@@ -1,10 +1,23 @@
 import { RECEIVE_MESSAGES, 
-         ERROR_MESSAGES
+         ERROR_MESSAGES,
+         DEAL_JOINGROUP
           // ADD_MESSAGE
         } from '../constants/messages';
 const initialState = {
    data:[],
    teamMessages:[],
+}
+const removeMessages = ( list: any, id: string ) =>{
+  // console.log(list)
+  // console.log(id)
+  const temp: any[] = []
+  list.map((item: any)=>{
+    if(item._id !== id){
+      temp.push(item)
+    }
+    return item
+  }) 
+  return temp
 }
 
 const messages = (state = initialState, action: any) => {
@@ -21,11 +34,11 @@ const messages = (state = initialState, action: any) => {
         ...state,
         data: []
       }
-    // case ADD_MESSAGE:
-    //   return{
-    //     ...state,
-    //     data: [...state.data, action.data]
-    //   }
+    case DEAL_JOINGROUP:
+      return{
+        ...state,
+        teamMessages: removeMessages(state.teamMessages, action.data)
+      }
     default:
       return state
   }

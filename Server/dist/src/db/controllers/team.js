@@ -15,7 +15,7 @@ exports.myTeam = (id) => __awaiter(this, void 0, void 0, function* () {
             projectId: 'project001',
             projectName: 'REST接口示例超长字符串测试asd123',
             member: [{
-                    userid: 'user002',
+                    userId: 'user002',
                     username: '哈哈哈',
                     role: 'front',
                     avatar: 'default.png'
@@ -28,12 +28,12 @@ exports.myTeam = (id) => __awaiter(this, void 0, void 0, function* () {
             projectId: 'project002',
             projectName: '基本操作示例',
             member: [{
-                    userid: 'user002',
+                    userId: 'user002',
                     username: '略略略',
                     role: 'back',
                     avatar: 'default.png'
                 }, {
-                    userid: 'user003',
+                    userId: 'user003',
                     username: '老夫聊发少年狂',
                     role: 'back',
                     avatar: 'default.png'

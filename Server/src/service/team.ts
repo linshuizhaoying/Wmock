@@ -12,11 +12,13 @@ interface Apply {
 }
 
 interface GroupMember {
-  userId: String,
+  userId?: String,
+  userEmail?: String,
   projectId?: String,
   groupId?: String,
   messageId?: String,
 }
+
 
 
 // 返回正常数据
@@ -59,18 +61,26 @@ export const sendApply = async(ctx: any) => {
 }
 
 export const rejectJoinGroup = async(ctx: any) => {
-  return ctx.body = success('')
+  const member: GroupMember = ctx.request.body;
+  console.log(member)
+  return ctx.body = success('拒绝成功!')
 }
 
 export const removeGroupMember = async(ctx: any) => {
-  return ctx.body = success('')
+  const member: GroupMember = ctx.request.body;
+  console.log(member)
+  return ctx.body = success('移除成功!')
 }
 
 
 export const allowedJoinGroup = async(ctx: any) => {
-  return ctx.body = success('')
+  const member: GroupMember = ctx.request.body;
+  console.log(member)
+  return ctx.body = success('加入成功!')
 }
 
 export const invitedGroupMember = async(ctx: any) => {
-  return ctx.body = success('')
+  const member: GroupMember = ctx.request.body;
+  console.log(member)
+  return ctx.body = success('邀请成功!')
 }

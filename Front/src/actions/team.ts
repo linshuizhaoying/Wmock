@@ -16,7 +16,8 @@ interface Id{
 }
 
 interface GroupMember{
-  userId: String,
+  userId?: String,
+  userEmail?: String,
   projectId?: String,
   groupId?: String,
   messageId?: String,
@@ -107,6 +108,79 @@ export function sendApplyError (msg: string) {
   notification.error({
     message:'发送失败!',
     description: '发送失败!',
+    duration: 1
+  })
+  return
+}
+
+export function allowedJoinSuccess (msg: string) {
+  notification.success({
+    message: '加入成功!',
+    description: '加入成功!',
+    duration: 1
+  })
+  return
+}
+
+export function rejectJoinError (msg: string) {
+  notification.error({
+    message:'拒绝失败!',
+    description: '拒绝失败!',
+    duration: 1
+  })
+  return
+}
+
+export function rejectJoinSuccess (msg: string) {
+  notification.success({
+    message: '拒绝成功!',
+    description: '拒绝成功!',
+    duration: 1
+  })
+  return
+}
+
+export function allowedJoinError (msg: string) {
+  notification.error({
+    message:'加入失败!',
+    description: '加入失败!',
+    duration: 1
+  })
+  return
+}
+
+
+export function removeGroupMemberSuccess (msg: string) {
+  notification.success({
+    message: '移除成功!',
+    description: '移除成功!',
+    duration: 1
+  })
+  return
+}
+
+export function removeGroupMemberError (msg: string) {
+  notification.error({
+    message:'移除失败!',
+    description: '移除失败!',
+    duration: 1
+  })
+  return
+}
+
+export function invitedGroupMemberSuccess (msg: string) {
+  notification.success({
+    message: '邀请成功!',
+    description: '邀请成功!',
+    duration: 1
+  })
+  return
+}
+
+export function invitedGroupMemberError (msg: string) {
+  notification.error({
+    message:'邀请失败!',
+    description: '邀请失败!',
     duration: 1
   })
   return
