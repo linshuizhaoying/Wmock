@@ -15,7 +15,11 @@ export const Router = (app: any) => {
           messagesList,
           userProjectList,
           demoProjectList,
+
           documentList,
+          removeDocument,
+          addDocument,
+          updateDocument,
           uploadFile,
 
           teamList,
@@ -27,8 +31,13 @@ export const Router = (app: any) => {
 
           mock,
           unJoinProjectList,
+
           baseModelList,
-          customModelList
+          customModelList,
+          addModel,
+          updateModel,
+          removeModel,
+
         } = Service
 
   router.post('/api/reg', Service.reg)
@@ -61,9 +70,23 @@ export const Router = (app: any) => {
 
         // 获取文档列表
         .post('/api/documentList', Service.documentList)
+        // 添加文档
+        .post('/api/addDocument', Service.addDocument)
+        // 更新文档
+        .post('/api/updateDocument', Service.updateDocument)
+        // 删除文档
+        .post('/api/removeDocument', Service.removeDocument)
+
         // 获取Mock模型
         .get('/api/baseModelList', Service.baseModelList)
         .post('/api/customModelList', Service.customModelList)
+        // 添加Mock模型
+        .post('/api/addModel', Service.addModel)
+        // 更新Mock模型
+        .post('/api/updateModel', Service.updateModel)
+        // 删除Mock模型
+        .post('/api/removeModel', Service.removeModel)
+
         // 图片上传
         .post('/api/upload', async (ctx, next) => {
           let result = {}

@@ -113,28 +113,34 @@ export class ModelMode extends React.Component<any, any> {
   }
   update = () => {
     let newInterface = {
-      "id": this.state.id,
+      "_id": this.state.id,
       "modelName": this.state.modelName,
       "modelDesc": this.state.modelDesc,
-      "modelMode": this.state.modelMode,
-      "mode": this.state.editorContent
+      "modelMode": this.state.editorContent,
     }
-    console.log(newInterface)
-    this.props.hideModelMode()
-    Message.success(`更新成功!`);
-
+    if(this.state.modelName === '' || this.state.modelDesc === '' || this.state.editorContent === '' ){
+      Message.error(`有内容为空，请填写!!`);
+    } else {
+      this.props.update(newInterface)
+     // Message.success(`添加成功!`);
+      this.props.hideModelMode()
+    }
   }
 
   add = () => {
     let newInterface = {
       "modelName": this.state.modelName,
       "modelDesc": this.state.modelDesc,
-      "modelMode": this.state.modelMode,
-      "mode": this.state.editorContent
+      "modelMode": this.state.editorContent,
     }
     console.log(newInterface)
-    this.props.hideModelMode()
-    Message.success(`添加成功!`);
+    if(this.state.modelName === '' || this.state.modelDesc === '' || this.state.editorContent === '' ){
+      Message.error(`有内容为空，请填写!!`);
+    } else {
+      this.props.add(newInterface)
+     // Message.success(`添加成功!`);
+      this.props.hideModelMode()
+    }
 
   }
   selectModel = (value: any) => {

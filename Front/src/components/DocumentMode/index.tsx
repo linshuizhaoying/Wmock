@@ -103,30 +103,33 @@ export class DocumentMode extends React.Component<any, any> {
       "assign":this.state.assign,
       "ownerName":this.state.ownerName,
       "ownerId":this.state.ownerId
-      
     }
-    console.log(newDocument)
-    this.props.updateDocument(newDocument)
-    
-    this.props.hideDocumentMode()
-    Message.success(`更新成功!`);
-    
+    if(this.state.desc === '' || this.state.type === '' || this.state.name === '' || this.state.content === '' || this.state.assign === ''){
+      Message.error(`有内容为空，请填写!!`);
+    } else {
+      console.log(newDocument)
+      this.props.updateDocument(newDocument)
+      this.props.hideDocumentMode();
+      //     this.props.refresh();
+    }
   }
   
   add = () =>{
     let newDocument = {
-      "id":this.state.id,
-      "desc":this.state.desc,
-      "type":this.state.type,
-      "name":this.state.name,
-      "content":this.state.content === '' ? '' :draftToHtml(convertToRaw(this.state.content.getCurrentContent())),
-      "assign":this.state.assign
+      "desc": this.state.desc,
+      "type": this.state.type,
+      "name": this.state.name,
+      "content": this.state.content === '' ? '' : draftToHtml(convertToRaw(this.state.content.getCurrentContent())),
+      "assign": this.state.assign
     }
-    console.log(newDocument)
-    this.props.hideDocumentMode()
-    Message.success(`添加成功!`);
-    this.props.refresh();
-    
+    if(this.state.desc === '' || this.state.type === '' || this.state.name === '' || this.state.content === '' || this.state.assign === ''){
+      Message.error(`有内容为空，请填写!!`);
+    } else {
+      console.log(newDocument)
+      this.props.addDocument(newDocument)
+      this.props.hideDocumentMode();
+      //     this.props.refresh();
+    }
   }
 
   onEditorStateChange = (editorState:any) =>{

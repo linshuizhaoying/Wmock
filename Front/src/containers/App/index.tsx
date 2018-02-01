@@ -24,13 +24,13 @@ class App extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    const { history, dispatch } = this.props;
+    const { dispatch } = this.props;
     console.log('token查询中')
     const token = localStorage.getItem('token')
     if(token ){
        dispatch(userToken({'token':token}))
     }else{
-      history.push('/login')
+      window.location.href = './login'
     }
     // if(!this.props.isLogin){
     //   history.push('/login')
@@ -55,10 +55,11 @@ class App extends React.Component<any, any> {
     }
     if(!this.state.login && nextProps.username.length > 0 && nextProps.isLogin && nextProps.loadingState === 'success'){
       const { history } = this.props;
+      console.log(history.location.pathname)
       this.setState({
         login: true
       })
-      if( history.location.pathname === '/'){
+      if( history.location.pathname === '/' || history.location.pathname.length < 8){
         history.push('/wmock/OverView')
       } else {
         history.push(history.location.pathname)

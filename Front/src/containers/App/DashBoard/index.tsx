@@ -89,7 +89,7 @@ export class DashBoard extends React.Component<any, any> {
       })
     }
     // 获取最新消息列表
-    if(nextProps.messagesList.length > 0 && nextProps.messagesList != this.state.messagesList){
+    if(nextProps.messagesList.length >= 0 && nextProps.messagesList != this.state.messagesList){
       this.setState({
         messagesList:nextProps.messagesList
       },()=>{
@@ -98,7 +98,7 @@ export class DashBoard extends React.Component<any, any> {
     }
 
     // 获取最新团队消息列表
-    if(nextProps.teamMessagesList.length > 0 && nextProps.teamMessagesList != this.state.teamMessagesList){
+    if(nextProps.teamMessagesList.length >= 0 && nextProps.teamMessagesList != this.state.teamMessagesList){
       this.setState({
         teamMessagesList:nextProps.teamMessagesList
       },()=>{
@@ -128,7 +128,7 @@ export class DashBoard extends React.Component<any, any> {
     
 
     // 获取最新文档列表
-    if(nextProps.documentList.length > 0 && nextProps.documentList != this.state.documentList){
+    if(nextProps.documentList.length >= 0 && nextProps.documentList != this.state.documentList){
       this.setState({
         documentList:nextProps.documentList
       },()=>{
@@ -138,7 +138,7 @@ export class DashBoard extends React.Component<any, any> {
 
     // 获取最新团队列表
     console.log(nextProps.teamList)
-    if(nextProps.teamList.length > 0 && nextProps.teamList != this.state.teamList){
+    if(nextProps.teamList.length >= 0 && nextProps.teamList != this.state.teamList){
       this.setState({
         teamList:nextProps.teamList
       },()=>{
@@ -148,7 +148,7 @@ export class DashBoard extends React.Component<any, any> {
 
 
     // 获取最新列表
-    if(nextProps.teamList.length > 0 && nextProps.teamList != this.state.teamList){
+    if(nextProps.teamList.length >= 0 && nextProps.teamList != this.state.teamList){
       this.setState({
         teamList:nextProps.teamList
       },()=>{
@@ -157,7 +157,7 @@ export class DashBoard extends React.Component<any, any> {
     }
 
     // 获取最新Base Model列表
-    if(nextProps.baseModelList.length > 0 && nextProps.baseModelList != this.state.baseModelList){
+    if(nextProps.baseModelList.length >= 0 && nextProps.baseModelList != this.state.baseModelList){
       this.setState({
         baseModelList:nextProps.baseModelList
       },()=>{
@@ -165,7 +165,7 @@ export class DashBoard extends React.Component<any, any> {
       })
     }
     // 获取最新Custom Model列表
-    if(nextProps.customModelList.length > 0 && nextProps.customModelList != this.state.customModelList){
+    if(nextProps.customModelList.length >= 0 && nextProps.customModelList != this.state.customModelList){
       this.setState({
         customModelList:nextProps.customModelList
       },()=>{

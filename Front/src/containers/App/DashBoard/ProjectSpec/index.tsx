@@ -9,8 +9,9 @@ import { isEqual } from '../../../../util/helper'
 // import differenceWith from 'lodash/differenceWith'
 // import isEqual from 'lodash/isEqual'
 import Popconfirm from 'antd/lib/popconfirm';
-import { deleteDocument, updateDocument}  from '../../../../actions/document'
-import Message from 'antd/lib/message';
+import { removeDocument, updateDocument, addDocument}  from '../../../../actions/document'
+// import Message from 'antd/lib/message';
+import { connect } from 'react-redux';
 import './index.less';
 export class ProjectSpec extends React.Component<any, any> {
   constructor (props: any) {
@@ -73,15 +74,21 @@ export class ProjectSpec extends React.Component<any, any> {
     })
   }
 
-  deleteDocument = (id:string) =>{
+  removeDocument = (id:string) =>{
     const { dispatch } = this.props;
-    dispatch(deleteDocument(id)) 
-    Message.success('文档删除成功!');
+    dispatch(removeDocument({id})) 
   }
 
   updateDocument = (data:any) =>{
+    console.log(data)
     const { dispatch } = this.props;
     dispatch(updateDocument(data)) 
+  }
+
+  addDocument = (data:any) =>{
+    console.log(data)
+    const { dispatch } = this.props;
+    dispatch(addDocument(data)) 
   }
 
   render () {
@@ -103,7 +110,7 @@ export class ProjectSpec extends React.Component<any, any> {
                           <Card
                             hoverable  actions={[<div onClick={()=> {this.selectCurrentDocument(item);this.showDocumentMode();}}>编辑<Icon type="edit" /></div>,
                             <div>
-                            <Popconfirm title="确定删除该文档么?" onConfirm={()=>{this.deleteDocument(item._id)}} okText="确定删除" cancelText="取消">
+                            <Popconfirm title="确定删除该文档么?" onConfirm={()=>{this.removeDocument(item._id)}} okText="确定删除" cancelText="取消">
                             删除<Icon type="close" />
                             </Popconfirm>
                            </div>]}
@@ -137,7 +144,7 @@ export class ProjectSpec extends React.Component<any, any> {
           <div></div>
         }
 
-         <DocumentMode refresh={this.props.refresh} updateDocument={this.updateDocument} projectList={this.props.projectList} hideDocumentMode={this.hideDocumentMode} visible={this.state.documentModeVisible} data={this.state.currentInterfaceData}/>
+         <DocumentMode refresh={this.props.refresh} addDocument={this.addDocument} updateDocument={this.updateDocument} projectList={this.props.projectList} hideDocumentMode={this.hideDocumentMode} visible={this.state.documentModeVisible} data={this.state.currentInterfaceData}/>
          
       </div>
     )
@@ -147,6 +154,4 @@ export class ProjectSpec extends React.Component<any, any> {
 
 
 
-
-
-export default ProjectSpec;
+export default connect()(ProjectSpec);

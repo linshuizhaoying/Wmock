@@ -1,16 +1,17 @@
 import { RECEIVE_DOCUMENT, 
   ERROR_DOCUMENT,
-  DELETE_DOCUMENT,
-  UPDATE_DOCUMENT
+  REMOVE_LOCALDOCUMENT,
+  UPDATE_LOCALDOCUMENT
    // ADD_MESSAGE
  } from '../constants/document';
 const initialState = {
   data:[]
 }
-const deleteDocument = ( list:any, id:any ) =>{
+const removeDocument = ( list:any, id:any ) =>{
+  console.log(list,id)
   let temp:any[] = []
   list.map((item:any,key:any)=>{
-    if(item._id !== id){
+    if(item._id !== id.id){
       temp.push(item)
     }
     return item
@@ -47,12 +48,12 @@ const document = (state = initialState, action: any) => {
     ...state,
     data: []
     }
-  case DELETE_DOCUMENT:
+  case REMOVE_LOCALDOCUMENT:
   return{
     ...state,
-    data: deleteDocument(state.data,action.id),
+    data: removeDocument(state.data,action.data),
     }
-  case UPDATE_DOCUMENT:
+  case UPDATE_LOCALDOCUMENT:
   return{
     ...state,
     data: updateDocument(state.data,action.data),

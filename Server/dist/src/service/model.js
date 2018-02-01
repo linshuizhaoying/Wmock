@@ -39,4 +39,19 @@ exports.customModelList = (ctx) => __awaiter(this, void 0, void 0, function* () 
     const result = yield index_1.CustomModelList(id);
     return ctx.body = success(result);
 });
+exports.addModel = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const model = ctx.request.body;
+    console.log(model);
+    return ctx.body = success('添加成功!');
+});
+exports.updateModel = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const model = ctx.request.body;
+    console.log(model);
+    return ctx.body = success('更新成功!');
+});
+exports.removeModel = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const model = ctx.request.body;
+    console.log(model);
+    return ctx.body = success('删除成功!');
+});
 //# sourceMappingURL=model.js.map
