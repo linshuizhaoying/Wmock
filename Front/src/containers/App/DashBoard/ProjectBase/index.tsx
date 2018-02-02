@@ -17,27 +17,13 @@ import Button from 'antd/lib/button';
 import Popconfirm from 'antd/lib/popconfirm';
 import Validator from '../../../../util/validator'
 import InterfaceMode from '../../../../components/InterfaceMode'
-
+import { exportFile } from '../../../../util/fileExport'
+import { isJson } from '../../../../util/helper'
+import Select from 'antd/lib/select';
+const Option = Select.Option;
 const TreeNode = Tree.TreeNode;
+const Dragger = Upload.Dragger;
 let inviteMemberEmailInput:any;
-const uploadProps = {
-  name: 'file',
-  action: '//haoqiao.me/posts/',
-  headers: {
-    authorization: 'authorization-text',
-  },
-  onChange(info: any) {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === 'done') {
-      Message.success(`${info.file.name} 文件上传成功!`);
-    } else if (info.file.status === 'error') {
-      Message.error(`${info.file.name} 文件上传失败.`);
-    }
-  },
-};
-
 
 export class ProjectBase extends React.Component<any, any> {
   constructor (props: any) {
@@ -56,6 +42,9 @@ export class ProjectBase extends React.Component<any, any> {
      inviteMemberEmailInput:'',
      interfaceModeVisible:false,
      autoCheckVisible:false,
+     uploadProject: false,
+     uploadJsonData: '',
+     uploadSelectType: 'demo'
     };
   }
   componentDidMount() {
@@ -165,41 +154,81 @@ export class ProjectBase extends React.Component<any, any> {
     });
   }
 
+  selectUpload = (value: string) => {
+    console.log(value)
+    this.setState({
+      uploadSelectType: value
+    })
+  }
 
   importProjectOk = (e:any) => {
-    console.log(e);
+    const data = JSON.parse(this.state.uploadJsonData)
+    data.type = this.state.uploadSelectType
+    console.log(data)
     Message.success('项目导入成功!');
     this.setState({
       importProject: false,
+      uploadProject: false,
+      uploadJsonData: '',
+      uploadSelectType: 'demo'
     });
   }
+
+
   importProjectCancel = (e:any) => {
     console.log(e);
     this.setState({
       importProject: false,
     });
   }
+  filterData = (json: any) =>{
+    console.log(json)
+    let expectArr = ['_id', 'teamMember']
+    let filterArr = []
+    let result = ''
+    for( let key in json){
+      if (expectArr.indexOf(key) === -1){
+        filterArr.push(key)
+        // 如果是嵌套数组，而且数组内有数据
+        if(Object.prototype.toString.call(json[key]) == "[object Array]" && json[key].length > 0){
+          for( let item in json[key][0]){
+            // 同样对里面的json数据进行属性字段过滤
+            if (expectArr.indexOf(item) === -1){
+              filterArr.push(item)
+            }
+          }
+        }
+      }
+    }
+    result = JSON.stringify(this.state.currentProjectData, filterArr)
+    console.log(result)
+    
+    return result
 
+  }
   exportJson = () => {
-    console.log(this.state.currentProjectData);
+    exportFile(this.filterData(this.state.currentProjectData), 'default.json', 'json')
     Message.success('项目导出成功!');
-    this.setState({
-      exportProject: false,
-    });
+
+    // this.setState({
+    //   exportProject: false,
+    // });
   }
   exportMarkdown = () => {
     console.log(this.state.currentProjectData);
+    exportFile(JSON.stringify(this.state.currentProjectData), 'default.md', 'markdwon')
     Message.success('项目导出成功!');
-    this.setState({
-      exportProject: false,
-    });
+    // this.setState({
+    //   exportProject: false,
+    // });
   }
   exportWord = () => {
     console.log(this.state.currentProjectData);
     Message.success('项目导出成功!');
-    this.setState({
-      exportProject: false,
-    });
+    exportFile(JSON.stringify(this.state.currentProjectData), 'default.doc', 'doc')
+    // this.setState({
+    //   exportProject: false,
+    // });
   }
   exportProjectCancel = (e:any) => {
     console.log(e);
@@ -301,7 +330,42 @@ export class ProjectBase extends React.Component<any, any> {
 
   render () {
      const suffix = this.state.inviteMemberEmail ? <Icon type="close-circle" onClick={this.inviteMemberEmailEmpty} /> : null;
-
+     const uploadProps = {
+      name: 'file',
+      action: '',
+      showUploadList: false,
+      beforeUpload: (file: any) => {{
+        console.log(file)
+        console.log(file.type)
+        const isJSON = file.type === 'application/json';
+        if (!isJSON) {
+          Message.error('只允许上传JSON格式文件!');
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+          Message.error('JSON文件大小必须小于 2MB!');
+        }
+        var reader = new FileReader(); // 读取操作都是由FileReader完成的
+        var that = this
+        reader.readAsText(file);
+        reader.onload = function(){//读取完毕从中取值
+          const json = this.result
+          if(isJson(json) && that.state.uploadJsonData.length === 0){
+            that.setState({
+              uploadProject:true,
+              uploadJsonData: json
+            })
+            Message.success('Json文件上传识别成功!');
+          }
+        }
+        return false;
+      }},
+      
+      onChange: (info: any) => {
+      },
+    };
+    
+    
     return(
       <div>
        {
@@ -412,11 +476,27 @@ export class ProjectBase extends React.Component<any, any> {
           okText="确认"
           cancelText="取消"
         >
-          <Upload {...uploadProps}>
-          <Button>
-            <Icon type="upload" /> 点击上传
-          </Button>
-        </Upload>
+        {
+          !this.state.uploadProject ? 
+          <Dragger {...uploadProps}>
+            <p className="ant-upload-drag-icon">
+              <Icon type="inbox" />
+            </p>
+            <p className="ant-upload-text">点击上传JSON文件或者拖拽上传JSON文件</p>
+              
+          </Dragger>
+          :
+          <div>
+            <h3>选择导入到:</h3>
+            <Select defaultValue="demo" style={{ width: 400 }} onChange={this.selectUpload}>
+              <Option value="demo">演示项目</Option>
+              <Option value="user">我的项目</Option>
+            </Select>
+          </div>
+
+        }
+       
+
         </Modal>
 
         <Modal

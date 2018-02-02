@@ -37,4 +37,19 @@ exports.documentList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const result = yield index_1.AllDocument();
     return ctx.body = success(result);
 });
+exports.addDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const document = ctx.request.body;
+    console.log(document);
+    return ctx.body = success('添加成功!');
+});
+exports.updateDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const document = ctx.request.body;
+    console.log(document);
+    return ctx.body = success('更新成功!');
+});
+exports.removeDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const document = ctx.request.body;
+    console.log(document);
+    return ctx.body = success('删除成功!');
+});
 //# sourceMappingURL=document.js.map

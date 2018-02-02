@@ -143,7 +143,7 @@ export class ProjectDetail extends React.Component<any, any> {
             <TabPane tab="项目简介" key="1">
               <div className="exportMe">
                 <Tooltip placement="right" title={'导出项目'}>
-                   <Icon type="right-circle" onClick={this.props.showexportProject}/>
+                   <Icon type="right-circle" onClick = {()=>this.props.showExportProject()}/>
                 </Tooltip>
               </div>
               <div className="proejctName title">
@@ -252,14 +252,14 @@ export class ProjectDetail extends React.Component<any, any> {
                       <div>已经是全部信息了~</div>}>
                     {
                       this.props.messages.map((item: any, index: any) =>{
-                      return <Timeline.Item dot={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />} color="red" key={index} >
+                      return <Timeline.Item dot={<Avatar src={item.avatar} />} color="red" key={index} >
                             <div className="timeline">
                               <p className="date"><TimeAgo
                                       datetime={item.time} 
                                       locale='zh_CN' /></p>
                         
                               <div>
-                                <div className="user">用户: {item.operator}</div>
+                                <div className="user">用户: {item.operatorName}</div>
                                 <div className="content">{item.desc}</div> 
                               </div>
                             

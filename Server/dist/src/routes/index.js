@@ -14,7 +14,7 @@ const path = require('path');
 const middleware = require('../middleware/index');
 const router = new Irouter();
 exports.Router = (app) => {
-    const { reg, login, tokenLogin, userInfo, messagesList, userProjectList, demoProjectList, documentList, uploadFile, teamList, sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember, mock, unJoinProjectList, baseModelList, customModelList } = Service;
+    const { reg, login, tokenLogin, userInfo, messagesList, userProjectList, demoProjectList, documentList, removeDocument, addDocument, updateDocument, uploadFile, teamList, sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember, mock, unJoinProjectList, baseModelList, customModelList, addModel, updateModel, removeModel, } = Service;
     router.post('/api/reg', Service.reg)
         .post('/api/login', Service.login)
         .get('/api/userInfo', Service.userInfo)
@@ -30,8 +30,14 @@ exports.Router = (app) => {
         .post('/api/removeGroupMember', Service.removeGroupMember)
         .post('/api/invitedGroupMember', Service.invitedGroupMember)
         .post('/api/documentList', Service.documentList)
+        .post('/api/addDocument', Service.addDocument)
+        .post('/api/updateDocument', Service.updateDocument)
+        .post('/api/removeDocument', Service.removeDocument)
         .get('/api/baseModelList', Service.baseModelList)
         .post('/api/customModelList', Service.customModelList)
+        .post('/api/addModel', Service.addModel)
+        .post('/api/updateModel', Service.updateModel)
+        .post('/api/removeModel', Service.removeModel)
         .post('/api/upload', (ctx, next) => __awaiter(this, void 0, void 0, function* () {
         let result = {};
         const serverFilePath = path.join(__dirname, '../images');

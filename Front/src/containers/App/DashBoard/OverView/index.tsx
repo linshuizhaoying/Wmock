@@ -152,14 +152,14 @@ export class Overview extends React.Component<any, any> {
             {
              this.state.messagesListData.length > 0 ? this.state.messagesListData.map((item: any, index: any) =>{
                if(index < 6){
-                return <Timeline.Item dot={<Avatar src={item.Avatar} />} color="red" key={index} >
+                return <Timeline.Item dot={<Avatar src={item.avatar} />} color="red" key={index} >
                   <div className="timeline">
                     <p className="date"><TimeAgo
                             datetime={item.time} 
                             locale='zh_CN' /></p>
               
                     <div>
-                      <div className="user">用户: {item.operator}</div>
+                      <div className="user">用户: {item.operatorName}</div>
                       <div className="content">{item.desc}</div> 
                     </div>
                   

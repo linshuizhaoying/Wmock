@@ -79,16 +79,16 @@ export const removeInterFace =  baseUrl + '/api/removeInterFace';
 
 export const documentList =  baseUrl + '/api/documentList';
 
-export const addDocument =  baseUrl + '/api/addDocument';
-
-export const editDocument =  baseUrl + '/api/editDocument';
-
+export const updateDocument =  baseUrl + '/api/updateDocument';
 export const removeDocument =  baseUrl + '/api/removeDocument';
+export const addDocument =  baseUrl + '/api/addDocument';
 
 // mock模型
 export const baseModelList =  baseUrl + '/api/baseModelList';
 export const customModelList =  baseUrl + '/api/customModelList';
-
+export const updateModel =  baseUrl + '/api/updateModel';
+export const removeModel =  baseUrl + '/api/removeModel';
+export const addModel =  baseUrl + '/api/addModel';
 // 文件上传
 
 export const upload = baseUrl + '/api/upload'
