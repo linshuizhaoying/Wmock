@@ -60,3 +60,13 @@ export function isEqual (value:any, other:any) {
   return true;
 
 };
+
+export function isJson(json:string) {  
+    try {  
+        if (typeof JSON.parse(json) == "object") {  
+            return true;  
+        }  
+    } catch(e) {  
+    }  
+    return false;  
+}  

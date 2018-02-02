@@ -4,16 +4,23 @@ import Table from 'antd/lib/table';
 import './index.less';
 const columns = [{
   title: '操作者',
-  key:'operator_name',
-  dataIndex: 'operator_name',
+  key:'operatorName',
+  dataIndex: 'operatorName',
 }, {
   title: '动作',
   key:'action',
   dataIndex: 'action',
+  render : (action: any)=> (
+    <div>
+      {action === 'add' ? '增加' :''}
+      {action === 'delete' ? '删除' :''}
+      {action === 'update' ? '更新' :''}
+    </div>
+  ),
 }, {
   title: '操作对象',
-  dataIndex: 'object_name',
-  key:'object_name',
+  dataIndex: 'objectName',
+  key:'objectName',
 }, {
   title: '描述',
   dataIndex: 'desc',

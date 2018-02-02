@@ -100,6 +100,11 @@ export function userTokenError (msg: string) {
   })
   window.location.reload();
 }
+export function tokenOut () {
+  return (dispatch: any) => {
+    dispatch(logout())
+  }
+}
 
 export function userLogout () {
   return (dispatch: any) => {

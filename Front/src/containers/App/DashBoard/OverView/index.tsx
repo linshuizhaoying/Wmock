@@ -159,7 +159,7 @@ export class Overview extends React.Component<any, any> {
                             locale='zh_CN' /></p>
               
                     <div>
-                      <div className="user">用户: {item.operator}</div>
+                      <div className="user">用户: {item.operatorName}</div>
                       <div className="content">{item.desc}</div> 
                     </div>
                   
