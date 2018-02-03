@@ -140,9 +140,9 @@ exports.UserProject = (username) => __awaiter(this, void 0, void 0, function* ()
     console.log(username);
     const data = [
         {
-            _id: 'project001',
+            _id: 'project003',
             projectName: 'REST接口示例超长字符串测试asd123',
-            projectUrl: '/project001',
+            projectUrl: '/project003',
             projectDesc: '项目描述',
             version: 'v1.0',
             transferUrl: 'http://haoqiao.me/api/project',
@@ -198,9 +198,9 @@ exports.UserProject = (username) => __awaiter(this, void 0, void 0, function* ()
             ]
         },
         {
-            _id: 'project002',
+            _id: 'project004',
             projectName: '基本操作示例',
-            projectUrl: '/project002',
+            projectUrl: '/project004',
             projectDesc: '项目描述',
             version: 'v2.0',
             transferUrl: 'http://haoqiao.me/api/project',

@@ -1,6 +1,19 @@
 import { UserProject, DemoProject, UnJoinProjectList } from '../db/controllers/index';
 
 
+interface Project {
+  _id?: String,
+  projectName?: String,
+  projectUrl?: String,
+  projectDesc?: String,
+  version?: String,
+  transferUrl?: String,
+  status?: String,
+  type?: String,
+  teamMember?: Array<any>,
+  interfaceList: Array<any>,
+}
+
 // 返回正常数据
 const success = ( data: any) => {
   return {
@@ -49,4 +62,36 @@ export const unJoinProjectList = async(ctx: any) => {
   const result = await UnJoinProjectList(id)
   // console.log(result)
   return ctx.body = success(result)
+}
+
+export const addProject = async(ctx: any) => {
+  const project: Project = ctx.request.body;
+  console.log(project)
+  return ctx.body = success('添加成功!')
+}
+
+
+export const updateProject = async(ctx: any) => {
+  const project: Project = ctx.request.body;
+  console.log(project)
+  return ctx.body = success('更新成功!')
+}
+
+export const removeProject = async(ctx: any) => {
+  const project: Project = ctx.request.body;
+  console.log(project)
+  return ctx.body = success('删除成功!')
+}
+
+
+export const importProject = async(ctx: any) => {
+  const { data } = ctx.request.body;
+  console.log(data)
+  return ctx.body = success('导入成功!')
+}
+
+export const cloneProject = async(ctx: any) => {
+  const { data } = ctx.request.body;
+  console.log(data)
+  return ctx.body = success('删除成功!')
 }

@@ -31,6 +31,11 @@ export const Router = (app: any) => {
 
           mock,
           unJoinProjectList,
+          addProject,
+          removeProject,
+          updateProject,
+          importProject,
+          cloneProject,
 
           baseModelList,
           customModelList,
@@ -47,12 +52,23 @@ export const Router = (app: any) => {
         // 用于持久化登录,只要auth头有未过期的token验证就能证明用户的登录状态
         .post('/api/token', Service.tokenLogin)
         .get('/api/messagesList', Service.messagesList)
+
         // 获取示例项目列表
         .post('/api/demoList', Service.demoProjectList)
         // 获取用户项目列表
         .post('/api/projectList', Service.userProjectList)
         // 获取未加入的项目列表
         .post('/api/unJoinProjectList', Service.unJoinProjectList)
+        // 添加项目
+        .post('/api/addProject', Service.addProject)
+        // 更新项目
+        .post('/api/updateProject', Service.updateProject)
+        // 删除项目
+        .post('/api/removeProject', Service.removeProject)
+        // 导入项目
+        .post('/api/importProject', Service.importProject)
+        // 克隆项目
+        .post('/api/cloneProject', Service.cloneProject)
 
         // 获取团队列表
         .post('/api/teamList', Service.teamList)

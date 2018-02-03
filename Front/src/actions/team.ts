@@ -11,9 +11,6 @@ interface Apply{
   type: String,
 }
 
-interface Id{
-  id:string
-}
 
 interface GroupMember{
   userId?: String,

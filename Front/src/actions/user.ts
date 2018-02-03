@@ -1,8 +1,8 @@
 import { USER_LOGIN, USER_LOGOUT, USER_REG, USER_TOKEN, USER_INFO } from '../constants/user'
 import  notification  from 'antd/lib/notification';
-interface USER {
-  username: String,
-  password: String
+interface User {
+  username: string,
+  password: string
 }
 interface RegUser  {
   username: string,
@@ -10,7 +10,7 @@ interface RegUser  {
   role: string,
   email: string
 }
-const login = (data: USER) => ({
+const login = (data: User) => ({
   type: USER_LOGIN,
   data: data
 })
@@ -34,7 +34,7 @@ const logout = () => ({
   type: USER_LOGOUT
 })
 
-export function userLogin (user:USER) {
+export function userLogin (user:User) {
   return (dispatch: any) => {
     dispatch(login(user))
   }
