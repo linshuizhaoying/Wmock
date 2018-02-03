@@ -28,9 +28,13 @@ export const projectList =  baseUrl + '/api/projectList';
 
 export const addProject =  baseUrl + '/api/addProject';
 
-export const editProject =  baseUrl + '/api/editProject';
+export const updateProject =  baseUrl + '/api/updateProject';
 
 export const removeProject =  baseUrl + '/api/removeProject';
+
+export const importProject =  baseUrl + '/api/importProject';
+
+export const cloneProject =  baseUrl + '/api/cloneProject';
 
 export const unJoinProjectList =  baseUrl + '/api/unJoinProjectList';
 
@@ -38,11 +42,6 @@ export const unJoinProjectList =  baseUrl + '/api/unJoinProjectList';
 // { username:demoId / userId }
 export const demoList =  baseUrl + '/api/demoList';
 
-export const addDemo =  baseUrl + '/api/addDemo';
-
-export const editDemo =  baseUrl + '/api/editDemo';
-
-export const removeDemo =  baseUrl + '/api/removeDemo';
 
 // 团队列表
 export const teamList =  baseUrl + '/api/teamList';
@@ -71,7 +70,7 @@ export const interFaceList =  baseUrl + '/api/interFaceList';
 
 export const addInterFace =  baseUrl + '/api/addInterFace';
 
-export const editInterFace =  baseUrl + '/api/editInterFace';
+export const updateInterFace =  baseUrl + '/api/updateInterFace';
 
 export const removeInterFace =  baseUrl + '/api/removeInterFace';
 

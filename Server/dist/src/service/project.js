@@ -54,4 +54,29 @@ exports.unJoinProjectList = (ctx) => __awaiter(this, void 0, void 0, function* (
     // console.log(result)
     return ctx.body = success(result);
 });
+exports.addProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const project = ctx.request.body;
+    console.log(project);
+    return ctx.body = success('添加成功!');
+});
+exports.updateProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const project = ctx.request.body;
+    console.log(project);
+    return ctx.body = success('更新成功!');
+});
+exports.removeProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const project = ctx.request.body;
+    console.log(project);
+    return ctx.body = success('删除成功!');
+});
+exports.importProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const { data } = ctx.request.body;
+    console.log(data);
+    return ctx.body = success('导入成功!');
+});
+exports.cloneProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const { data } = ctx.request.body;
+    console.log(data);
+    return ctx.body = success('删除成功!');
+});
 //# sourceMappingURL=project.js.map

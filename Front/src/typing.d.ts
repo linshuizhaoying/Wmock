@@ -1,3 +1,20 @@
+interface Id{
+  id: String
+}
+
+interface Project{
+  _id? : String,
+  projectName?: String,
+  projectUrl?: String,
+  projectDesc?: String,
+  version?: String,
+  transferUrl?: String,
+  status?: String,
+  type?: String,
+  teamMember?: Array<any>,
+  interfaceList?: Array<any>,
+}
+
 declare module '*.less' {
   const content: any;
   export default content;

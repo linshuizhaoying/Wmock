@@ -198,6 +198,11 @@ export class DashBoard extends React.Component<any, any> {
     dispatch(fetchProject(user)) 
   }
 
+  getMyProject = () =>{
+    const { dispatch } = this.props;
+    dispatch(fetchProject({'username':this.props.username})) 
+  }
+
   getProjectDemo = () =>{
     const { dispatch } = this.props;
     dispatch(fetchDemo({'username':this.props.username})) 
@@ -297,7 +302,7 @@ export class DashBoard extends React.Component<any, any> {
                       </Link>
                     </Menu.Item>
                     <Menu.Item key="9">
-                      <Link to='/wmock/myProject'>
+                      <Link to='/wmock/myProject'  onClick={this.getMyProject}>
                         <Icon type="credit-card" />我的项目
                       </Link>
                     </Menu.Item>
