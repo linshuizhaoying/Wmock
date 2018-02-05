@@ -144,12 +144,19 @@ export class ProjectDetail extends React.Component<any, any> {
     console.log(projectId)
   }
 
-  toggleTransfer = () => {
+  toggleTransfer = (id: string) => {
+    this.props.update({
+      _id: id,
+      status: 'transfer'
+    })
     console.log('start transfer')
   }
 
-  toggleMock = () => {
-    console.log('start mock')
+  toggleMock = (id: string) => {
+    this.props.update({
+      _id: id,
+      status: 'mock'
+    })
   }
 
   render() {
@@ -245,8 +252,8 @@ export class ProjectDetail extends React.Component<any, any> {
                 />
                 {
                   this.props.data.status === 'mock' ?
-                    <Button onClick={() => this.toggleTransfer()}>接口转发<Icon type="retweet" /></Button>
-                    : <Button onClick={() => this.toggleMock()}>Mock代理<Icon type="retweet" /></Button>
+                    <Button onClick={() => this.toggleTransfer(this.props.data._id)}>接口转发<Icon type="retweet" /></Button>
+                    : <Button onClick={() => this.toggleMock(this.props.data._id)}>Mock代理<Icon type="retweet" /></Button>
                 }
 
                 <Button onClick={() => this.props.showAutoCheckVisible(this.props.data._id)}>自动校验<Icon type="check-circle-o" /></Button>

@@ -1,4 +1,4 @@
-import { FETCH_PROJECT, FETCH_UNJOINPROJECT, FETCH_DEMO, ADD_PROJECT, REMOVE_PROJECT, UPDATE_PROJECT, IMPORT_PROJECT, CLONE_PROJECT } from '../constants/project'
+import { FETCH_PROJECT, FETCH_UNJOINPROJECT, FETCH_DEMO, ADD_PROJECT, REMOVE_PROJECT, UPDATE_PROJECT, IMPORT_PROJECT, CLONE_PROJECT, VERIFY_PROJECT } from '../constants/project'
 import notification from 'antd/lib/notification';
 
 const fetch_project = (data: any) => ({
@@ -14,6 +14,11 @@ const import_project = (data: any) => ({
 
 const clone_project = (data: any) => ({
   type: CLONE_PROJECT,
+  data: data
+})
+
+const verify_project = (data: any) => ({
+  type: VERIFY_PROJECT,
   data: data
 })
 
@@ -64,6 +69,12 @@ export function importProject(data: any) {
 export function cloneProject(data: any) {
   return (dispatch: any) => {
     dispatch(clone_project(data))
+  }
+}
+
+export function verifyProject(data: any) {
+  return (dispatch: any) => {
+    dispatch(verify_project(data))
   }
 }
 
@@ -169,6 +180,24 @@ export function importProjectError(msg: string) {
   return
 }
 
+export function verifyProjectSuccess(msg: string) {
+  notification.success({
+    message: '校验成功!',
+    description: '校验成功!',
+    duration: 1
+  })
+  return
+}
+
+export function verifyProjectError(msg: string) {
+  notification.error({
+    message: '校验失败!',
+    description: '校验失败!',
+    duration: 1
+  })
+  return
+}
+
 export function cloneProjectSuccess(msg: string) {
   notification.success({
     message: '克隆成功!',
@@ -186,6 +215,7 @@ export function cloneProjectError(msg: string) {
   })
   return
 }
+
 
 
 export function errorProject(msg: string) {

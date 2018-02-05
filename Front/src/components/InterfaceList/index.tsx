@@ -24,7 +24,7 @@ export class InterfaceList extends React.Component<any, any> {
   }
 
   componentWillReceiveProps(nextProps: any) {
-    console.log(nextProps)
+   // console.log(nextProps)
   }
 
   preview = (item: any) => {

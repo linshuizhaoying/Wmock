@@ -36,7 +36,10 @@ export const importProject =  baseUrl + '/api/importProject';
 
 export const cloneProject =  baseUrl + '/api/cloneProject';
 
+export const verifyProject = baseUrl + '/api/verifyProject';
+
 export const unJoinProjectList =  baseUrl + '/api/unJoinProjectList';
+
 
 // 项目示例列表
 // { username:demoId / userId }

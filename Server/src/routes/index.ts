@@ -36,6 +36,7 @@ export const Router = (app: any) => {
           updateProject,
           importProject,
           cloneProject,
+          verifyProject,
 
           baseModelList,
           customModelList,
@@ -69,6 +70,8 @@ export const Router = (app: any) => {
         .post('/api/importProject', Service.importProject)
         // 克隆项目
         .post('/api/cloneProject', Service.cloneProject)
+        // 校验项目
+        .post('/api/verifyProject', Service.verifyProject)
 
         // 获取团队列表
         .post('/api/teamList', Service.teamList)
