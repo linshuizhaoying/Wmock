@@ -15,6 +15,15 @@ interface Project{
   interfaceList?: Array<any>,
 }
 
+interface Interface{
+  _id?: String,
+  interfaceName?: String,
+  url?: String,
+  method?: String,
+  desc?: String,
+  mode?: String,
+}
+
 declare module '*.less' {
   const content: any;
   export default content;

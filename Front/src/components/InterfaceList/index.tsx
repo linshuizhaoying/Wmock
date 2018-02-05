@@ -34,7 +34,10 @@ export class InterfaceList extends React.Component<any, any> {
   }
 
   deleteInterface = (id: string) => {
-    console.log(id)
+    this.props.removeInterface({
+      interfaceId:id,
+      projectId: this.props.projectId
+    })
   }
   render() {
 

@@ -10,12 +10,13 @@ import Avatar from 'antd/lib/avatar';
 import Popover from 'antd/lib/popover';
 import Message from 'antd/lib/message';
 import Timeline from 'antd/lib/timeline';
-import Popconfirm from 'antd/lib/popconfirm';
+// import Popconfirm from 'antd/lib/popconfirm';
 import TimeAgo from 'timeago-react'
 import InterfaceList from '../InterfaceList';
 import Divider from 'antd/lib/divider'
 import Alert from 'antd/lib/alert'
 import { MockUrl } from '../../service/api'
+import { Link } from 'react-router-dom';
 const TabPane = Tabs.TabPane;
 
 class EditableCell extends React.Component<any, any> {
@@ -139,7 +140,7 @@ export class ProjectDetail extends React.Component<any, any> {
     }
   }
 
-  deleteInterface = (userId: string, projectId: string) => {
+  removeTeamUser = (userId: string, projectId: string) => {
     console.log(userId)
     console.log(projectId)
   }
@@ -205,21 +206,25 @@ export class ProjectDetail extends React.Component<any, any> {
                       }>
                         <Avatar src={user.avatar} />
                       </Popover>
-                      <div className="projectUserDelete">
-                        <Popconfirm title="确定删除该项目么?" onConfirm={() => { this.deleteInterface(user._id, this.props.data._id) }} okText="确定删除" cancelText="取消">
+                      {/* <div className="projectUserDelete">
+                        <Popconfirm title="确定删除该项目么?" onConfirm={() => { this.removeTeamUser(user._id, this.props.data._id) }} okText="确定删除" cancelText="取消">
                           <Icon type="close" />
                         </Popconfirm>
 
-                      </div>
+                      </div> */}
                     </li>
                   )
                 }) :
                   <div>  </div>
                 }
-                <li className="addProjectUser">
-                  <Icon type="plus" onClick={this.props.showInviteGroupMember} />
-                </li>
+                <Tooltip placement="top" title={'管理项目团队'}>
+                  <Link to='/wmock/teamManage'>
+                    <li className="addProjectUser">
+                      <Icon type="team" />
+                    </li>
+                  </Link>
 
+                </Tooltip>
               </ul>
             </div>
             <div className="proejctDesc title">
@@ -265,7 +270,7 @@ export class ProjectDetail extends React.Component<any, any> {
                   <Icon type="plus-circle-o" onClick={this.props.addInterFace} />
                 </Tooltip>
               </div>
-              <InterfaceList copyToClipBoard={this.copyToClipBoard} selectCurrentInterface={this.props.selectCurrentInterface} showInterfaceMode={this.props.showInterfaceMode} data={this.props.data.interfaceList} projectId={this.props.data._id} baseUrl={MockUrl + '/' + this.props.data._id + this.props.data.projectUrl} />
+              <InterfaceList removeInterface={this.props.removeInterface} copyToClipBoard={this.copyToClipBoard} selectCurrentInterface={this.props.selectCurrentInterface} showInterfaceMode={this.props.showInterfaceMode} data={this.props.data.interfaceList} projectId={this.props.data._id} baseUrl={MockUrl + '/' + this.props.data._id + this.props.data.projectUrl} />
             </div>
 
           </TabPane>

@@ -1,4 +1,6 @@
-import { FETCH_PROJECT, FETCH_UNJOINPROJECT, FETCH_DEMO, ADD_PROJECT, REMOVE_PROJECT, UPDATE_PROJECT, IMPORT_PROJECT, CLONE_PROJECT, VERIFY_PROJECT } from '../constants/project'
+import { FETCH_PROJECT, FETCH_UNJOINPROJECT, FETCH_DEMO, ADD_PROJECT, REMOVE_PROJECT, UPDATE_PROJECT, IMPORT_PROJECT, CLONE_PROJECT, VERIFY_PROJECT,
+         ADD_INTERFACE, REMOVE_INTERFACE, UPDATE_INTERFACE,
+} from '../constants/project'
 import notification from 'antd/lib/notification';
 
 const fetch_project = (data: any) => ({
@@ -49,10 +51,21 @@ const remove_project = (data: any) => ({
 })
 
 
-// const add_message = (data: any) => ({
-//   type: ADD_MESSAGE,
-//   data: data
-// })
+const add_interface = (data: any) => ({
+  type: ADD_INTERFACE,
+  data: data
+})
+
+const update_interface = (data: any) => ({
+  type: UPDATE_INTERFACE,
+  data: data
+})
+
+const remove_interface = (data: any) => ({
+  type: REMOVE_INTERFACE,
+  data: data
+})
+
 
 export function fetchProject(user: any) {
   return (dispatch: any) => {
@@ -109,6 +122,23 @@ export function addProject(project: Project) {
   }
 }
 
+export function removeInterface(id: Id) {
+  return (dispatch: any) => {
+    dispatch(remove_interface(id))
+  }
+}
+
+export function updateInterface(data: Interface) {
+  return (dispatch: any) => {
+    dispatch(update_interface(data))
+  }
+}
+
+export function addInterface(data: Interface) {
+  return (dispatch: any) => {
+    dispatch(add_interface(data))
+  }
+}
 
 export function updateProjectSuccess(msg: string) {
   notification.success({
@@ -162,6 +192,61 @@ export function addProjectError(msg: string) {
   })
   return
 }
+
+export function addInterfaceSuccess(msg: string) {
+  notification.success({
+    message: '添加成功!',
+    description: '添加成功!',
+    duration: 1
+  })
+  return
+}
+
+export function addInterfaceError(msg: string) {
+  notification.error({
+    message: '添加失败!',
+    description: '添加失败!',
+    duration: 1
+  })
+  return
+}
+
+export function updateInterfaceSuccess(msg: string) {
+  notification.success({
+    message: '更新成功!',
+    description: '更新成功!',
+    duration: 1
+  })
+  return
+}
+
+export function updateInterfaceError(msg: string) {
+  notification.error({
+    message: '更新失败!',
+    description: '更新失败!',
+    duration: 1
+  })
+  return
+}
+
+export function removeInterfaceSuccess(msg: string) {
+  notification.success({
+    message: '移除成功!',
+    description: '移除成功!',
+    duration: 1
+  })
+  return
+}
+
+export function removeInterfaceError(msg: string) {
+  notification.error({
+    message: '移除失败!',
+    description: '移除失败!',
+    duration: 1
+  })
+  return
+}
+
 export function importProjectSuccess(msg: string) {
   notification.success({
     message: '导入成功!',

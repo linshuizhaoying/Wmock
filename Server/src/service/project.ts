@@ -13,6 +13,14 @@ interface Project {
   teamMember?: Array<any>,
   interfaceList: Array<any>,
 }
+interface Interface {
+  _id?: String,
+  interfaceName?: String,
+  url?: String,
+  method?: String,
+  desc?: String,
+  mode?: String,
+}
 
 // 返回正常数据
 const success = ( data: any) => {
@@ -121,4 +129,23 @@ export const verifyProject = async(ctx: any) => {
     ]
 
   })
+}
+
+export const addInterface = async(ctx: any) => {
+  const interfaceData: Interface = ctx.request.body;
+  console.log(interfaceData)
+  return ctx.body = success('添加成功!')
+}
+
+
+export const updateInterface = async(ctx: any) => {
+  const interfaceData: Interface = ctx.request.body;
+  console.log(interfaceData)
+  return ctx.body = success('更新成功!')
+}
+
+export const removeInterface = async(ctx: any) => {
+  const interfaceData: Interface = ctx.request.body;
+  console.log(interfaceData)
+  return ctx.body = success('删除成功!')
 }

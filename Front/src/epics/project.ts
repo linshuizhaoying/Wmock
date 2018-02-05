@@ -3,7 +3,7 @@ import { combineEpics } from 'redux-observable';
 import * as fetch from '../service/fetch';
 
 import { LOADING_START, LOADING_ERROR, LOADING_SUCCESS } from '../constants/loading';
-import { projectList, unJoinProjectList, demoList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject } from '../service/api'
+import { projectList, unJoinProjectList, demoList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject, addInterFace, updateInterFace, removeInterFace } from '../service/api'
 
 import {
   ERROR_PROJECT, FETCH_PROJECT,
@@ -15,7 +15,8 @@ import {
   REMOVE_LOCALPROJECT,
   IMPORT_PROJECT,
   CLONE_PROJECT,
-  VERIFY_PROJECT, RECEIVE_VERIFYPROJECT
+  VERIFY_PROJECT, RECEIVE_VERIFYPROJECT,
+  ADD_INTERFACE, UPDATE_INTERFACE, REMOVE_INTERFACE, UPDATE_LOCALINTERFACE, REMOVE_LOCALINTERFACE
 } from '../constants/project';
 
 import {
@@ -25,7 +26,10 @@ import {
   updateProjectSuccess, updateProjectError,
   importProjectSuccess, importProjectError,
   cloneProjectSuccess, cloneProjectError,
-  verifyProjectSuccess, verifyProjectError
+  verifyProjectSuccess, verifyProjectError,
+  removeInterfaceSuccess, removeInterfaceError,
+  updateInterfaceSuccess, updateInterfaceError, 
+  addInterfaceSuccess, addInterfaceError
 } from '../actions/index';
 export const loadingStart = () => ({ type: LOADING_START });
 export const loadingError = () => ({ type: LOADING_ERROR });
@@ -37,6 +41,9 @@ export const unJoinprojectReceive = (data: any) => ({ type: RECEIVE_UNJOINPROJEC
 export const updateLocalProject = (data: any) => ({ type: UPDATE_LOCALPROJECT, data: data })
 export const removeLocalProject = (data: any) => ({ type: REMOVE_LOCALPROJECT, data: data })
 export const verifyLocalProject = (data: any) => ({ type: RECEIVE_VERIFYPROJECT, data: data })
+export const updateLocalInterface = (data: any) => ({ type: UPDATE_LOCALINTERFACE, data: data })
+export const removeLocalInterface = (data: any) => ({ type: REMOVE_LOCALINTERFACE, data: data })
+
 export const nothing = () => ({ type: NOTHING });
 
 export const fetchProject = (action$: any) =>
@@ -228,4 +235,67 @@ export const EcloneProject = (action$: any) =>
   
       });
 
-export default combineEpics(fetchProject, fetchUnJoinProject, fetchDemo, EaddProject, EremoveProject, EupdateProject, EimportProject, EcloneProject, EverifyProject);
+ export const EupdateInterface = (action$: any) =>
+      action$.ofType(UPDATE_INTERFACE)
+        .mergeMap((action: any) => {
+          return fetch.post(updateInterFace, action.data)
+            .map((response: any) => {
+              console.log(response);
+              if (response.state.code === 1) {
+                updateInterfaceSuccess(response.state.msg)
+                return updateLocalInterface(action.data);
+              } else {
+                updateInterfaceError(response.state.msg)
+                return nothing();
+              }
+            })
+            // 只有服务器崩溃才捕捉错误
+            .catch((e: any): any => {
+              return Observable.of(({ type: ERROR_PROJECT })).startWith(loadingError())
+            })
+    
+        });
+    
+    export const EremoveInterface = (action$: any) =>
+      action$.ofType(REMOVE_INTERFACE)
+        .mergeMap((action: any) => {
+          return fetch.post(removeInterFace, action.data)
+            .map((response: any) => {
+              console.log(response);
+              if (response.state.code === 1) {
+                removeInterfaceSuccess(response.state.msg)
+                return removeLocalInterface(action.data);
+              } else {
+                removeInterfaceError(response.state.msg)
+                return nothing();
+              }
+            })
+            // 只有服务器崩溃才捕捉错误
+            .catch((e: any): any => {
+              return Observable.of(({ type: ERROR_PROJECT })).startWith(loadingError())
+            })
+    
+        });
+    
+    export const EaddInterface = (action$: any) =>
+      action$.ofType(ADD_INTERFACE)
+        .mergeMap((action: any) => {
+          return fetch.post(addInterFace, action.data)
+            .map((response: any) => {
+              console.log(response);
+              if (response.state.code === 1) {
+                addInterfaceSuccess(response.state.msg)
+                return nothing();
+              } else {
+                addInterfaceError(response.state.msg)
+                return nothing();
+              }
+            })
+            // 只有服务器崩溃才捕捉错误
+            .catch((e: any): any => {
+              return Observable.of(({ type: ERROR_PROJECT })).startWith(loadingError())
+            })
+    
+        });
+
+export default combineEpics(fetchProject, fetchUnJoinProject, fetchDemo, EaddProject, EremoveProject, EupdateProject, EimportProject, EcloneProject, EverifyProject, EaddInterface, EremoveInterface, EupdateInterface);
