@@ -1,7 +1,6 @@
 import * as React from 'react';
 import './index.less';
-import differenceWith from 'lodash/differenceWith'
-import  isEqual from 'lodash/isEqual'
+import { isEqual } from '../../../../util/helper'
 import Card from 'antd/lib/card';
 import Tree from 'antd/lib/tree';
 import Icon from 'antd/lib/icon';
@@ -12,19 +11,25 @@ import Message from 'antd/lib/message';
 import ProjectDetail from '../../../../components/ProjectDetail';
 import NewProject from '../../../../components/NewProject';
 import Modal from 'antd/lib/modal';
+import Spin from 'antd/lib/spin';
 import Upload from 'antd/lib/upload';
+import Alert from 'antd/lib/alert'
 import Button from 'antd/lib/button';
 import Popconfirm from 'antd/lib/popconfirm';
 import Validator from '../../../../util/validator'
 import InterfaceMode from '../../../../components/InterfaceMode'
+import jsBeautify from 'js-beautify/js/lib/beautify'
 import { exportFile } from '../../../../util/fileExport'
 import { isJson } from '../../../../util/helper'
 import { connect } from 'react-redux';
-import { removeProject, addProject, updateProject, importProject, cloneProject } from '../../../../actions/project'
+import { removeProject, addProject, updateProject, importProject, cloneProject, invitedGroupMember, verifyProject } from '../../../../actions'
 import Select from 'antd/lib/select';
 const Option = Select.Option;
 const TreeNode = Tree.TreeNode;
 const Dragger = Upload.Dragger;
+import Collapse from 'antd/lib/collapse';
+const Panel = Collapse.Panel;
+
 let inviteMemberEmailInput: any;
 
 export class ProjectBase extends React.Component<any, any> {
@@ -49,7 +54,10 @@ export class ProjectBase extends React.Component<any, any> {
       uploadJsonData: '',
       uploadSelectType: 'demo',
       currentCloneProjectType: 'demo',
-      currentCloneProjectId: ''
+      currentCloneProjectId: '',
+      verifyResult: '',
+      verifyData: [],
+
     };
   }
   componentDidMount() {
@@ -59,7 +67,7 @@ export class ProjectBase extends React.Component<any, any> {
   componentWillReceiveProps(nextProps: any) {
     // 每次只更新变动的项目内容
     // console.log(nextProps)
-    if (nextProps.projectList.length > 0 && differenceWith( nextProps.projectList, this.state.allData,  isEqual).length !== 0) {
+    if (nextProps.projectList.length > 0 && !isEqual(nextProps.projectList, this.state.allData)) {
       this.setState({
         allData: nextProps.projectList
       }, () => {
@@ -75,12 +83,21 @@ export class ProjectBase extends React.Component<any, any> {
       })
     }
     // 每次只更新变动的项目动态
-    if (nextProps.messagesList.length > 0 && differenceWith( nextProps.messagesList, this.state.allMessages,  isEqual).length !== 0) {
+    if (nextProps.messagesList.length > 0 && !isEqual(nextProps.messagesList, this.state.allMessages)) {
       this.setState({
         allMessages: nextProps.messagesList
       }, () => {
         //     console.log(this.state.allMessages)
       })
+    }
+    // 更新自动校验内的数据
+    if (nextProps.projectVerify.data && !isEqual(nextProps.projectVerify.data, this.state.verifyData)) {
+        this.setState({
+          verifyResult: nextProps.projectVerify.result,
+          verifyData: nextProps.projectVerify.data
+        }, () => {
+         console.log('校验数据更新')
+        })
     }
 
   }
@@ -154,6 +171,16 @@ export class ProjectBase extends React.Component<any, any> {
     dispatch(updateProject(data))
     // this.selectProject(data._id)
   }
+
+  // 验证项目
+
+  verify = (data: any) => {
+    const { dispatch } = this.props;
+
+    dispatch(verifyProject(data))
+    // this.selectProject(data._id)
+  }
+
 
   handleCancel = (e: any) => {
     console.log(e);
@@ -317,10 +344,13 @@ export class ProjectBase extends React.Component<any, any> {
   }
 
   inviteGroupMemberOk = (e: any) => {
-    console.log(this.props.userid)
-    console.log(this.state.inviteMemberEmail);
+
     if (Validator.emailCheck(this.state.inviteMemberEmail)) {
-      Message.success('发送邀请成功!');
+      const { dispatch } = this.props;
+      dispatch(invitedGroupMember({
+        userEmail: this.state.inviteMemberEmail,
+        projectId: this.state.currentProjectData._id
+      })) 
       this.setState({
         inviteGroupMember: false,
       });
@@ -378,7 +408,7 @@ export class ProjectBase extends React.Component<any, any> {
   }
 
   showAutoCheckVisible = (projectId: string) => {
-    console.log(projectId)
+    this.verify({id:projectId})
     this.setState({
       autoCheckVisible: true
     })
@@ -386,7 +416,9 @@ export class ProjectBase extends React.Component<any, any> {
 
   hideAutoCheckVisible = () => {
     this.setState({
-      autoCheckVisible: false
+      autoCheckVisible: false,
+      verifyData: [],
+      verifyReuslt:''
     })
   }
 
@@ -429,6 +461,7 @@ export class ProjectBase extends React.Component<any, any> {
       },
     };
 
+    
 
     return (
       <div>
@@ -507,7 +540,7 @@ export class ProjectBase extends React.Component<any, any> {
               <div className="projectContent">
                 {
                   this.state.currentProjectData ?
-                    <ProjectDetail showAutoCheckVisible={this.showAutoCheckVisible} addInterFace={this.addInterFace} data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showExportProject={this.showExportProject} showInviteGroupMember={this.showInviteGroupMember} showInterfaceMode={this.showInterfaceMode} selectCurrentInterface={this.selectCurrentInterface} update={this.update} /> :
+                    <ProjectDetail showAutoCheckVisible={this.showAutoCheckVisible} addInterFace={this.addInterFace} data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showExportProject={this.showExportProject} showInviteGroupMember={this.showInviteGroupMember} showInterfaceMode={this.showInterfaceMode} selectCurrentInterface={this.selectCurrentInterface} update={this.update}/> :
                     <div>
                       <h2>
                         项目示例说明
@@ -618,7 +651,49 @@ export class ProjectBase extends React.Component<any, any> {
             onCancel={this.hideAutoCheckVisible}
             footer={null}
           >
+          {
+            this.state.verifyData.length > 0 ?
+             <div>
+               <h2>
+                  {
+                    this.state.verifyResult === 'no' ?
+                    <div>
+                      <Alert message="接口校验不匹配" type="error" showIcon />
+                    </div>
+                    :
+                    <div>
+                      <Alert message="接口校验匹配" type="success" showIcon />
+                    </div>
+                  }
+             
+                 <Collapse bordered={false}>                                    
+                  {
+                    this.state.verifyData.map((item: any, index: any) => {
+                      let  match  = item.compare === 'match' ? '匹配' : '不匹配'
+                      return (
+                        <Panel key={index} header={ "接口 " + item.interfaceName + " " + match }>
+                          <div>
+                            <span>期望数据</span>
+                            <p> {jsBeautify.js_beautify(item.expect, { indent_size: 2 })}</p>
+                          </div>
+                          <div>
+                            <span>实际数据</span> 
+                            <p>  {jsBeautify.js_beautify(item.expect, { indent_size: 2 })} </p>
+                          </div>
 
+                        </Panel>
+                      )
+                    })
+                  }
+                  </Collapse>
+               </h2>
+
+
+             </div>
+            :
+              <h3>校验中,请稍后...<Spin size="large" /></h3>    
+          }
+            
           </Modal>
           <Modal
             title="克隆项目"

@@ -14,7 +14,7 @@ const path = require('path');
 const middleware = require('../middleware/index');
 const router = new Irouter();
 exports.Router = (app) => {
-    const { reg, login, tokenLogin, userInfo, messagesList, userProjectList, demoProjectList, documentList, removeDocument, addDocument, updateDocument, uploadFile, teamList, sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember, mock, unJoinProjectList, addProject, removeProject, updateProject, importProject, cloneProject, baseModelList, customModelList, addModel, updateModel, removeModel, } = Service;
+    const { reg, login, tokenLogin, userInfo, messagesList, userProjectList, demoProjectList, documentList, removeDocument, addDocument, updateDocument, uploadFile, teamList, sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember, mock, unJoinProjectList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject, baseModelList, customModelList, addModel, updateModel, removeModel, } = Service;
     router.post('/api/reg', Service.reg)
         .post('/api/login', Service.login)
         .get('/api/userInfo', Service.userInfo)
@@ -28,6 +28,7 @@ exports.Router = (app) => {
         .post('/api/removeProject', Service.removeProject)
         .post('/api/importProject', Service.importProject)
         .post('/api/cloneProject', Service.cloneProject)
+        .post('/api/verifyProject', Service.verifyProject)
         .post('/api/teamList', Service.teamList)
         .post('/api/sendApply', Service.sendApply)
         .post('/api/allowedJoinGroup', Service.allowedJoinGroup)

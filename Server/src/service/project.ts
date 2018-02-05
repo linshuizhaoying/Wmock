@@ -95,3 +95,30 @@ export const cloneProject = async(ctx: any) => {
   console.log(data)
   return ctx.body = success('删除成功!')
 }
+
+export const verifyProject = async(ctx: any) => {
+  const { data } = ctx.request.body;
+  console.log(data)
+  return ctx.body = success({
+    result: 'no',
+    data: [
+      {
+        'interfaceName': 'token',
+        'expect': '{data:2333}',
+        'actual': '{xxx:222}',
+        'compare': 'mismatch'
+      }, {
+        'interfaceName': '注册',
+        'expect': '{data:2333}',
+        'actual': '{data:222}',
+        'compare': 'match'
+      }, {
+        'interfaceName': '登录',
+        'expect': '{ccc:2333}',
+        'actual': '{ccc:123asd123}',
+        'compare': 'match'
+      }
+    ]
+
+  })
+}

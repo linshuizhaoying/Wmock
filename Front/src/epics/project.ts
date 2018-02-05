@@ -3,7 +3,7 @@ import { combineEpics } from 'redux-observable';
 import * as fetch from '../service/fetch';
 
 import { LOADING_START, LOADING_ERROR, LOADING_SUCCESS } from '../constants/loading';
-import { projectList, unJoinProjectList, demoList, addProject, removeProject, updateProject, importProject, cloneProject } from '../service/api'
+import { projectList, unJoinProjectList, demoList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject } from '../service/api'
 
 import {
   ERROR_PROJECT, FETCH_PROJECT,
@@ -14,7 +14,8 @@ import {
   UPDATE_LOCALPROJECT,
   REMOVE_LOCALPROJECT,
   IMPORT_PROJECT,
-  CLONE_PROJECT
+  CLONE_PROJECT,
+  VERIFY_PROJECT, RECEIVE_VERIFYPROJECT
 } from '../constants/project';
 
 import {
@@ -23,7 +24,8 @@ import {
   removeProjectSuccess, removeProjectError,
   updateProjectSuccess, updateProjectError,
   importProjectSuccess, importProjectError,
-  cloneProjectSuccess, cloneProjectError
+  cloneProjectSuccess, cloneProjectError,
+  verifyProjectSuccess, verifyProjectError
 } from '../actions/index';
 export const loadingStart = () => ({ type: LOADING_START });
 export const loadingError = () => ({ type: LOADING_ERROR });
@@ -34,6 +36,7 @@ export const demoReceive = (data: any) => ({ type: RECEIVE_DEMO, data: data });
 export const unJoinprojectReceive = (data: any) => ({ type: RECEIVE_UNJOINPROJECT, data: data });
 export const updateLocalProject = (data: any) => ({ type: UPDATE_LOCALPROJECT, data: data })
 export const removeLocalProject = (data: any) => ({ type: REMOVE_LOCALPROJECT, data: data })
+export const verifyLocalProject = (data: any) => ({ type: RECEIVE_VERIFYPROJECT, data: data })
 export const nothing = () => ({ type: NOTHING });
 
 export const fetchProject = (action$: any) =>
@@ -203,4 +206,26 @@ export const EcloneProject = (action$: any) =>
         })
 
     });
-export default combineEpics(fetchProject, fetchUnJoinProject, fetchDemo, EaddProject, EremoveProject, EupdateProject, EimportProject, EcloneProject);
+
+ export const EverifyProject = (action$: any) =>
+    action$.ofType(VERIFY_PROJECT)
+      .mergeMap((action: any) => {
+        return fetch.post(verifyProject, action.data)
+          .map((response: any) => {
+            console.log(response);
+            if (response.state.code === 1) {
+              verifyProjectSuccess(response.state.msg)
+              return verifyLocalProject(response.data);
+            } else {
+              verifyProjectError(response.state.msg)
+              return nothing();
+            }
+          })
+          // 只有服务器崩溃才捕捉错误
+          .catch((e: any): any => {
+            return Observable.of(({ type: ERROR_PROJECT })).startWith(loadingError())
+          })
+  
+      });
+
+export default combineEpics(fetchProject, fetchUnJoinProject, fetchDemo, EaddProject, EremoveProject, EupdateProject, EimportProject, EcloneProject, EverifyProject);
