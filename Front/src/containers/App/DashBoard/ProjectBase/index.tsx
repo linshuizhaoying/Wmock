@@ -22,7 +22,7 @@ import jsBeautify from 'js-beautify/js/lib/beautify'
 import { exportFile } from '../../../../util/fileExport'
 import { isJson } from '../../../../util/helper'
 import { connect } from 'react-redux';
-import { removeProject, addProject, updateProject, importProject, cloneProject, invitedGroupMember, verifyProject } from '../../../../actions'
+import { removeProject, addProject, updateProject, importProject, cloneProject, invitedGroupMember, verifyProject, addInterface, removeInterface, updateInterface } from '../../../../actions'
 import Select from 'antd/lib/select';
 const Option = Select.Option;
 const TreeNode = Tree.TreeNode;
@@ -334,6 +334,20 @@ export class ProjectBase extends React.Component<any, any> {
     const { dispatch } = this.props;
     dispatch(removeProject({ id: projectId }))
   }
+  addInterface = (data: any) => {
+    const { dispatch } = this.props;
+    dispatch(addInterface(data))
+  }
+
+  updateInterface = (data: any) => {
+    const { dispatch } = this.props;
+    dispatch(updateInterface(data))
+  }
+
+  removeInterface = (data: any) => {
+    const { dispatch } = this.props;
+    dispatch(removeInterface(data))
+  }
 
   // 邀请成员
 
@@ -512,10 +526,6 @@ export class ProjectBase extends React.Component<any, any> {
 
                                       <div className="interfaceName" onClick={() => { this.selectCurrentInterface(item); this.showInterfaceMode(); }}><Icon type="file" /> {item.interfaceName} </div>
                                       <div className="interfaceOperate">
-                                        <Tooltip placement="top" title={'删除接口'}>
-                                          <Icon type="delete" className="operate-icon" />
-                                        </Tooltip>
-
                                         <Tooltip placement="top" title={'克隆接口'} >
                                           <Icon type="copy" className="operate-icon" />
                                         </Tooltip>
@@ -540,7 +550,7 @@ export class ProjectBase extends React.Component<any, any> {
               <div className="projectContent">
                 {
                   this.state.currentProjectData ?
-                    <ProjectDetail showAutoCheckVisible={this.showAutoCheckVisible} addInterFace={this.addInterFace} data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showExportProject={this.showExportProject} showInviteGroupMember={this.showInviteGroupMember} showInterfaceMode={this.showInterfaceMode} selectCurrentInterface={this.selectCurrentInterface} update={this.update}/> :
+                    <ProjectDetail removeInterface={this.removeInterface} showAutoCheckVisible={this.showAutoCheckVisible} addInterFace={this.addInterFace} data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showExportProject={this.showExportProject} showInviteGroupMember={this.showInviteGroupMember} showInterfaceMode={this.showInterfaceMode} selectCurrentInterface={this.selectCurrentInterface} update={this.update}/> :
                     <div>
                       <h2>
                         项目示例说明
@@ -716,7 +726,7 @@ export class ProjectBase extends React.Component<any, any> {
 
           </Modal>
 
-          <InterfaceMode projectId={this.state.currentProjectData._id} data={this.state.currentInterfaceData} visible={this.state.interfaceModeVisible} hideInterfaceMode={this.hideInterfaceMode} />
+          <InterfaceMode  addInterface={this.addInterface} updateInterface={this.updateInterface}  projectId={this.state.currentProjectData._id} data={this.state.currentInterfaceData} visible={this.state.interfaceModeVisible} hideInterfaceMode={this.hideInterfaceMode} />
         </div>
 
       </div>

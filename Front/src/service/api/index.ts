@@ -70,11 +70,8 @@ export const rejectJoinGroup = baseUrl + '/api/rejectJoinGroup';
 // 接口列表
 
 export const interFaceList =  baseUrl + '/api/interFaceList';
-
 export const addInterFace =  baseUrl + '/api/addInterFace';
-
 export const updateInterFace =  baseUrl + '/api/updateInterFace';
-
 export const removeInterFace =  baseUrl + '/api/removeInterFace';
 
 // 文档列表

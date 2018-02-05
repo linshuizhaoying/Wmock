@@ -104,4 +104,19 @@ exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
         ]
     });
 });
+exports.addInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const interfaceData = ctx.request.body;
+    console.log(interfaceData);
+    return ctx.body = success('添加成功!');
+});
+exports.updateInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const interfaceData = ctx.request.body;
+    console.log(interfaceData);
+    return ctx.body = success('更新成功!');
+});
+exports.removeInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const interfaceData = ctx.request.body;
+    console.log(interfaceData);
+    return ctx.body = success('删除成功!');
+});
 //# sourceMappingURL=project.js.map
