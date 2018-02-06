@@ -7,21 +7,18 @@ import { Link, Switch, Route } from 'react-router-dom';
 
 // 加载子组件
 import './index.less';
-import InterfaceTest from './InterfaceTest/index';
 import Messages from './Messages/index';
 import MockModel from './MockModel/index';
 import MyProject from './MyProject/index';
 import OverView from './OverView/index'
 import ProjectDemo from './ProjectDemo/index';
-import ProjectManage from './ProjectManage/index';
 import ProjectSpec from './ProjectSpec/index';
-import ProjectStruct from './ProjectStruct/index';
-import Template from './Template/index';
 import TeamManage from './TeamManage/index';
 import LoadingBar from '../../../components/LoadingBar';
+// import { isEqual } from '../../../util/helper'
 import { userLogout, userInfo } from '../../../actions/user';
 import { fetchMessages, fetchProject, fetchDemo, fetchDocument, fetchTeam, fetchUnJoinProject, fetchBaseModel, fetchCustomModel } from '../../../actions/index';
-import UserInfo from '../../../components/UserInfo'
+import UserInfo from './UserInfo'
 import Modal from 'antd/lib/modal';
 import Badge from 'antd/lib/badge';
 // import Upload from 'antd/lib/upload';
@@ -36,15 +33,15 @@ export class DashBoard extends React.Component<any, any> {
       collapsed: false,
       progress: 0,
       error: false,
-      messagesList: [],
-      teamMessagesList: [],
-      projectList: [],
-      projectVerify: [],
-      demoList: [],
-      documentList: [],
-      teamList: [],
-      baseModelList: [],
-      customModelList: [],
+      // messagesList: [],
+      // teamMessagesList: [],
+      // projectList: [],
+      // projectVerify: [],
+      // demoList: [],
+      // documentList: [],
+      // teamList: [],
+      // baseModelList: [],
+      // customModelList: [],
       userInfoVisible: false
     };
   }
@@ -89,97 +86,86 @@ export class DashBoard extends React.Component<any, any> {
         progress: 100
       })
     }
-    // 获取最新消息列表
-    if (nextProps.messagesList.length >= 0 && nextProps.messagesList != this.state.messagesList) {
-      this.setState({
-        messagesList: nextProps.messagesList
-      }, () => {
-        // console.log(this.state.messagesList)
-      })
-    }
+    // // 获取最新消息列表
+    // if (nextProps.messagesList.length >= 0 && !isEqual(nextProps.messagesList, this.state.messagesList)) {
+    //   this.setState({
+    //     messagesList: nextProps.messagesList
+    //   }, () => {
+    //     // console.log(this.state.messagesList)
+    //   })
+    // }
 
-    // 获取最新团队消息列表
-    if (nextProps.teamMessagesList.length >= 0 && nextProps.teamMessagesList != this.state.teamMessagesList) {
-      this.setState({
-        teamMessagesList: nextProps.teamMessagesList
-      }, () => {
-        // console.log(this.state.messagesList)
-      })
-    }
+    // // 获取最新团队消息列表
+    // if (nextProps.teamMessagesList.length >= 0 && !isEqual(nextProps.teamMessagesList, this.state.teamMessagesList)) {
+    //   this.setState({
+    //     teamMessagesList: nextProps.teamMessagesList
+    //   }, () => {
+    //     // console.log(this.state.messagesList)
+    //   })
+    // }
 
-    // 获取最新项目列表
-    if (nextProps.projectList !== undefined && nextProps.projectList != this.state.projectList) {
-      this.setState({
-        projectList: nextProps.projectList
-      }, () => {
-        // console.log(this.state.projectList)
-      })
-    }
+    // // 获取最新项目列表
+    // if (nextProps.projectList.length && !isEqual(nextProps.projectList, this.state.projectList)) {
+    //   this.setState({
+    //     projectList: nextProps.projectList
+    //   }, () => {
+    //     // console.log(this.state.projectList)
+    //   })
+    // }
 
-    // 获取最新演示项目列表
-    if (nextProps.demoList !== undefined && nextProps.demoList != this.state.demoList) {
-      this.setState({
-        demoList: nextProps.demoList
-      }, () => {
-        // console.log(this.state.projectList)
-      })
-    }
+    // // 获取最新演示项目列表
+    // if (nextProps.demoList.length && !isEqual(nextProps.demoList, this.state.demoList)) {
+    //   this.setState({
+    //     demoList: nextProps.demoList
+    //   }, () => {
+    //     // console.log(this.state.projectList)
+    //   })
+    // }
 
-    // 获取最新项目校验结果
-    if (nextProps.projectVerify !== undefined && nextProps.projectVerify != this.state.projectVerify) {
-      this.setState({
-        projectVerify: nextProps.projectVerify
-      }, () => {
-        console.log(this.state.projectVerify)
-      })
-    }
-
-
-    // 获取最新文档列表
-    if (nextProps.documentList.length >= 0 && nextProps.documentList != this.state.documentList) {
-      this.setState({
-        documentList: nextProps.documentList
-      }, () => {
-        // console.log(this.state.projectList)
-      })
-    }
-
-    // 获取最新团队列表
-    console.log(nextProps.teamList)
-    if (nextProps.teamList.length >= 0 && nextProps.teamList != this.state.teamList) {
-      this.setState({
-        teamList: nextProps.teamList
-      }, () => {
-        // console.log(this.state.projectList)
-      })
-    }
+    // // 获取最新项目校验结果
+    // if (nextProps.projectVerify && !isEqual(nextProps.projectVerify, this.state.projectVerify)) {
+    //   this.setState({
+    //     projectVerify: nextProps.projectVerify
+    //   }, () => {
+    //     console.log(this.state.projectVerify)
+    //   })
+    // }
 
 
-    // 获取最新列表
-    if (nextProps.teamList.length >= 0 && nextProps.teamList != this.state.teamList) {
-      this.setState({
-        teamList: nextProps.teamList
-      }, () => {
-        // console.log(this.state.projectList)
-      })
-    }
+    // // 获取最新文档列表
+    // if (nextProps.documentList.length >= 0 && !isEqual(nextProps.documentList, this.state.documentList)) {
+    //   this.setState({
+    //     documentList: nextProps.documentList
+    //   }, () => {
+    //      console.log(this.state.documentList)
+    //   })
+    // }
 
-    // 获取最新Base Model列表
-    if (nextProps.baseModelList.length >= 0 && nextProps.baseModelList != this.state.baseModelList) {
-      this.setState({
-        baseModelList: nextProps.baseModelList
-      }, () => {
-        // console.log(this.state.projectList)
-      })
-    }
-    // 获取最新Custom Model列表
-    if (nextProps.customModelList.length >= 0 && nextProps.customModelList != this.state.customModelList) {
-      this.setState({
-        customModelList: nextProps.customModelList
-      }, () => {
-        // console.log(this.state.projectList)
-      })
-    }
+    // // 获取最新团队列表
+    // if (nextProps.teamList.length >= 0 && !isEqual(nextProps.teamList, this.state.teamList)) {
+    //   this.setState({
+    //     teamList: nextProps.teamList
+    //   }, () => {
+    //     // console.log(this.state.projectList)
+    //   })
+    // }
+
+    // // 获取最新Base Model列表
+    // if (nextProps.baseModelList.length >= 0 && !isEqual(nextProps.baseModelList, this.state.baseModelList)) {
+    //   this.setState({
+    //     baseModelList: nextProps.baseModelList
+    //   }, () => {
+    //     // console.log(this.state.projectList)
+    //   })
+    // }
+    // // 获取最新Custom Model列表
+    // if (nextProps.customModelList.length >= 0 && !isEqual(nextProps.customModelList, this.state.customModelList)) {
+    //   this.setState({
+    //     customModelList: nextProps.customModelList
+    //   }, () => {
+    //     // console.log(this.state.projectList)
+    //   })
+    // }
   }
 
   overView = () => {
@@ -226,6 +212,10 @@ export class DashBoard extends React.Component<any, any> {
     dispatch(fetchTeam({ 'id': this.props.userid }))
   }
 
+  getModel = () => {
+    this.getBaseModelList()
+    this.getCustomModelList()
+  }
   getBaseModelList = () => {
     const { dispatch } = this.props;
     dispatch(fetchBaseModel())
@@ -293,7 +283,7 @@ export class DashBoard extends React.Component<any, any> {
                     </Menu.Item> */}
                   <Menu.Item key="3">
                     <Link to='/wmock/teamManage' onClick={() => { this.getTeamList(); this.getUnJoinProjectList() }}>
-                      <Icon type="team" /> <Badge count={this.state.teamMessagesList.length}> <span className="header">团队管理</span></Badge>
+                      <Icon type="team" /> <Badge count={this.props.teamMessagesList.length}> <span className="header">团队管理</span></Badge>
                     </Link>
                   </Menu.Item>
                   <Menu.Item key="4">
@@ -364,19 +354,13 @@ export class DashBoard extends React.Component<any, any> {
               </Header>
               <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
                 <Switch>
-                  <Route path="/wmock/InterfaceTest" component={InterfaceTest} />
-                  <Route path="/wmock/Messages" render={() => <Messages data={this.state.messagesList}></Messages>} />
-                  <Route path="/wmock/MockModel" render={() => <MockModel baseModelList={this.state.baseModelList} customModelList={this.state.customModelList} userid={this.props.userid}></MockModel>} />
-                  <Route path="/wmock/MyProject" render={() => <MyProject projectVerify={this.state.projectVerify} projectList={this.state.projectList} messagesList={this.state.messagesList} userid={this.props.userid}></MyProject>} />
-                  <Route path="/wmock/OverView" render={() => <OverView messagesList={this.state.messagesList}></OverView>} />
-
-                  <Route path="/wmock/ProjectDemo" render={() => <ProjectDemo projectVerify={this.state.projectVerify} projectList={this.state.demoList} messagesList={this.state.messagesList} userid={this.props.userid}></ProjectDemo>} />
-
-                  <Route path="/wmock/ProjectManage" component={ProjectManage} />
-                  <Route path="/wmock/ProjectSpec" render={() => <ProjectSpec messagesList={this.state.messagesList} refresh={this.getDocumentList} projectList={this.state.projectList} documentList={this.state.documentList} userid={this.props.userid}></ProjectSpec>} />
-                  <Route path="/wmock/ProjectStruct" component={ProjectStruct} />
-                  <Route path="/wmock/Template" component={Template} />
-                  <Route path="/wmock/TeamManage" render={() => <TeamManage unJoinprojectList={this.props.unJoinprojectList} userid={this.props.userid} username={this.props.username} refresh={() => { this.getTeamList(); this.getMessagesList() }} teamList={this.state.teamList} teamMessagesList={this.state.teamMessagesList}></TeamManage>} />
+                  <Route path="/wmock/messages" render={() => <Messages data={this.props.messagesList}></Messages>} />
+                  <Route path="/wmock/mockModel" render={() => <MockModel refresh={() => this.getModel()} baseModelList={this.props.baseModelList} customModelList={this.props.customModelList} userid={this.props.userid}></MockModel>} />
+                  <Route path="/wmock/myProject" render={() => <MyProject documentList={this.props.documentList} projectVerify={this.props.projectVerify} projectList={this.props.projectList} messagesList={this.props.messagesList} userid={this.props.userid}></MyProject>} />
+                  <Route path="/wmock/overView" render={() => <OverView messagesList={this.props.messagesList}></OverView>} />
+                  <Route path="/wmock/projectDemo" render={() => <ProjectDemo documentList={this.props.documentList} projectVerify={this.props.projectVerify} projectList={this.props.demoList} messagesList={this.props.messagesList} userid={this.props.userid}></ProjectDemo>} />
+                  <Route path="/wmock/projectSpec" render={() => <ProjectSpec refresh={() => this.getDocumentList()} projectList={this.props.projectList} documentList={this.props.documentList} userid={this.props.userid}></ProjectSpec>} />
+                  <Route path="/wmock/teamManage" render={() => <TeamManage unJoinprojectList={this.props.unJoinprojectList} userid={this.props.userid} username={this.props.username} refresh={() => { this.getTeamList(); this.getMessagesList() }} teamList={this.props.teamList} teamMessagesList={this.props.teamMessagesList}></TeamManage>} />
                 </Switch>
               </Content>
               <Footer>Wmock ©2018 Created by LinShuiZhaoYing</Footer>

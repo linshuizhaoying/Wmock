@@ -5,7 +5,7 @@ import { ColumnProps } from "antd/lib/table/";
 import Button from 'antd/lib/button';
 import Popover from 'antd/lib/popover';
 import Popconfirm from 'antd/lib/popconfirm';
-import { MockUrl } from '../../service/api'
+import { MockUrl } from '../../../../../../../../service/api'
 
 class MyTable extends Table<any>{ }
 

@@ -18,14 +18,14 @@ class ProjectDemo extends React.Component<any, any> {
 
   }
   componentWillReceiveProps(nextProps: any) {
-
+    //  console.log(nextProps)
   }
 
 
   render() {
     return (
       <div className="ProjectDemo">
-        <ProjectBase projectVerify={this.props.projectVerify} projectList={this.props.projectList} messagesList={this.props.messagesList} userid={this.props.userid} type={"demo"}></ProjectBase>
+        <ProjectBase documentList={this.props.documentList} projectVerify={this.props.projectVerify} projectList={this.props.projectList} messagesList={this.props.messagesList} userid={this.props.userid} type={"demo"}></ProjectBase>
       </div>
     );
   }

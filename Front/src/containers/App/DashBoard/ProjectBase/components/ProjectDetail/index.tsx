@@ -12,10 +12,11 @@ import Message from 'antd/lib/message';
 import Timeline from 'antd/lib/timeline';
 // import Popconfirm from 'antd/lib/popconfirm';
 import TimeAgo from 'timeago-react'
-import InterfaceList from '../InterfaceList';
+import InterfaceList from './components/InterfaceList';
 import Divider from 'antd/lib/divider'
 import Alert from 'antd/lib/alert'
-import { MockUrl } from '../../service/api'
+import ProjectSpec from '../../../ProjectSpec'
+import { MockUrl } from '../../../../../../service/api'
 import { Link } from 'react-router-dom';
 const TabPane = Tabs.TabPane;
 
@@ -85,6 +86,7 @@ export class ProjectDetail extends React.Component<any, any> {
     this.state = {
       selectUserId: '', // 从项目选择的用户ID
       projectMessagesList: [], // 项目的动态信息
+      currentDocument: []
     };
   }
   componentDidMount() {
@@ -92,7 +94,7 @@ export class ProjectDetail extends React.Component<any, any> {
   }
 
   componentWillReceiveProps(nextProps: any) {
-    console.log(nextProps)
+    console.log('detail', nextProps)
   }
   changeProjectName = (origin: any, id: any) => {
     return (value: any) => {
@@ -159,11 +161,20 @@ export class ProjectDetail extends React.Component<any, any> {
       status: 'mock'
     })
   }
+  selectTab = (key: string) => {
+    console.log(key)
+    if (key === '4') {
+      // 让加载数据的方法能够在组件加载后执行
+      setTimeout(() => {
+        this.props.selectDocument(this.props.data._id)
+      }, 0)
+    }
+  }
 
   render() {
     return (
       <div id="ProjectDetail">
-        <Tabs defaultActiveKey="1">
+        <Tabs defaultActiveKey="1" onTabClick={this.selectTab}>
           <TabPane tab="项目简介" key="1">
             <div className="exportMe">
               <Tooltip placement="right" title={'导出项目'}>
@@ -299,7 +310,9 @@ export class ProjectDetail extends React.Component<any, any> {
               </Timeline>
             </div>
           </TabPane>
-          <TabPane tab="项目文档" key="4">正在开发中...</TabPane>
+          <TabPane tab="项目文档" key="4">
+            <ProjectSpec userid={this.props.userid} documentList={this.props.documentList} projectList={this.props.projectList} ></ProjectSpec>
+          </TabPane>
         </Tabs>
       </div>
     )

@@ -7,7 +7,7 @@ import Icon from 'antd/lib/icon';
 import Divider from 'antd/lib/divider';
 import Card from 'antd/lib/card';
 import Popconfirm from 'antd/lib/popconfirm';
-import ModelMode from '../../../../components/ModelMode'
+import ModelMode from './components/ModelMode'
 import Modal from 'antd/lib/modal';
 import { isEqual } from '../../../../util/helper'
 import { connect } from 'react-redux';
