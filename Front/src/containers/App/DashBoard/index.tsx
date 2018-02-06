@@ -356,9 +356,9 @@ export class DashBoard extends React.Component<any, any> {
                 <Switch>
                   <Route path="/wmock/messages" render={() => <Messages data={this.props.messagesList}></Messages>} />
                   <Route path="/wmock/mockModel" render={() => <MockModel refresh={() => this.getModel()} baseModelList={this.props.baseModelList} customModelList={this.props.customModelList} userid={this.props.userid}></MockModel>} />
-                  <Route path="/wmock/myProject" render={() => <MyProject documentList={this.props.documentList} projectVerify={this.props.projectVerify} projectList={this.props.projectList} messagesList={this.props.messagesList} userid={this.props.userid}></MyProject>} />
+                  <Route path="/wmock/myProject" render={() => <MyProject documentList={this.props.documentList} projectVerify={this.props.projectVerify}  otherList={this.props.demoList}  projectList={this.props.projectList} messagesList={this.props.messagesList} userid={this.props.userid}></MyProject>} />
                   <Route path="/wmock/overView" render={() => <OverView messagesList={this.props.messagesList}></OverView>} />
-                  <Route path="/wmock/projectDemo" render={() => <ProjectDemo documentList={this.props.documentList} projectVerify={this.props.projectVerify} projectList={this.props.demoList} messagesList={this.props.messagesList} userid={this.props.userid}></ProjectDemo>} />
+                  <Route path="/wmock/projectDemo" render={() => <ProjectDemo documentList={this.props.documentList} projectVerify={this.props.projectVerify} projectList={this.props.demoList} otherList={this.props.projectList} messagesList={this.props.messagesList} userid={this.props.userid}></ProjectDemo>} />
                   <Route path="/wmock/projectSpec" render={() => <ProjectSpec refresh={() => this.getDocumentList()} projectList={this.props.projectList} documentList={this.props.documentList} userid={this.props.userid}></ProjectSpec>} />
                   <Route path="/wmock/teamManage" render={() => <TeamManage unJoinprojectList={this.props.unJoinprojectList} userid={this.props.userid} username={this.props.username} refresh={() => { this.getTeamList(); this.getMessagesList() }} teamList={this.props.teamList} teamMessagesList={this.props.teamMessagesList}></TeamManage>} />
                 </Switch>

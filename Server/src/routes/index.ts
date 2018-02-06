@@ -40,6 +40,7 @@ export const Router = (app: any) => {
           addInterface,
           removeInterface,
           updateInterface,
+          cloneInterface,
 
 
           baseModelList,
@@ -74,6 +75,8 @@ export const Router = (app: any) => {
         .post('/api/importProject', Service.importProject)
         // 克隆项目
         .post('/api/cloneProject', Service.cloneProject)
+        // 克隆接口
+        .post('/api/cloneInterface', Service.cloneInterface)
         // 校验项目
         .post('/api/verifyProject', Service.verifyProject)
          // 添加接口

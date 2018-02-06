@@ -36,6 +36,8 @@ export const importProject =  baseUrl + '/api/importProject';
 
 export const cloneProject =  baseUrl + '/api/cloneProject';
 
+export const cloneInterface =  baseUrl + '/api/cloneInterface';
+
 export const verifyProject = baseUrl + '/api/verifyProject';
 
 export const unJoinProjectList =  baseUrl + '/api/unJoinProjectList';

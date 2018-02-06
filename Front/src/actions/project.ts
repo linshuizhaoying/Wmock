@@ -1,5 +1,5 @@
 import { FETCH_PROJECT, FETCH_UNJOINPROJECT, FETCH_DEMO, ADD_PROJECT, REMOVE_PROJECT, UPDATE_PROJECT, IMPORT_PROJECT, CLONE_PROJECT, VERIFY_PROJECT,
-         ADD_INTERFACE, REMOVE_INTERFACE, UPDATE_INTERFACE,
+         ADD_INTERFACE, REMOVE_INTERFACE, UPDATE_INTERFACE, CLONE_INTERFACE
 } from '../constants/project'
 import notification from 'antd/lib/notification';
 
@@ -18,6 +18,12 @@ const clone_project = (data: any) => ({
   type: CLONE_PROJECT,
   data: data
 })
+
+const clone_interface = (data: any) => ({
+  type: CLONE_INTERFACE,
+  data: data
+})
+
 
 const verify_project = (data: any) => ({
   type: VERIFY_PROJECT,
@@ -82,6 +88,12 @@ export function importProject(data: any) {
 export function cloneProject(data: any) {
   return (dispatch: any) => {
     dispatch(clone_project(data))
+  }
+}
+
+export function cloneInterface(data: any) {
+  return (dispatch: any) => {
+    dispatch(clone_interface(data))
   }
 }
 
@@ -301,6 +313,23 @@ export function cloneProjectError(msg: string) {
   return
 }
 
+export function cloneInterfaceSuccess(msg: string) {
+  notification.success({
+    message: '克隆成功!',
+    description: '克隆成功!',
+    duration: 1
+  })
+  return
+}
+
+export function cloneInterfaceError(msg: string) {
+  notification.error({
+    message: '克隆失败!',
+    description: '克隆失败!',
+    duration: 1
+  })
+  return
+}
 
 
 export function errorProject(msg: string) {

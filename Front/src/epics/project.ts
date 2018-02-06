@@ -3,7 +3,7 @@ import { combineEpics } from 'redux-observable';
 import * as fetch from '../service/fetch';
 
 import { LOADING_START, LOADING_ERROR, LOADING_SUCCESS } from '../constants/loading';
-import { projectList, unJoinProjectList, demoList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject, addInterFace, updateInterFace, removeInterFace } from '../service/api'
+import { projectList, unJoinProjectList, demoList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject, addInterFace, updateInterFace, removeInterFace, cloneInterface } from '../service/api'
 
 import {
   ERROR_PROJECT, FETCH_PROJECT,
@@ -14,7 +14,7 @@ import {
   UPDATE_LOCALPROJECT,
   REMOVE_LOCALPROJECT,
   IMPORT_PROJECT,
-  CLONE_PROJECT,
+  CLONE_PROJECT, CLONE_INTERFACE,
   VERIFY_PROJECT, RECEIVE_VERIFYPROJECT,
   ADD_INTERFACE, UPDATE_INTERFACE, REMOVE_INTERFACE, UPDATE_LOCALINTERFACE, REMOVE_LOCALINTERFACE
 } from '../constants/project';
@@ -29,7 +29,7 @@ import {
   verifyProjectSuccess, verifyProjectError,
   removeInterfaceSuccess, removeInterfaceError,
   updateInterfaceSuccess, updateInterfaceError, 
-  addInterfaceSuccess, addInterfaceError
+  addInterfaceSuccess, addInterfaceError, cloneInterfaceSuccess, cloneInterfaceError
 } from '../actions/index';
 export const loadingStart = () => ({ type: LOADING_START });
 export const loadingError = () => ({ type: LOADING_ERROR });
@@ -213,6 +213,27 @@ export const EcloneProject = (action$: any) =>
         })
 
     });
+ 
+    export const EcloneInterface = (action$: any) =>
+    action$.ofType(CLONE_INTERFACE)
+      .mergeMap((action: any) => {
+        return fetch.post(cloneInterface, action.data)
+          .map((response: any) => {
+            console.log(response);
+            if (response.state.code === 1) {
+              cloneInterfaceSuccess(response.state.msg)
+              return nothing();
+            } else {
+              cloneInterfaceError(response.state.msg)
+              return nothing();
+            }
+          })
+          // 只有服务器崩溃才捕捉错误
+          .catch((e: any): any => {
+            return Observable.of(({ type: ERROR_PROJECT })).startWith(loadingError())
+          })
+  
+      });
 
  export const EverifyProject = (action$: any) =>
     action$.ofType(VERIFY_PROJECT)
@@ -298,4 +319,4 @@ export const EcloneProject = (action$: any) =>
     
         });
 
-export default combineEpics(fetchProject, fetchUnJoinProject, fetchDemo, EaddProject, EremoveProject, EupdateProject, EimportProject, EcloneProject, EverifyProject, EaddInterface, EremoveInterface, EupdateInterface);
+export default combineEpics(fetchProject, fetchUnJoinProject, fetchDemo, EaddProject, EremoveProject, EupdateProject, EimportProject, EcloneProject, EcloneInterface, EverifyProject, EaddInterface, EremoveInterface, EupdateInterface);
