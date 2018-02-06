@@ -5,8 +5,8 @@ import './index.less';
 import Upload from 'antd/lib/upload';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
-import { upload, imgBaseUrl } from '../../service/api/index'
-import  Validator  from '../../util/validator';
+import { upload, imgBaseUrl } from '../../../../service/api/index'
+import  Validator  from '../../../../util/validator';
 import md5 from 'md5'
 import Radio from 'antd/lib/radio';
 const RadioGroup = Radio.Group;

@@ -4,7 +4,7 @@ import Col from 'antd/lib/col';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Card from 'antd/lib/card';
-import DocumentMode from '../../../../components/DocumentMode'
+import DocumentMode from './components/DocumentMode'
 import { isEqual } from '../../../../util/helper'
 // import differenceWith from 'lodash/differenceWith'
 // import isEqual from 'lodash/isEqual'
@@ -30,12 +30,12 @@ export class ProjectSpec extends React.Component<any, any> {
   componentWillReceiveProps(nextProps: any) {
     // 每次只更新变动的文档 
     console.log(nextProps)
+    console.log('项目文档')
     // console.log(nextProps.documentList.length)
     // console.log(nextProps.documentList)
     // console.log(this.state.allDocuments)
     // console.log(isEqual(nextProps.documentList,this.state.allDocuments))
     if (nextProps.documentList.length >= 0 && !isEqual(nextProps.documentList, this.state.allDocuments)) {
-      console.log('233')
       this.setState({
         allDocuments: nextProps.documentList,
         isLoaded: true

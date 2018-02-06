@@ -8,8 +8,8 @@ import Input from 'antd/lib/input';
 import Tooltip from 'antd/lib/tooltip';
 import notification from 'antd/lib/notification'
 import Message from 'antd/lib/message';
-import ProjectDetail from '../../../../components/ProjectDetail';
-import NewProject from '../../../../components/NewProject';
+import ProjectDetail from './components/ProjectDetail';
+import NewProject from './components/NewProject';
 import Modal from 'antd/lib/modal';
 import Spin from 'antd/lib/spin';
 import Upload from 'antd/lib/upload';
@@ -17,13 +17,14 @@ import Alert from 'antd/lib/alert'
 import Button from 'antd/lib/button';
 import Popconfirm from 'antd/lib/popconfirm';
 import Validator from '../../../../util/validator'
-import InterfaceMode from '../../../../components/InterfaceMode'
+import InterfaceMode from './components/ProjectDetail/components/InterfaceMode'
 import jsBeautify from 'js-beautify/js/lib/beautify'
 import { exportFile } from '../../../../util/fileExport'
 import { isJson } from '../../../../util/helper'
 import { connect } from 'react-redux';
 import { removeProject, addProject, updateProject, importProject, cloneProject, invitedGroupMember, verifyProject, addInterface, removeInterface, updateInterface } from '../../../../actions'
 import Select from 'antd/lib/select';
+
 const Option = Select.Option;
 const TreeNode = Tree.TreeNode;
 const Dragger = Upload.Dragger;
@@ -57,6 +58,8 @@ export class ProjectBase extends React.Component<any, any> {
       currentCloneProjectId: '',
       verifyResult: '',
       verifyData: [],
+      allDocumentList:[],
+      currentDocumentList:[]
 
     };
   }
@@ -66,7 +69,7 @@ export class ProjectBase extends React.Component<any, any> {
 
   componentWillReceiveProps(nextProps: any) {
     // 每次只更新变动的项目内容
-    // console.log(nextProps)
+   // console.log(nextProps)
     if (nextProps.projectList.length > 0 && !isEqual(nextProps.projectList, this.state.allData)) {
       this.setState({
         allData: nextProps.projectList
@@ -99,7 +102,18 @@ export class ProjectBase extends React.Component<any, any> {
          console.log('校验数据更新')
         })
     }
-
+    // 更新自动文档数据
+    console.log(nextProps.documentList)
+    if (nextProps.documentList.length >=0 && !isEqual(nextProps.documentList, this.state.allDocumentList)) {
+      this.setState({
+        allDocumentList: nextProps.documentList
+      }, () => {
+        // 如果是在项目内操作文档,那么更新项目内的文档数据
+        if(this.state.currentDocumentList.length > 0){
+          this.selectDocument(this.state.currentProjectData._id)
+        }
+      })
+    }
   }
 
   selectProject = (id: string) => {
@@ -122,11 +136,29 @@ export class ProjectBase extends React.Component<any, any> {
     })
     this.setState({
       currentProjectMessages: arr
-    }, () => {
-      // console.log(this.state.currentProjectMessages)
+    })
+    this.selectDocument(id)
+  
+
+  }
+  selectDocument = (id: string) =>{
+  // 筛选出选中文档
+    // console.log(this.state.allDocumentList)
+    let documentTemp: any[] = []
+    this.state.allDocumentList.map((item: any) => {
+       item.assign.map((projectId: any) => {
+         if(projectId === id){
+           console.log(projectId)
+           console.log(id)
+          documentTemp.push(item)
+         }
+       })
+    })
+    console.log(documentTemp)
+    this.setState({
+      currentDocumentList: documentTemp
     })
   }
-
   // 新建项目
 
   handleOk = (projectName: any, url: any, desc: any) => {
@@ -550,7 +582,7 @@ export class ProjectBase extends React.Component<any, any> {
               <div className="projectContent">
                 {
                   this.state.currentProjectData ?
-                    <ProjectDetail removeInterface={this.removeInterface} showAutoCheckVisible={this.showAutoCheckVisible} addInterFace={this.addInterFace} data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showExportProject={this.showExportProject} showInviteGroupMember={this.showInviteGroupMember} showInterfaceMode={this.showInterfaceMode} selectCurrentInterface={this.selectCurrentInterface} update={this.update}/> :
+                    <ProjectDetail selectDocument={this.selectDocument} userid={this.props.userid} documentList={this.state.currentDocumentList} projectList={this.props.projectList} removeInterface={this.removeInterface} showAutoCheckVisible={this.showAutoCheckVisible} addInterFace={this.addInterFace} data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showExportProject={this.showExportProject} showInviteGroupMember={this.showInviteGroupMember} showInterfaceMode={this.showInterfaceMode} selectCurrentInterface={this.selectCurrentInterface} update={this.update}/> :
                     <div>
                       <h2>
                         项目示例说明

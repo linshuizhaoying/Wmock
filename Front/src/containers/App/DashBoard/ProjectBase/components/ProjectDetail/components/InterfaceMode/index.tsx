@@ -9,7 +9,7 @@ import 'brace/mode/javascript';
 import 'brace/theme/monokai';
 import jsBeautify from 'js-beautify/js/lib/beautify'
 import Message from 'antd/lib/message';
-import { MockUrl } from '../../service/api'
+import { MockUrl } from '../../../../../../../../service/api'
 const Option = Select.Option;
 
 export class InterfaceMode extends React.Component<any, any> {

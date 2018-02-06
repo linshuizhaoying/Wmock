@@ -16,7 +16,7 @@ export class NewProject extends React.Component<any, any> {
   
 
   componentDidMount() {
-    console.log('2333')
+
   }
 
   editProjectName = (name:string) => {
