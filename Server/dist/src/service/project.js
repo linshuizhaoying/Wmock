@@ -77,7 +77,12 @@ exports.importProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
 exports.cloneProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { data } = ctx.request.body;
     console.log(data);
-    return ctx.body = success('删除成功!');
+    return ctx.body = success('克隆成功!');
+});
+exports.cloneInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const { data } = ctx.request.body;
+    console.log(data);
+    return ctx.body = success('克隆成功!');
 });
 exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { data } = ctx.request.body;

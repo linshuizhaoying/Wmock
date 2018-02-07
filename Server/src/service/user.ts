@@ -3,14 +3,14 @@ import Validator from '../utils/validator'
 import { AddRegUser, LoginUser, FindUserById } from '../db/controllers'
 import { config } from '../config'
 interface UserData  {
-  userid: string,
-  username: string,
-  avatar: string,
-  email: string,
-  regDate: Date,
-  token: any,
-  role: string,
-  msg: string
+  userid?: string,
+  username?: string,
+  avatar?: string,
+  email?: string,
+  regDate?: Date,
+  token?: any,
+  role?: string,
+  msg?: string
 }
 
 interface ErrorData  {
@@ -225,4 +225,10 @@ export const tokenLogin = async(ctx: any) => {
       msg: '会话过期!'
     })
   }
+}
+
+export const updateUser = async(ctx: any) => {
+  const data = ctx.request.body;
+  console.log(data)
+  return ctx.body = success({msg: '登录成功!' })
 }

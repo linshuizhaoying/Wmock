@@ -101,8 +101,15 @@ export const importProject = async(ctx: any) => {
 export const cloneProject = async(ctx: any) => {
   const { data } = ctx.request.body;
   console.log(data)
-  return ctx.body = success('删除成功!')
+  return ctx.body = success('克隆成功!')
 }
+
+export const cloneInterface = async(ctx: any) => {
+  const { data } = ctx.request.body;
+  console.log(data)
+  return ctx.body = success('克隆成功!')
+}
+
 
 export const verifyProject = async(ctx: any) => {
   const { data } = ctx.request.body;

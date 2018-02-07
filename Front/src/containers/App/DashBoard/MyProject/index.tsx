@@ -20,7 +20,7 @@ export class MyProject extends React.Component<any, any> {
   render () {
     return(
       <div id="MyProject">
-        <ProjectBase documentList={this.props.documentList} projectVerify={this.props.projectVerify} projectList={this.props.projectList} messagesList={this.props.messagesList} userid={this.props.userid} type={"user"}></ProjectBase>
+        <ProjectBase otherList={this.props.otherList}  documentList={this.props.documentList} projectVerify={this.props.projectVerify} projectList={this.props.projectList} messagesList={this.props.messagesList} userid={this.props.userid} type={"user"}></ProjectBase>
       </div>
     )
   }

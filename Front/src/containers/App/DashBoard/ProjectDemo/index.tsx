@@ -25,7 +25,7 @@ class ProjectDemo extends React.Component<any, any> {
   render() {
     return (
       <div className="ProjectDemo">
-        <ProjectBase documentList={this.props.documentList} projectVerify={this.props.projectVerify} projectList={this.props.projectList} messagesList={this.props.messagesList} userid={this.props.userid} type={"demo"}></ProjectBase>
+        <ProjectBase  otherList={this.props.otherList} documentList={this.props.documentList} projectVerify={this.props.projectVerify} projectList={this.props.projectList} messagesList={this.props.messagesList} userid={this.props.userid} type={"demo"}></ProjectBase>
       </div>
     );
   }

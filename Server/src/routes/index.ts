@@ -12,6 +12,7 @@ export const Router = (app: any) => {
           login,
           tokenLogin,
           userInfo,
+          updateUser,
           messagesList,
           userProjectList,
           demoProjectList,
@@ -40,6 +41,7 @@ export const Router = (app: any) => {
           addInterface,
           removeInterface,
           updateInterface,
+          cloneInterface,
 
 
           baseModelList,
@@ -56,6 +58,8 @@ export const Router = (app: any) => {
         .get('/api/userInfo', Service.userInfo)
         // 用于持久化登录,只要auth头有未过期的token验证就能证明用户的登录状态
         .post('/api/token', Service.tokenLogin)
+        // 更新用户信息
+        .post('/api/updateUser', Service.updateUser)
         .get('/api/messagesList', Service.messagesList)
 
         // 获取示例项目列表
@@ -74,6 +78,8 @@ export const Router = (app: any) => {
         .post('/api/importProject', Service.importProject)
         // 克隆项目
         .post('/api/cloneProject', Service.cloneProject)
+        // 克隆接口
+        .post('/api/cloneInterface', Service.cloneInterface)
         // 校验项目
         .post('/api/verifyProject', Service.verifyProject)
          // 添加接口
