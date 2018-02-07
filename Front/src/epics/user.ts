@@ -1,11 +1,11 @@
 
 import { Observable } from 'rxjs/Observable'
 import { combineEpics } from 'redux-observable';
-import { Login, Reg, Token, UserInfo } from '../service/api'
+import { Login, Reg, Token, UserInfo, updateUser } from '../service/api'
 import * as fetch from '../service/fetch';
-import { USER_LOGIN, USER_INFO ,USER_LOGINSUCCESS, USER_LOGINERROR, USER_REG, USER_REGSUCCESS, USER_REGERROR, USER_TOKEN, USER_LOGOUT } from '../constants/user';
+import { USER_LOGIN, USER_INFO ,USER_LOGINSUCCESS, USER_LOGINERROR, USER_REG, USER_REGSUCCESS, USER_REGERROR, USER_TOKEN, USER_LOGOUT, UPDATE_USER, NOTHING, UPDATE_LOCALUSER } from '../constants/user';
 import { LOADING_START, LOADING_ERROR, LOADING_SUCCESS } from '../constants/loading';
-import { userRegSuccess, userRegError, userLoginSuccess, userLoginError, userTokenError } from '../actions/user'
+import { userRegSuccess, userRegError, userLoginSuccess, userLoginError, userTokenError, updateUserSuccess, updateUserError } from '../actions/user'
 
 export const loadingStart = () => ({type: LOADING_START});
 export const loadingError = () => ({type: LOADING_ERROR});
@@ -16,9 +16,10 @@ export const RegError = () => ({type: USER_REGERROR});
 
 export const LoginSuccess = (data:any) => ({type: USER_LOGINSUCCESS, data: data});
 export const SetUserInfo = (data:any) => ({type: USER_INFO, data: data});
-
+export const updateLocalUser = (data: any) => ({ type: UPDATE_LOCALUSER, data: data })
 export const LoginError = () => ({type: USER_LOGINERROR});
 export const TokenOut = () => ({type: USER_LOGOUT});
+export const nothing = () => ({ type: NOTHING });
 
 export const userReg  = (action$:any) =>
   action$.ofType(USER_REG)
@@ -110,9 +111,34 @@ export const userToken  = (action$:any) =>
     .catch((e: any): any => {
       // console.log(e)
       return Observable.of(({ type: USER_LOGINERROR })).startWith(loadingError())
-    }).startWith(loadingSuccess()).delay(300).startWith(loadingStart())
+    })
 
   });
 
-export default combineEpics(userLogin, userReg, userToken, userInfo);
+  export const userUpdate  = (action$:any) =>
+  action$.ofType(UPDATE_USER)
+  .mergeMap((action: any) => {
+    return fetch.post(updateUser, action.data)
+    // 登录验证情况
+    .map((response: any) => {
+      console.log(response);
+      if(response.state.code === 1){
+        updateUserSuccess(response.state.msg);
+        return updateLocalUser(action.data);
+      }else{
+        console.log('token error')
+        updateUserError(response.state.msg);
+        return nothing();
+      }
+    })
+    // 只有服务器崩溃才捕捉错误
+    .catch((e: any): any => {
+      // console.log(e)
+      return Observable.of(({ type: USER_LOGINERROR })).startWith(loadingError())
+    })
+
+  });
+
+
+export default combineEpics(userLogin, userReg, userToken, userInfo, userUpdate);
     

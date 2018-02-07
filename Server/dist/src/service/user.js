@@ -203,4 +203,9 @@ exports.tokenLogin = (ctx) => __awaiter(this, void 0, void 0, function* () {
         });
     }
 });
+exports.updateUser = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const data = ctx.request.body;
+    console.log(data);
+    return ctx.body = success({ msg: '登录成功!' });
+});
 //# sourceMappingURL=user.js.map

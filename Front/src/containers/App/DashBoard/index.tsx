@@ -372,9 +372,9 @@ export class DashBoard extends React.Component<any, any> {
           visible={this.state.userInfoVisible}
           width={'60%'}
           onCancel={this.hideUserInfoVisible}
-          onOk={this.getUserInfo}
+          onOk={this.hideUserInfoVisible}
           cancelText="取消"
-          okText="刷新载入变更"
+          okText="确定"
         >
           <UserInfo getUserInfo={this.getUserInfo} userData={this.props.userData} />
         </Modal>

@@ -14,11 +14,12 @@ const path = require('path');
 const middleware = require('../middleware/index');
 const router = new Irouter();
 exports.Router = (app) => {
-    const { reg, login, tokenLogin, userInfo, messagesList, userProjectList, demoProjectList, documentList, removeDocument, addDocument, updateDocument, uploadFile, teamList, sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember, mock, unJoinProjectList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject, addInterface, removeInterface, updateInterface, cloneInterface, baseModelList, customModelList, addModel, updateModel, removeModel, } = Service;
+    const { reg, login, tokenLogin, userInfo, updateUser, messagesList, userProjectList, demoProjectList, documentList, removeDocument, addDocument, updateDocument, uploadFile, teamList, sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember, mock, unJoinProjectList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject, addInterface, removeInterface, updateInterface, cloneInterface, baseModelList, customModelList, addModel, updateModel, removeModel, } = Service;
     router.post('/api/reg', Service.reg)
         .post('/api/login', Service.login)
         .get('/api/userInfo', Service.userInfo)
         .post('/api/token', Service.tokenLogin)
+        .post('/api/updateUser', Service.updateUser)
         .get('/api/messagesList', Service.messagesList)
         .post('/api/demoList', Service.demoProjectList)
         .post('/api/projectList', Service.userProjectList)

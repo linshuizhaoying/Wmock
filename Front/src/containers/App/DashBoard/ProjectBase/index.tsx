@@ -282,7 +282,8 @@ export class ProjectBase extends React.Component<any, any> {
     const { dispatch } = this.props;
     dispatch(cloneProject({
       id: this.state.currentCloneProjectId,
-      type: this.state.currentCloneProjectType
+      type: this.state.currentCloneProjectType,
+      userId: this.props.userid
     }))
     this.setState({
       cloneProject: false,

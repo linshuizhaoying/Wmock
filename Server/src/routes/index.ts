@@ -12,6 +12,7 @@ export const Router = (app: any) => {
           login,
           tokenLogin,
           userInfo,
+          updateUser,
           messagesList,
           userProjectList,
           demoProjectList,
@@ -57,6 +58,8 @@ export const Router = (app: any) => {
         .get('/api/userInfo', Service.userInfo)
         // 用于持久化登录,只要auth头有未过期的token验证就能证明用户的登录状态
         .post('/api/token', Service.tokenLogin)
+        // 更新用户信息
+        .post('/api/updateUser', Service.updateUser)
         .get('/api/messagesList', Service.messagesList)
 
         // 获取示例项目列表

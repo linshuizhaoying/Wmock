@@ -1,4 +1,4 @@
-import { USER_LOGINSUCCESS, USER_LOGINERROR, USER_LOGOUT, USER_REGSUCCESS, USER_REGERROR, USER_INFO } from '../constants/user';
+import { USER_LOGINSUCCESS, USER_LOGINERROR, USER_LOGOUT, USER_REGSUCCESS, USER_REGERROR, USER_INFO, UPDATE_LOCALUSER } from '../constants/user';
 const initialState = {
    username: '',
    userid:'',
@@ -7,6 +7,12 @@ const initialState = {
    regDate:'',
    role:'',
    isLogin: false,
+}
+const updateUserInfo = (origin: any, userInfo: any) => {
+  if(userInfo.oldPass !== undefined){
+    userInfo = {}
+  }
+  return Object.assign({}, origin, userInfo)
 }
 
 const user = (state = initialState, action: any) => {
@@ -25,7 +31,10 @@ const user = (state = initialState, action: any) => {
         role: action.data.role,
         isLogin: true
       }
-    
+    case UPDATE_LOCALUSER:
+      return {
+        ...updateUserInfo(state, action.data)
+      }
     case USER_REGERROR:
       return{
         ...state,
