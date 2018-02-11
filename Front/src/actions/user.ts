@@ -1,24 +1,13 @@
-import { USER_LOGIN, USER_LOGOUT, USER_REG, USER_TOKEN, USER_INFO, UPDATE_USER } from '../constants/user'
-import  notification  from 'antd/lib/notification';
-interface LoginUser {
-  username: string,
-  password: string
-}
-interface User {
-  username?: string,
-  userid?: string,
-  email?: string,
-  avatar?: string,
-  role?: string,
-  oldPass?: string,
-  newPass?: string
-}
-interface RegUser  {
-  username: string,
-  password: string,
-  role: string,
-  email: string
-}
+import notification from 'antd/lib/notification';
+import {
+  UPDATE_USER,
+  USER_INFO,
+  USER_LOGIN,
+  USER_LOGOUT,
+  USER_REG,
+  USER_TOKEN
+  } from '../constants/user';
+
 const login = (data: LoginUser) => ({
   type: USER_LOGIN,
   data: data
@@ -29,131 +18,124 @@ const reg = (data: RegUser) => ({
   data: data
 })
 
-const token = (data: any) => ({
+const token = (data: object) => ({
   type: USER_TOKEN,
   data: data
 })
 
-const info = (data: any) => ({
+const info = (userInfoData: object) => ({
   type: USER_INFO,
-  data: data
+  data: userInfoData
 })
 
-
-const update_user = (data: any) => ({
+const updateUserData = (user: User) => ({
   type: UPDATE_USER,
-  data: data
+  data: user
 })
-
 
 const logout = () => ({
   type: USER_LOGOUT
 })
 
-export function userLogin (user:LoginUser) {
-  return (dispatch: any) => {
+export function userLogin(user: LoginUser) {
+  return (dispatch: Function) => {
     dispatch(login(user))
   }
 }
 
-
-export function userToken (t:any) {
-  return (dispatch: any) => {
-    dispatch(token(t))
+export function userToken(data: object) {
+  return (dispatch: Function) => {
+    dispatch(token(data))
   }
 }
 
-export function userInfo (i:any) {
-  return (dispatch: any) => {
-    dispatch(info(i))
+export function userInfo(userInfoData: object) {
+  return (dispatch: Function) => {
+    dispatch(info(userInfoData))
   }
 }
 
-
-export function userReg (user:RegUser) {
-  return (dispatch: any) => {
+export function userReg(user: RegUser) {
+  return (dispatch: Function) => {
     dispatch(reg(user))
   }
 }
 
-export function updateUser (user:User) {
-  return (dispatch: any) => {
-    dispatch(update_user(user))
+export function updateUser(user: User) {
+  return (dispatch: Function) => {
+    dispatch(updateUserData(user))
   }
 }
 
-
-export function userLoginSuccess () {
+export function userLoginSuccess() {
   notification.success({
-    message:' 登录成功!',
-    description:'登录成功',
+    message: ' 登录成功!',
+    description: '登录成功',
     duration: 2
   })
 }
 
-export function userLoginError (msg: string) {
+export function userLoginError(msg: string) {
   notification.error({
-    message:' 登录失败!',
+    message: ' 登录失败!',
     description: msg,
     duration: 2
   })
 }
 
-export function userRegSuccess () {
+export function userRegSuccess() {
   notification.success({
-    message:' 注册成功!',
-    description:'注册成功',
+    message: ' 注册成功!',
+    description: '注册成功',
     duration: 2
   })
 }
 
-export function userRegError (msg: string) {
+export function userRegError(msg: string) {
   notification.error({
-    message:' 注册失败!',
+    message: ' 注册失败!',
     description: msg,
     duration: 2
   })
 }
 
-export function updateUserSuccess (msg: string) {
+export function updateUserSuccess(msg: string) {
   notification.success({
-    message:' 更新成功!',
+    message: ' 更新成功!',
     description: msg,
     duration: 2
   })
 }
 
-export function updateUserError (msg: string) {
+export function updateUserError(msg: string) {
   notification.error({
-    message:' 更新失败!',
+    message: ' 更新失败!',
     description: msg,
     duration: 2
   })
 }
 
-
-export function userTokenError (msg: string) {
+export function userTokenError(msg: string) {
   notification.error({
-    message:' Token无效!',
+    message: ' Token无效!',
     description: msg,
     duration: 2
   })
   window.location.reload();
 }
-export function tokenOut () {
-  return (dispatch: any) => {
+export function tokenOut() {
+  return (dispatch: Function) => {
     dispatch(logout())
   }
 }
 
-export function userLogout () {
-  return (dispatch: any) => {
+export function userLogout() {
+  return (dispatch: Function) => {
     dispatch(logout())
     notification.success({
-      message:' 退出成功!',
-      description:'退出成功',
+      message: ' 退出成功!',
+      description: '退出成功',
       duration: 2
     })
   }
 }
-

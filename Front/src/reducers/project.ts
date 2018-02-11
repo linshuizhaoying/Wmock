@@ -1,15 +1,13 @@
 import {
-  RECEIVE_PROJECT,
   ERROR_PROJECT,
-  RECEIVE_UNJOINPROJECT,
   RECEIVE_DEMO,
-  //  UPDATE_LOCALPROJECT,
-  REMOVE_LOCALPROJECT,
-  UPDATE_LOCALPROJECT,
+  RECEIVE_PROJECT,
+  RECEIVE_UNJOINPROJECT,
   RECEIVE_VERIFYPROJECT,
   REMOVE_LOCALINTERFACE,
-  UPDATE_LOCALINTERFACE
-  // ADD_MESSAGE
+  REMOVE_LOCALPROJECT,
+  UPDATE_LOCALINTERFACE,
+  UPDATE_LOCALPROJECT
 } from '../constants/project';
 const initialState = {
   data: [],
@@ -17,22 +15,11 @@ const initialState = {
   demo: [],
   verify: ''
 }
-// const updateProject = ( list: any, project: any ) =>{
-//   const temp: any[] = []
-//   list.map((item: any)=>{
-//     if(item._id === project._id){
-//       temp.push(project)
-//     }else{
-//       temp.push(item)
-//     }
-//   }) 
-//   return temp
-// }
-const updateProject = (list: any, project: any) => {
-  const temp: any[] = []
-  list.map((item: any) => {
-    if (item._id === project._id) {
-      temp.push(Object.assign({}, item, project))
+const updateProject = (list: Array<Project>, projectData: Project) => {
+  const temp: Array<Project> = []
+  list.map((item: Project) => {
+    if (item._id === projectData._id) {
+      temp.push(Object.assign({}, item, projectData))
     } else {
       temp.push(item)
     }
@@ -40,14 +27,14 @@ const updateProject = (list: any, project: any) => {
   return temp
 }
 
-const updateInterface = (list: any, inter: any) => {
-  const temp: any[] = []
-  list.map((item: any) => {
-    let tempInterface: any[] = []
-    item.interfaceList.map((interData: any) => {
+const updateInterface = (list: Array<Project>, inter: Interface) => {
+  const temp: Array<Project> = []
+  list.map((item: ProjectWithFull) => {
+    let tempInterface: Array<Interface> = []
+    item.interfaceList.map((interData: Interface) => {
       if (interData._id === inter._id) {
         tempInterface.push(Object.assign({}, interData, inter))
-      }else{
+      } else {
         tempInterface.push(interData)
       }
     })
@@ -57,21 +44,22 @@ const updateInterface = (list: any, inter: any) => {
   return temp
 }
 
-const removeProject = (list: any, id: any) => {
-  const temp: any[] = []
-  list.map((item: any) => {
+const removeProject = (list: Array<Project>, id: Id) => {
+  const temp: Array<Project> = []
+  list.map((item: Project) => {
     if (item._id !== id.id) {
       temp.push(item)
     }
   })
   return temp
 }
-const removeInterface = (list: any, data: any) => {
-  const temp: any[] = []
-  list.map((item: any) => {
+
+const removeInterface = (list: Array<Project>, data: ProjectInterface) => {
+  const temp: Array<Project> = []
+  list.map((item: ProjectWithFull) => {
     if (item._id === data.projectId) {
-      let tempInterface: any[] = []
-      item.interfaceList.map((inter: any) => {
+      let tempInterface: Array<Interface> = []
+      item.interfaceList.map((inter: Interface) => {
         if (inter._id !== data.interfaceId) {
           tempInterface.push(inter)
         }
@@ -83,9 +71,7 @@ const removeInterface = (list: any, data: any) => {
   return temp
 }
 
-
-const project = (state = initialState, action: any) => {
-  // console.log(action)
+const project = (state = initialState, action: Action) => {
   switch (action.type) {
     case RECEIVE_PROJECT:
       return {

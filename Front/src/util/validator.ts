@@ -11,14 +11,14 @@ const RULES = {
   zipcode: /^\d{6}$/,
   username: /^\w{4,12}$/,
   password: /^\w{6,32}$/,
-  required: (value: any) => { return value !== undefined && value.length !== 0 }
+  required: (value: string) => { return value !== undefined && value.length !== 0 }
 }
 export class Validator {
   userCheck = (value: string) => {
     // console.log(RULES.required(value))
     if (!RULES.required(value)) {
       return false
-    }else {
+    } else {
       // console.log('userCheck:' + new RegExp(RULES.username).test(value))
       return  new RegExp(RULES.username).test(value)
     }

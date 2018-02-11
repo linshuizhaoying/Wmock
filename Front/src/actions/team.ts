@@ -1,98 +1,79 @@
-import { FETCH_TEAM,  SEND_APPLY, REJECT_JOINGROUP, REMOVE_GROUPMEMBER, ALLOWED_JOINGROUP, INVITED_GROUPMEMBER} from '../constants/team'
-import  notification  from 'antd/lib/notification';
-interface Apply{
-  operatorId: String,
-  operatorName: String,
-  projectId: String,
-  time: Date,
-  objectId: String,
-  objectName: String,
-  desc: String,
-  type: String,
-}
+import notification from 'antd/lib/notification';
+import {
+  ALLOWED_JOINGROUP,
+  FETCH_TEAM,
+  INVITED_GROUPMEMBER,
+  REJECT_JOINGROUP,
+  REMOVE_GROUPMEMBER,
+  SEND_APPLY
+  } from '../constants/team';
 
-
-interface GroupMember{
-  userId?: String,
-  userEmail?: String,
-  projectId?: String,
-  groupId?: String,
-  messageId?: String,
-}
-
-
-const fetch_team = (data: any) => ({
+const fetchTeamData = (id: Id) => ({
   type: FETCH_TEAM,
-  data: data
+  data: id
 })
-const send_apply = (apply: Apply) => ({
+const sendApplyData = (apply: Apply) => ({
   type: SEND_APPLY,
   data: apply
 })
 
-const reject_JoinGroup = (data: any) => ({
+const rejectJoinGroupData = (member: GroupMember) => ({
   type: REJECT_JOINGROUP,
-  data: data
+  data: member
 })
 
-const remove_GroupMember = (data: any) => ({
+const removeGroupMemberData = (member: GroupMember) => ({
   type: REMOVE_GROUPMEMBER,
-  data: data
+  data: member
 })
 
-const allowed_JoinGroup = (data: any) => ({
+const allowedJoinGroupData = (member: GroupMember) => ({
   type: ALLOWED_JOINGROUP,
-  data: data
+  data: member
 })
 
-const invited_GroupMember = (data: any) => ({
+const invitedGroupMemberData = (member: GroupMember) => ({
   type: INVITED_GROUPMEMBER,
-  data: data
+  data: member
 })
 
-// const add_message = (data: any) => ({
-//   type: ADD_MESSAGE,
-//   data: data
-// })
-
-export function fetchTeam (id: Id) {
-  return (dispatch: any) => {
-    dispatch(fetch_team(id))
+export function fetchTeam(id: Id) {
+  return (dispatch: Function) => {
+    dispatch(fetchTeamData(id))
   }
 }
 
-export function sendApply (apply: Apply) {
-  return (dispatch: any) => {
-    dispatch(send_apply(apply))
+export function sendApply(apply: Apply) {
+  return (dispatch: Function) => {
+    dispatch(sendApplyData(apply))
   }
 }
 
-export function rejectJoinGroup (member: GroupMember) {
-  return (dispatch: any) => {
-    dispatch(reject_JoinGroup(member))
+export function rejectJoinGroup(member: GroupMember) {
+  return (dispatch: Function) => {
+    dispatch(rejectJoinGroupData(member))
   }
 }
 
-export function removeGroupMember (member: GroupMember) {
-  return (dispatch: any) => {
-    dispatch(remove_GroupMember(member))
+export function removeGroupMember(member: GroupMember) {
+  return (dispatch: Function) => {
+    dispatch(removeGroupMemberData(member))
   }
 }
 
-
-export function allowedJoinGroup (member: GroupMember) {
-  return (dispatch: any) => {
-    dispatch(allowed_JoinGroup(member))
+export function allowedJoinGroup(member: GroupMember) {
+  return (dispatch: Function) => {
+    dispatch(allowedJoinGroupData(member))
   }
 }
 
-export function invitedGroupMember (member: GroupMember) {
-  return (dispatch: any) => {
-    dispatch(invited_GroupMember(member))
+export function invitedGroupMember(member: GroupMember) {
+  return (dispatch: Function) => {
+    dispatch(invitedGroupMemberData(member))
   }
 }
 
-export function sendApplySuccess (msg: string) {
+export function sendApplySuccess(msg: string) {
   notification.success({
     message: '发送成功!',
     description: '发送成功!',
@@ -101,16 +82,16 @@ export function sendApplySuccess (msg: string) {
   return
 }
 
-export function sendApplyError (msg: string) {
+export function sendApplyError(msg: string) {
   notification.error({
-    message:'发送失败!',
+    message: '发送失败!',
     description: '发送失败!',
     duration: 1
   })
   return
 }
 
-export function allowedJoinSuccess (msg: string) {
+export function allowedJoinSuccess(msg: string) {
   notification.success({
     message: '加入成功!',
     description: '加入成功!',
@@ -119,16 +100,16 @@ export function allowedJoinSuccess (msg: string) {
   return
 }
 
-export function rejectJoinError (msg: string) {
+export function rejectJoinError(msg: string) {
   notification.error({
-    message:'拒绝失败!',
+    message: '拒绝失败!',
     description: '拒绝失败!',
     duration: 1
   })
   return
 }
 
-export function rejectJoinSuccess (msg: string) {
+export function rejectJoinSuccess(msg: string) {
   notification.success({
     message: '拒绝成功!',
     description: '拒绝成功!',
@@ -137,17 +118,16 @@ export function rejectJoinSuccess (msg: string) {
   return
 }
 
-export function allowedJoinError (msg: string) {
+export function allowedJoinError(msg: string) {
   notification.error({
-    message:'加入失败!',
+    message: '加入失败!',
     description: '加入失败!',
     duration: 1
   })
   return
 }
 
-
-export function removeGroupMemberSuccess (msg: string) {
+export function removeGroupMemberSuccess(msg: string) {
   notification.success({
     message: '移除成功!',
     description: '移除成功!',
@@ -156,16 +136,16 @@ export function removeGroupMemberSuccess (msg: string) {
   return
 }
 
-export function removeGroupMemberError (msg: string) {
+export function removeGroupMemberError(msg: string) {
   notification.error({
-    message:'移除失败!',
+    message: '移除失败!',
     description: '移除失败!',
     duration: 1
   })
   return
 }
 
-export function invitedGroupMemberSuccess (msg: string) {
+export function invitedGroupMemberSuccess(msg: string) {
   notification.success({
     message: '邀请成功!',
     description: '邀请成功!',
@@ -174,18 +154,18 @@ export function invitedGroupMemberSuccess (msg: string) {
   return
 }
 
-export function invitedGroupMemberError (msg: string) {
+export function invitedGroupMemberError(msg: string) {
   notification.error({
-    message:'邀请失败!',
+    message: '邀请失败!',
     description: '邀请失败!',
     duration: 1
   })
   return
 }
 
-export function errorTeam (msg: string) {
+export function errorTeam(msg: string) {
   notification.error({
-    message:' 获取团队列表失败!',
+    message: ' 获取团队列表失败!',
     description: msg,
     duration: 2
   })

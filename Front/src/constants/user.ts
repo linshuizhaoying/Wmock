@@ -1,13 +1,23 @@
 export const USER_LOGIN = 'USER_LOGIN'
+
 export const USER_REG = 'USER_REG'
+
 export const USER_TOKEN = 'USER_TOKEN'
+
 export const USER_INFO = 'USER_INFO'
+
 export const USER_REGSUCCESS = 'USER_REGSUCCESS'
+
 export const USER_REGERROR = 'USER_REGERROR'
+
 export const UPDATE_USER = 'UPDATE_USER'
+
 export const UPDATE_LOCALUSER = 'UPDATE_LOCALUSER'
+
 export const USER_LOGINSUCCESS = 'USER_LOGINSUCCESS'
+
 export const USER_LOGINERROR = 'USER_LOGINERROR'
 
 export const USER_LOGOUT = 'USER_LOGOUT'
+
 export const NOTHING = 'NOTHING'

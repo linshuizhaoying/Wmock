@@ -1,45 +1,60 @@
 import * as React from 'react';
-import './index.less';
-import { isEqual } from '../../../../util/helper'
-import Card from 'antd/lib/card';
-import Tree from 'antd/lib/tree';
-import Icon from 'antd/lib/icon';
-import Tooltip from 'antd/lib/tooltip';
-import notification from 'antd/lib/notification'
-import Message from 'antd/lib/message';
-import ProjectDetail from './components/ProjectDetail';
-import NewProject from './components/NewProject';
-import Modal from 'antd/lib/modal';
-import Spin from 'antd/lib/spin';
-import Upload from 'antd/lib/upload';
-import Alert from 'antd/lib/alert'
+import Alert from 'antd/lib/alert';
 import Button from 'antd/lib/button';
+import Card from 'antd/lib/card';
+import Collapse from 'antd/lib/collapse';
+import Icon from 'antd/lib/icon';
+import InterfaceMode from './components/ProjectDetail/components/InterfaceMode';
+import jsBeautify from 'js-beautify/js/lib/beautify';
+import Message from 'antd/lib/message';
+import Modal from 'antd/lib/modal';
+import NewProject from './components/NewProject';
+import notification from 'antd/lib/notification';
 import Popconfirm from 'antd/lib/popconfirm';
-import Validator from '../../../../util/validator'
-import InterfaceMode from './components/ProjectDetail/components/InterfaceMode'
-import jsBeautify from 'js-beautify/js/lib/beautify'
-import { exportFile } from '../../../../util/fileExport'
-import { isJson } from '../../../../util/helper'
-import { connect } from 'react-redux';
-import { removeProject, addProject, updateProject, importProject, cloneProject, cloneInterface, invitedGroupMember, verifyProject, addInterface, removeInterface, updateInterface } from '../../../../actions'
+import ProjectDetail from './components/ProjectDetail';
 import Select from 'antd/lib/select';
+import Spin from 'antd/lib/spin';
+import Tooltip from 'antd/lib/tooltip';
+import Tree from 'antd/lib/tree';
+import Upload from 'antd/lib/upload';
+import Validator from '../../../../util/validator';
+import {
+  addInterface,
+  addProject,
+  cloneInterface,
+  cloneProject,
+  importProject,
+  invitedGroupMember,
+  removeInterface,
+  removeProject,
+  updateInterface,
+  updateProject,
+  verifyProject
+} from '../../../../actions';
+import { ChangeEvent } from 'react';
+import { connect } from 'react-redux';
+import { exportFile } from '../../../../util/fileExport';
+import { isEqual } from '../../../../util/helper';
+import { isJson } from '../../../../util/helper';
+import { UploadFile } from 'antd/es/upload/interface';
+import './index.less';
+
 const { Option, OptGroup } = Select;
 const TreeNode = Tree.TreeNode;
 const Dragger = Upload.Dragger;
-import Collapse from 'antd/lib/collapse';
 const Panel = Collapse.Panel;
 
-let inviteMemberEmailInput: any;
+let inviteMemberEmailInput: HTMLInputElement;
 
-export class ProjectBase extends React.Component<any, any> {
-  constructor(props: any) {
+export class ProjectBase extends React.Component<AppProps, ProjectState> {
+  constructor(props: AppProps) {
     super(props)
     this.state = {
       allData: [],
       allMessages: [],
       currentProjectMessages: [],
       currentProjectData: '',
-      currentInterfaceData: '',
+      currentInterfaceData: {},
       newProject: false,
       importProject: false,
       cloneProject: false,
@@ -47,7 +62,6 @@ export class ProjectBase extends React.Component<any, any> {
       exportProject: false,
       inviteGroupMember: false,
       inviteMemberEmail: '',
-      inviteMemberEmailInput: '',
       interfaceModeVisible: false,
       autoCheckVisible: false,
       uploadProject: false,
@@ -60,37 +74,28 @@ export class ProjectBase extends React.Component<any, any> {
       verifyData: [],
       allDocumentList: [],
       currentDocumentList: [],
-      currentCloneInterfaceProjectId:''
+      currentCloneInterfaceProjectId: ''
     };
   }
-  componentDidMount() {
 
-  }
-
-  componentWillReceiveProps(nextProps: any) {
+  componentWillReceiveProps(nextProps: AppProps) {
     // 每次只更新变动的项目内容
-    // console.log(nextProps)
     if (nextProps.projectList.length > 0 && !isEqual(nextProps.projectList, this.state.allData)) {
-      this.setState({
-        allData: nextProps.projectList
-      }, () => {
+      this.setState({ allData: nextProps.projectList }, () => {
         // 即时更新选中的项目里的内容
-        nextProps.projectList.map((item: any) => {
+        nextProps.projectList.map((item: Project) => {
           if (item._id === this.state.currentProjectData._id) {
             this.setState({
               currentProjectData: item
             })
           }
         })
-        //   console.log(this.state.allData)
       })
     }
     // 每次只更新变动的项目动态
     if (nextProps.messagesList.length > 0 && !isEqual(nextProps.messagesList, this.state.allMessages)) {
       this.setState({
         allMessages: nextProps.messagesList
-      }, () => {
-        //     console.log(this.state.allMessages)
       })
     }
     // 更新自动校验内的数据
@@ -98,16 +103,12 @@ export class ProjectBase extends React.Component<any, any> {
       this.setState({
         verifyResult: nextProps.projectVerify.result,
         verifyData: nextProps.projectVerify.data
-      }, () => {
-        console.log('校验数据更新')
       })
     }
     // 更新自动文档数据
-    console.log(nextProps.documentList)
+
     if (nextProps.documentList.length >= 0 && !isEqual(nextProps.documentList, this.state.allDocumentList)) {
-      this.setState({
-        allDocumentList: nextProps.documentList
-      }, () => {
+      this.setState({ allDocumentList: nextProps.documentList }, () => {
         // 如果是在项目内操作文档,那么更新项目内的文档数据
         if (this.state.currentDocumentList.length > 0) {
           this.selectDocument(this.state.currentProjectData._id)
@@ -117,19 +118,16 @@ export class ProjectBase extends React.Component<any, any> {
   }
 
   selectProject = (id: string) => {
-    this.state.allData.map((project: any) => {
+    this.state.allData.map((project: Project) => {
       if (project._id === id) {
         this.setState({
           currentProjectData: project
-        }, () => {
-          //   console.log(this.state.currentProjectData)
         })
       }
     })
     // 筛选出对应项目的动态
-    // console.log(this.state.currentProjectMessages)
-    let arr: any[] = []
-    this.state.allMessages.map((item: any) => {
+    let arr: Array<Message> = []
+    this.state.allMessages.map((item: Message) => {
       if (item.projectId === id) {
         arr.push(item)
       }
@@ -139,38 +137,32 @@ export class ProjectBase extends React.Component<any, any> {
     })
     this.selectDocument(id)
 
-
   }
   selectDocument = (id: string) => {
     // 筛选出选中文档
-    // console.log(this.state.allDocumentList)
-    let documentTemp: any[] = []
-    this.state.allDocumentList.map((item: any) => {
-      item.assign.map((projectId: any) => {
+    let documentTemp: Document[] = []
+    this.state.allDocumentList.map((item: Document) => {
+      item.assign.map((projectId: string) => {
         if (projectId === id) {
-          console.log(projectId)
-          console.log(id)
           documentTemp.push(item)
         }
       })
     })
-    console.log(documentTemp)
     this.setState({
       currentDocumentList: documentTemp
     })
   }
   // 新建项目
 
-  handleOk = (projectName: any, url: any, desc: any) => {
-    console.log(projectName, url, desc)
+  handleOk = (projectName: string, url: string, desc: string) => {
     if (projectName === '') {
-      notification['error']({
+      notification.error({
         message: '出错啦!',
         description: '项目名称必须填写不能为空.',
       });
     }
     if (url === '') {
-      notification['error']({
+      notification.error({
         message: '出错啦!',
         description: '项目URL必须填写不能为空.',
       });
@@ -179,8 +171,6 @@ export class ProjectBase extends React.Component<any, any> {
       desc = projectName;
     }
     if (projectName && url && desc) {
-      //   console.log(projectName,url,desc,this.props.type)
-
       const { dispatch } = this.props;
       dispatch(addProject({
         projectName,
@@ -197,7 +187,7 @@ export class ProjectBase extends React.Component<any, any> {
 
   // 更新项目
 
-  update = (data: any) => {
+  update = (data: Project) => {
     const { dispatch } = this.props;
 
     dispatch(updateProject(data))
@@ -206,16 +196,14 @@ export class ProjectBase extends React.Component<any, any> {
 
   // 验证项目
 
-  verify = (data: any) => {
+  verify = (id: Id) => {
     const { dispatch } = this.props;
 
-    dispatch(verifyProject(data))
+    dispatch(verifyProject(id))
     // this.selectProject(data._id)
   }
 
-
-  handleCancel = (e: any) => {
-    console.log(e);
+  handleCancel = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       newProject: false,
     });
@@ -227,7 +215,6 @@ export class ProjectBase extends React.Component<any, any> {
   }
 
   // 导入导出项目 
-
 
   showimportProject = () => {
     this.setState({
@@ -241,34 +228,30 @@ export class ProjectBase extends React.Component<any, any> {
   }
 
   selectUpload = (value: string) => {
-    console.log(value)
     this.setState({
       uploadSelectType: value
     })
   }
 
   selectProjectClone = (value: string) => {
-    console.log(value)
     this.setState({
       currentCloneProjectType: value
     })
   }
 
   selectInterfaceClone = (value: string) => {
-    console.log(value)
     this.setState({
       currentCloneInterfaceProjectId: value
-     })
+    })
   }
 
-  importProjectOk = (e: any) => {
+  importProjectOk = (e: React.FormEvent<HTMLFormElement>) => {
     const data = JSON.parse(this.state.uploadJsonData)
     data.type = this.state.uploadSelectType
-    console.log(data)
     const { dispatch } = this.props;
-    dispatch(importProject({
+    dispatch(importProject(
       data
-    }))
+    ))
 
     this.setState({
       importProject: false,
@@ -278,12 +261,12 @@ export class ProjectBase extends React.Component<any, any> {
     });
   }
 
-  cloneProjectOk = (e: any) => {
+  cloneProjectOk = (e: React.FormEvent<HTMLFormElement>) => {
     const { dispatch } = this.props;
     dispatch(cloneProject({
       id: this.state.currentCloneProjectId,
       type: this.state.currentCloneProjectType,
-      userId: this.props.userid
+      userId: this.props.userId
     }))
     this.setState({
       cloneProject: false,
@@ -291,40 +274,36 @@ export class ProjectBase extends React.Component<any, any> {
       currentCloneProjectType: 'demo'
     });
   }
-  cloneInterfaceOk = (e: any) => {
+  cloneInterfaceOk = (e: React.FormEvent<HTMLFormElement>) => {
     const { dispatch } = this.props;
     dispatch(cloneInterface({
-      interfaceId:this.state.currentCloneInterfaceId,
+      interfaceId: this.state.currentCloneInterfaceId,
       projectId: this.state.currentCloneInterfaceProjectId
     }))
     this.setState({
       cloneInterface: false,
       currentCloneInterfaceId: '',
-      currentCloneInterfaceProjectId:''
+      currentCloneInterfaceProjectId: ''
     });
   }
 
-  cloneProjectCancel = (e: any) => {
-    console.log(e);
+  cloneProjectCancel = (e: React.FormEvent<HTMLFormElement>) => {
     this.setState({
       cloneProject: false,
     });
   }
 
-  cloneInterfaceCancel = (e: any) => {
-    console.log(e);
+  cloneInterfaceCancel = (e: React.FormEvent<HTMLFormElement>) => {
     this.setState({
       cloneInterface: false,
     });
   }
-  importProjectCancel = (e: any) => {
-    console.log(e);
+  importProjectCancel = (e: React.FormEvent<HTMLFormElement>) => {
     this.setState({
       importProject: false,
     });
   }
-  filterData = (json: any) => {
-    console.log(json)
+  filterData = (json: object) => {
     let expectArr = ['_id', 'teamMember']
     let filterArr = []
     let result = ''
@@ -332,7 +311,7 @@ export class ProjectBase extends React.Component<any, any> {
       if (expectArr.indexOf(key) === -1) {
         filterArr.push(key)
         // 如果是嵌套数组，而且数组内有数据
-        if (Object.prototype.toString.call(json[key]) == "[object Array]" && json[key].length > 0) {
+        if (Object.prototype.toString.call(json[key]) === '[object Array]' && json[key].length > 0) {
           for (let item in json[key][0]) {
             // 同样对里面的json数据进行属性字段过滤
             if (expectArr.indexOf(item) === -1) {
@@ -343,8 +322,6 @@ export class ProjectBase extends React.Component<any, any> {
       }
     }
     result = JSON.stringify(this.state.currentProjectData, filterArr)
-    console.log(result)
-
     return result
 
   }
@@ -352,35 +329,22 @@ export class ProjectBase extends React.Component<any, any> {
     exportFile(this.filterData(this.state.currentProjectData), 'default.json', 'json')
     Message.success('项目导出成功!');
 
-    // this.setState({
-    //   exportProject: false,
-    // });
   }
   exportMarkdown = () => {
-    console.log(this.state.currentProjectData);
     exportFile(JSON.stringify(this.state.currentProjectData), 'default.md', 'markdwon')
     Message.success('项目导出成功!');
-    // this.setState({
-    //   exportProject: false,
-    // });
   }
   exportWord = () => {
-    console.log(this.state.currentProjectData);
     Message.success('项目导出成功!');
     exportFile(JSON.stringify(this.state.currentProjectData), 'default.doc', 'doc')
-    // this.setState({
-    //   exportProject: false,
-    // });
   }
-  exportProjectCancel = (e: any) => {
-    console.log(e);
+  exportProjectCancel = (e: React.FormEvent<HTMLFormElement>) => {
     this.setState({
       exportProject: false,
     });
   }
 
   cloneCurrentProject = (projectId: string) => {
-    console.log(projectId)
     this.setState({
       currentCloneProjectId: projectId,
       cloneProject: true
@@ -388,7 +352,6 @@ export class ProjectBase extends React.Component<any, any> {
   }
 
   cloneCurrentInterface = (interfaceId: string) => {
-    console.log(interfaceId)
     this.setState({
       currentCloneInterfaceId: interfaceId,
       cloneInterface: true
@@ -398,17 +361,17 @@ export class ProjectBase extends React.Component<any, any> {
     const { dispatch } = this.props;
     dispatch(removeProject({ id: projectId }))
   }
-  addInterface = (data: any) => {
+  addInterface = (data: Interface) => {
     const { dispatch } = this.props;
     dispatch(addInterface(data))
   }
 
-  updateInterface = (data: any) => {
+  updateInterface = (data: Interface) => {
     const { dispatch } = this.props;
     dispatch(updateInterface(data))
   }
 
-  removeInterface = (data: any) => {
+  removeInterface = (data: Id) => {
     const { dispatch } = this.props;
     dispatch(removeInterface(data))
   }
@@ -421,7 +384,7 @@ export class ProjectBase extends React.Component<any, any> {
     });
   }
 
-  inviteGroupMemberOk = (e: any) => {
+  inviteGroupMemberOk = (e: React.FormEvent<HTMLFormElement>) => {
 
     if (Validator.emailCheck(this.state.inviteMemberEmail)) {
       const { dispatch } = this.props;
@@ -433,15 +396,14 @@ export class ProjectBase extends React.Component<any, any> {
         inviteGroupMember: false,
       });
     } else {
-      notification['error']({
+      notification.error({
         message: '出错啦!',
         description: '邮箱地址格式错误!',
       });
     }
 
   }
-  inviteGroupMemberCancel = (e: any) => {
-    console.log(e);
+  inviteGroupMemberCancel = (e: React.FormEvent<HTMLFormElement>) => {
     this.setState({
       inviteGroupMember: false,
     });
@@ -454,25 +416,22 @@ export class ProjectBase extends React.Component<any, any> {
     });
   }
 
-  onChangeinviteMemberEmail = (e: any) => {
+  onChangeinviteMemberEmail = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({ inviteMemberEmail: e.target.value });
   }
 
   showInterfaceMode = () => {
-    console.log('showInterfaceMode')
     this.setState({
       interfaceModeVisible: true
     })
   }
   hideInterfaceMode = () => {
-    console.log('showInterfaceMode')
     this.setState({
       interfaceModeVisible: false
     })
   }
 
-  selectCurrentInterface = (data: any) => {
-    console.log(data)
+  selectCurrentInterface = (data: Interface) => {
     this.setState({
       currentInterfaceData: data
     })
@@ -480,7 +439,7 @@ export class ProjectBase extends React.Component<any, any> {
 
   addInterFace = () => {
     this.setState({
-      currentInterfaceData: '',
+      currentInterfaceData: {},
       interfaceModeVisible: true
     })
   }
@@ -496,19 +455,89 @@ export class ProjectBase extends React.Component<any, any> {
     this.setState({
       autoCheckVisible: false,
       verifyData: [],
-      verifyReuslt: ''
+      verifyResult: ''
     })
   }
 
+  renderTreeProjectTitle = (project: Project) => {
+    return (
+      <div className="projectType">
+        <div className="projectName" onClick={() => { this.selectProject(project._id) }}>
+          <Icon type="folder-open" />
+          {project.projectName}
+        </div>
+        <div className="projectOperate">
+          <Popconfirm
+            title="确定删除该项目么?"
+            onConfirm={() => { this.deleteProject(project._id) }}
+            okText="确定删除"
+            cancelText="取消"
+          >
+            <Tooltip placement="right" title={'删除项目'}>
+              <Icon type="delete" className="operate-icon" />
+            </Tooltip>
+          </Popconfirm>
+          <Popconfirm
+            title="确定克隆该项目么?"
+            onConfirm={() => { this.cloneCurrentProject(project._id) }}
+            okText="确定克隆"
+            cancelText="取消"
+          >
+            <Tooltip placement="right" title={'克隆项目'}>
+              <Icon type="copy" className="operate-icon" />
+            </Tooltip>
+          </Popconfirm>
+        </div>
+      </div>
+    )
+  }
+  renderTreeInterfaceTitle = (item: InterfaceWithFull) => {
+    return (
+      <div className="interfaceType">
+        <div
+          className="interfaceName"
+          onClick={() => { this.selectCurrentInterface(item); this.showInterfaceMode(); }}
+        >
+          <Icon type="file" />
+          {item.interfaceName}
+        </div>
+        <div className="interfaceOperate">
+          <Popconfirm
+            title="确定克隆该接口么?"
+            onConfirm={() => { this.cloneCurrentInterface(item._id) }}
+            okText="确定克隆"
+            cancelText="取消"
+          >
+            <Tooltip placement="top" title={'克隆接口'} >
+              <Icon type="copy" className="operate-icon" />
+            </Tooltip>
+          </Popconfirm>
+        </div>
+      </div>
+    )
+  }
+  checkJson = (file: Blob) => {
+    var reader = new FileReader(); // 读取操作都是由FileReader完成的
+    var that = this
+    reader.readAsText(file);
+    reader.onload = function () {// 读取完毕从中取值
+      const json = this.result
+      if (isJson(json) && that.state.uploadJsonData.length === 0) {
+        that.setState({
+          uploadProject: true,
+          uploadJsonData: json
+        })
+        Message.success('Json文件上传识别成功!');
+      }
+    }
+  }
   render() {
     const uploadProps = {
       name: 'file',
       action: '',
       showUploadList: false,
-      beforeUpload: (file: any) => {
+      beforeUpload: (file: UploadFile) => {
         {
-          console.log(file)
-          console.log(file.type)
           const isJSON = file.type === 'application/json';
           if (!isJSON) {
             Message.error('只允许上传JSON格式文件!');
@@ -517,28 +546,12 @@ export class ProjectBase extends React.Component<any, any> {
           if (!isLt2M) {
             Message.error('JSON文件大小必须小于 2MB!');
           }
-          var reader = new FileReader(); // 读取操作都是由FileReader完成的
-          var that = this
-          reader.readAsText(file);
-          reader.onload = function () {//读取完毕从中取值
-            const json = this.result
-            if (isJson(json) && that.state.uploadJsonData.length === 0) {
-              that.setState({
-                uploadProject: true,
-                uploadJsonData: json
-              })
-              Message.success('Json文件上传识别成功!');
-            }
-          }
+          const fileBlob:Blob = new Blob([file])
+          this.checkJson(fileBlob)
           return false;
         }
       },
-
-      onChange: (info: any) => {
-      },
     };
-
-
 
     return (
       <div>
@@ -557,52 +570,15 @@ export class ProjectBase extends React.Component<any, any> {
                 <Card style={{ width: 280 }}>
                   <Tree>
                     {
-                      this.props.projectList.map((project: any) => {
+                      this.props.projectList.map((project: Project) => {
                         return (
-                          <TreeNode title={
-                            <div className="projectType">
-
-                              <div className="projectName" onClick={() => { this.selectProject(project._id) }}><Icon type="folder-open" />{
-                                project.projectName
-                              }</div>
-                              <div className="projectOperate">
-                                <Popconfirm title="确定删除该项目么?" onConfirm={() => { this.deleteProject(project._id) }} okText="确定删除" cancelText="取消">
-                                  <Tooltip placement="right" title={'删除项目'}>
-                                    <Icon type="delete" className="operate-icon" />
-                                  </Tooltip>
-                                </Popconfirm>
-
-                                <Popconfirm title="确定克隆该项目么?" onConfirm={() => { this.cloneCurrentProject(project._id) }} okText="确定克隆" cancelText="取消">
-                                  <Tooltip placement="right" title={'克隆项目'}>
-                                    <Icon type="copy" className="operate-icon" />
-                                  </Tooltip>
-                                </Popconfirm>
-
-                              </div>
-                            </div>
-                          } key={project._id} >
+                          <TreeNode title={this.renderTreeProjectTitle(project)} key={project._id} >
                             {
-                              project.interfaceList.length > 0 ?
-                                project.interfaceList.map((item: any) => {
-                                  return (<TreeNode title={
-                                    <div className="interfaceType">
-
-                                      <div className="interfaceName" onClick={() => { this.selectCurrentInterface(item); this.showInterfaceMode(); }}><Icon type="file" /> {item.interfaceName} </div>
-                                      <div className="interfaceOperate">
-                                        <Popconfirm title="确定克隆该接口么?" onConfirm={() => { this.cloneCurrentInterface(item._id) }} okText="确定克隆" cancelText="取消">
-                                          <Tooltip placement="top" title={'克隆接口'} >
-                                            <Icon type="copy" className="operate-icon" />
-                                          </Tooltip>
-                                        </Popconfirm>
-
-                                      </div>
-                                    </div>
-                                  } key={item._id} />
+                              project.interfaceList ?
+                                project.interfaceList.map((item: InterfaceWithFull) => {
+                                  return (<TreeNode title={this.renderTreeInterfaceTitle(item)} key={item._id} />
                                   )
-                                })
-
-
-                                : <div></div>
+                                }) : null
                             }
                           </TreeNode>
                         )
@@ -616,7 +592,22 @@ export class ProjectBase extends React.Component<any, any> {
               <div className="projectContent">
                 {
                   this.state.currentProjectData ?
-                    <ProjectDetail selectDocument={this.selectDocument} userid={this.props.userid} documentList={this.state.currentDocumentList} projectList={this.props.projectList} removeInterface={this.removeInterface} showAutoCheckVisible={this.showAutoCheckVisible} addInterFace={this.addInterFace} data={this.state.currentProjectData} messages={this.state.currentProjectMessages} showExportProject={this.showExportProject} showInviteGroupMember={this.showInviteGroupMember} showInterfaceMode={this.showInterfaceMode} selectCurrentInterface={this.selectCurrentInterface} update={this.update} /> :
+                    <ProjectDetail
+                      selectDocument={this.selectDocument}
+                      userId={this.props.userId}
+                      documentList={this.state.currentDocumentList}
+                      projectList={this.props.projectList}
+                      removeInterface={this.removeInterface}
+                      showAutoCheckVisible={this.showAutoCheckVisible}
+                      addInterFace={this.addInterFace}
+                      data={this.state.currentProjectData}
+                      messages={this.state.currentProjectMessages}
+                      showExportProject={this.showExportProject}
+                      showInviteGroupMember={this.showInviteGroupMember}
+                      showInterfaceMode={this.showInterfaceMode}
+                      selectCurrentInterface={this.selectCurrentInterface}
+                      update={this.update}
+                    /> :
                     <div>
                       <h2>
                         项目示例说明
@@ -635,8 +626,6 @@ export class ProjectBase extends React.Component<any, any> {
               <img src={require('./nodata.jpg')} alt="no Data" />
               <Button onClick={() => this.toggleNewProject()}> 去添加新项目</Button>
             </div>
-
-
         }
 
         <NewProject visible={this.state.newProject} handleOk={this.handleOk} handleCancel={this.handleCancel} />
@@ -668,7 +657,6 @@ export class ProjectBase extends React.Component<any, any> {
                 </div>
 
             }
-
 
           </Modal>
 
@@ -716,20 +704,20 @@ export class ProjectBase extends React.Component<any, any> {
                     {
                       this.state.verifyResult === 'no' ?
                         <div>
-                          <Alert message="接口校验不匹配" type="error" showIcon />
+                          <Alert message="接口校验不匹配" type="error" showIcon={true} />
                         </div>
                         :
                         <div>
-                          <Alert message="接口校验匹配" type="success" showIcon />
+                          <Alert message="接口校验匹配" type="success" showIcon={true} />
                         </div>
                     }
 
                     <Collapse bordered={false}>
                       {
-                        this.state.verifyData.map((item: any, index: any) => {
+                        this.state.verifyData.map((item: ProjectVerify, index: number) => {
                           let match = item.compare === 'match' ? '匹配' : '不匹配'
                           return (
-                            <Panel key={index} header={"接口 " + item.interfaceName + " " + match}>
+                            <Panel key={index.toString()} header={'接口 ' + item.interfaceName + ' ' + match}>
                               <div>
                                 <span>期望数据</span>
                                 <p> {jsBeautify.js_beautify(item.expect, { indent_size: 2 })}</p>
@@ -745,7 +733,6 @@ export class ProjectBase extends React.Component<any, any> {
                       }
                     </Collapse>
                   </h2>
-
 
                 </div>
                 :
@@ -788,14 +775,14 @@ export class ProjectBase extends React.Component<any, any> {
 
                   <Select style={{ width: 400 }} onChange={this.selectInterfaceClone}>
                     <OptGroup label="演示项目">
-                      {this.props.otherList.map((item: any, index: any) => {
+                      {this.props.otherList.map((item: Project, index: number) => {
                         return (
                           <Option key={index} value={item._id}>{item.projectName}</Option>
                         )
                       })}
                     </OptGroup>
                     <OptGroup label="我的项目">
-                      {this.props.projectList.map((item: any, index: any) => {
+                      {this.props.projectList.map((item: Project, index: number) => {
                         return (
                           <Option key={index} value={item._id}>{item.projectName}</Option>
                         )
@@ -807,14 +794,14 @@ export class ProjectBase extends React.Component<any, any> {
 
                   <Select style={{ width: 400 }} onChange={this.selectInterfaceClone}>
                     <OptGroup label="演示项目">
-                      {this.props.projectList.map((item: any, index: any) => {
+                      {this.props.projectList.map((item: Project, index: number) => {
                         return (
                           <Option key={index} value={item._id}>{item.projectName}</Option>
                         )
                       })}
                     </OptGroup>
                     <OptGroup label="我的项目">
-                      {this.props.otherList.map((item: any, index: any) => {
+                      {this.props.otherList.map((item: Project, index: number) => {
                         return (
                           <Option key={index} value={item._id}>{item.projectName}</Option>
                         )
@@ -822,24 +809,22 @@ export class ProjectBase extends React.Component<any, any> {
                     </OptGroup>
                   </Select>
               }
-
-
-
             </div>
-
-
-
           </Modal>
 
-          <InterfaceMode addInterface={this.addInterface} updateInterface={this.updateInterface} projectId={this.state.currentProjectData._id} data={this.state.currentInterfaceData} visible={this.state.interfaceModeVisible} hideInterfaceMode={this.hideInterfaceMode} />
+          <InterfaceMode
+            addInterface={this.addInterface}
+            updateInterface={this.updateInterface}
+            projectId={this.state.currentProjectData._id}
+            data={this.state.currentInterfaceData}
+            visible={this.state.interfaceModeVisible}
+            hideInterfaceMode={this.hideInterfaceMode}
+          />
         </div>
 
       </div>
     )
   }
 }
-
-
-
 
 export default connect()(ProjectBase);

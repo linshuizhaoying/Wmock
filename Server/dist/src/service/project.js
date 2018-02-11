@@ -33,16 +33,16 @@ const success = (data) => {
 exports.userProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // console.log('allNews')
     // console.log(ctx.request.body)
-    const { username } = ctx.request.body;
-    const result = yield index_1.UserProject(username);
+    const { userName } = ctx.request.body;
+    const result = yield index_1.UserProject(userName);
     // console.log(result)
     return ctx.body = success(result);
 });
 exports.demoProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // console.log('allNews')
     // console.log(ctx.request.body)
-    const { username } = ctx.request.body;
-    const result = yield index_1.DemoProject(username);
+    const { userName } = ctx.request.body;
+    const result = yield index_1.DemoProject(userName);
     // console.log(result)
     return ctx.body = success(result);
 });

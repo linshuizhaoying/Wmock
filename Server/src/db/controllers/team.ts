@@ -7,7 +7,7 @@ export const myTeam = async(id: string) => {
       projectName: 'REST接口示例超长字符串测试asd123',
       member: [{
         userId: 'user002',
-        username: '哈哈哈',
+        userName: '哈哈哈',
         role: 'front',
         avatar: 'default.png'
       }],
@@ -20,12 +20,12 @@ export const myTeam = async(id: string) => {
       projectName: '基本操作示例',
       member: [{
         userId: 'user002',
-        username: '略略略',
+        userName: '略略略',
         role: 'back',
         avatar: 'default.png'
       }, {
         userId: 'user003',
-        username: '老夫聊发少年狂',
+        userName: '老夫聊发少年狂',
         role: 'back',
         avatar: 'default.png'
       }

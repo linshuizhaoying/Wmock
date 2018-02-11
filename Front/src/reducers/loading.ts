@@ -3,7 +3,7 @@ const initialState = {
    loadingState: ''
 }
 
-const loading = (state = initialState, action: any) => {
+const loading = (state = initialState, action: Action) => {
   // console.log(action)
   switch (action.type) {
     case LOADING_START:

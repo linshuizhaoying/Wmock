@@ -1,19 +1,19 @@
 import * as React from 'react';
-import './index.less';
-// import brace from 'brace';
 import AceEditor from 'react-ace';
-import Select from 'antd/lib/select';
-import Input from 'antd/lib/input';
 import Button from 'antd/lib/button';
+import Input from 'antd/lib/input';
+import jsBeautify from 'js-beautify/js/lib/beautify';
+import Message from 'antd/lib/message';
+import Select from 'antd/lib/select';
+import { ChangeEvent } from 'react';
+import { MockUrl } from '../../../../../../../../service/api';
+import './index.less';
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
-import jsBeautify from 'js-beautify/js/lib/beautify'
-import Message from 'antd/lib/message';
-import { MockUrl } from '../../../../../../../../service/api'
 const Option = Select.Option;
 
-export class InterfaceMode extends React.Component<any, any> {
-  constructor(props: any) {
+export class InterfaceMode extends React.Component<InterfaceModeProps, InterfaceModeState> {
+  constructor(props: InterfaceModeProps) {
     super(props)
     this.state = {
       status: 'add',
@@ -23,17 +23,13 @@ export class InterfaceMode extends React.Component<any, any> {
       url: '',
       desc: '',
       id: '',
+      mode: '',
       interfaceName: ''
 
     };
   }
-  componentDidMount() {
-
-  }
-
-  componentWillReceiveProps(nextProps: any) {
+  componentWillReceiveProps(nextProps: AdvanceAny) {
     // 如果有传入数据说明是编辑状态
-    console.log(nextProps)
     if (nextProps.data) {
       this.setState({
         id: nextProps.data._id,
@@ -43,8 +39,6 @@ export class InterfaceMode extends React.Component<any, any> {
         editorContent: nextProps.data.mode,
         status: 'update',
         interfaceName: nextProps.data.interfaceName,
-      }, () => {
-        console.log('set ok')
       })
     } else {
       this.setState({
@@ -70,33 +64,28 @@ export class InterfaceMode extends React.Component<any, any> {
 
   }
   editorOnChange = (newValue: string) => {
-    console.log(newValue)
     this.setState({
       editorContent: newValue
     })
   }
 
   selectedMethod = (value: string) => {
-    console.log(value)
     this.setState({
       method: value
     })
   }
 
-  changeUrl = (e: any) => {
-    console.log(e.target.value)
+  changeUrl = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       url: e.target.value
     })
   }
-  changeDesc = (e: any) => {
-    console.log(e.target.value)
+  changeDesc = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       desc: e.target.value
     })
   }
-  changeInterfaceName = (e: any) => {
-    console.log(e.target.value)
+  changeInterfaceName = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       interfaceName: e.target.value
     })
@@ -112,15 +101,19 @@ export class InterfaceMode extends React.Component<any, any> {
   }
   update = () => {
     let newInterface = {
-      "_id": this.state.id,
-      "desc": this.state.desc,
-      "url": this.state.url,
-      "method": this.state.method,
-      "mode": this.state.editorContent,
-      "interfaceName": this.state.interfaceName
+      '_id': this.state.id,
+      'desc': this.state.desc,
+      'url': this.state.url,
+      'method': this.state.method,
+      'mode': this.state.editorContent,
+      'interfaceName': this.state.interfaceName
 
     }
-    if(this.state.interfaceName === '' || this.state.desc === '' || this.state.method === '' || this.state.mode === '' || this.state.url === ''){
+    if (this.state.interfaceName === '' ||
+      this.state.desc === '' ||
+      this.state.method === '' ||
+      this.state.mode === '' ||
+      this.state.url === '') {
       Message.error(`有内容为空，请填写!!`);
     } else {
       this.props.updateInterface(newInterface)
@@ -131,13 +124,17 @@ export class InterfaceMode extends React.Component<any, any> {
 
   add = () => {
     let newInterface = {
-      "interfaceName": this.state.interfaceName,
-      "desc": this.state.desc,
-      "url": this.state.url,
-      "method": this.state.method,
-      "mode": this.state.editorContent
+      'interfaceName': this.state.interfaceName,
+      'desc': this.state.desc,
+      'url': this.state.url,
+      'method': this.state.method,
+      'mode': this.state.editorContent
     }
-    if(this.state.interfaceName === '' || this.state.desc === '' || this.state.method === '' || this.state.mode === '' || this.state.url === ''){
+    if (this.state.interfaceName === '' ||
+      this.state.desc === '' ||
+      this.state.method === '' ||
+      this.state.mode === '' ||
+      this.state.url === '') {
       Message.error(`有内容为空，请填写!!`);
     } else {
       this.props.addInterface(newInterface)
@@ -147,7 +144,7 @@ export class InterfaceMode extends React.Component<any, any> {
 
   render() {
     return (
-      <div id="InterfaceMode" className={this.props.visible === true ? "show" : 'hide'} >
+      <div id="InterfaceMode" className={this.props.visible === true ? 'show' : 'hide'} >
         <div className="editor">
           <AceEditor
             mode="javascript"
@@ -168,7 +165,8 @@ export class InterfaceMode extends React.Component<any, any> {
               enableSnippets: false,
               showLineNumbers: true,
               tabSize: 2,
-            }} />
+            }}
+          />
 
         </div>
         <div className="operate">
@@ -177,7 +175,7 @@ export class InterfaceMode extends React.Component<any, any> {
             <div className="form">
               <div className="item">
                 <h3>名称</h3>
-                <div style={{ width: '100%' }}>
+                <div className="fullwidth">
                   <Input addonAfter="" value={this.state.interfaceName} onChange={this.changeInterfaceName} />
                 </div>
               </div>
@@ -208,7 +206,8 @@ export class InterfaceMode extends React.Component<any, any> {
 
               <div className="item">
                 <div style={{ width: '100%' }}>
-                  {this.state.status === 'update' ? <Button type="primary" className="update" onClick={this.update}>更新</Button>
+                  {this.state.status === 'update' ?
+                    <Button type="primary" className="update" onClick={this.update}>更新</Button>
                     : <Button type="primary" className="add" onClick={this.add}>创建</Button>}
                 </div>
 
@@ -227,8 +226,5 @@ export class InterfaceMode extends React.Component<any, any> {
     )
   }
 }
-
-
-
 
 export default InterfaceMode;

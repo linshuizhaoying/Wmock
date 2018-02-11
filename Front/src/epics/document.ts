@@ -1,39 +1,48 @@
-import { Observable } from 'rxjs/Observable'
-import { combineEpics } from 'redux-observable';
 import * as fetch from '../service/fetch';
-
-import { LOADING_START, LOADING_ERROR, LOADING_SUCCESS } from '../constants/loading';
-import { documentList, updateDocument, addDocument, removeDocument } from '../service/api'
-
 import {
-  ERROR_DOCUMENT, FETCH_DOCUMENT, RECEIVE_DOCUMENT,
-  ADD_DOCUMENT, REMOVE_DOCUMENT,
-  REMOVE_LOCALDOCUMENT, UPDATE_DOCUMENT, UPDATE_LOCALDOCUMENT,
-  NOTHING
+  ADD_DOCUMENT,
+  ERROR_DOCUMENT,
+  FETCH_DOCUMENT,
+  NOTHING,
+  RECEIVE_DOCUMENT,
+  REMOVE_DOCUMENT,
+  REMOVE_LOCALDOCUMENT,
+  UPDATE_DOCUMENT,
+  UPDATE_LOCALDOCUMENT
 } from '../constants/document';
-
 import {
+  addDocument,
+  documentList,
+  removeDocument,
+  updateDocument
+} from '../service/api';
+import {
+  addDocumentError,
+  addDocumentSuccess,
   errorDocument,
-  removeDocumentError, removeDocumentSuccess,
-  updateDocumentError, updateDocumentSuccess,
-  addDocumentError, addDocumentSuccess
+  removeDocumentError,
+  removeDocumentSuccess,
+  updateDocumentError,
+  updateDocumentSuccess
 } from '../actions/index';
+import { combineEpics } from 'redux-observable';
+import { LOADING_ERROR, LOADING_START, LOADING_SUCCESS } from '../constants/loading';
+import { Observable } from 'rxjs/Observable';
+import { Response } from './typing'
+
 export const loadingStart = () => ({ type: LOADING_START });
 export const loadingError = () => ({ type: LOADING_ERROR });
 export const loadingSuccess = () => ({ type: LOADING_SUCCESS });
-
-export const documentReceive = (data: any) => ({ type: RECEIVE_DOCUMENT, data: data });
-export const updateLocalDocument = (data: any) => ({ type: UPDATE_LOCALDOCUMENT, data: data })
-export const removeLocalDocument = (data: any) => ({ type: REMOVE_LOCALDOCUMENT, data: data })
-
+export const documentReceive = (data: Document) => ({ type: RECEIVE_DOCUMENT, data: data });
+export const updateLocalDocument = (data: Document) => ({ type: UPDATE_LOCALDOCUMENT, data: data })
+export const removeLocalDocument = (data: Document) => ({ type: REMOVE_LOCALDOCUMENT, data: data })
 export const nothing = () => ({ type: NOTHING });
 
-export const fetchAllDocument = (action$: any) =>
+export const fetchAllDocument = (action$: EpicAction) =>
   action$.ofType(FETCH_DOCUMENT)
-    .mergeMap((action: any) => {
+    .mergeMap((action: Action) => {
       return fetch.post(documentList, action.data)
-        .map((response: any) => {
-          console.log(response);
+        .map((response: Response) => {
           if (response.state.code === 1) {
             let temp = response.data;
             return documentReceive(temp);
@@ -42,20 +51,17 @@ export const fetchAllDocument = (action$: any) =>
           }
         })
         // 只有服务器崩溃才捕捉错误
-        .catch((e: any): any => {
-          console.log(e)
+        .catch((e: Error): Observable<Action> => {
           return Observable.of(({ type: ERROR_DOCUMENT })).startWith(loadingError())
         }).startWith(loadingSuccess()).delay(200).startWith(loadingStart())
 
     });
 
-
-export const EupdateDocument = (action$: any) =>
+export const EupdateDocument = (action$: EpicAction) =>
   action$.ofType(UPDATE_DOCUMENT)
-    .mergeMap((action: any) => {
+    .mergeMap((action: Action) => {
       return fetch.post(updateDocument, action.data)
-        .map((response: any) => {
-          console.log(response);
+        .map((response: Response) => {
           if (response.state.code === 1) {
             updateDocumentSuccess(response.state.msg)
             return updateLocalDocument(action.data);
@@ -65,18 +71,17 @@ export const EupdateDocument = (action$: any) =>
           }
         })
         // 只有服务器崩溃才捕捉错误
-        .catch((e: any): any => {
+        .catch((e: Error): Observable<Action> => {
           return Observable.of(({ type: ERROR_DOCUMENT })).startWith(loadingError())
         })
 
     });
 
-export const EremoveDocument = (action$: any) =>
+export const EremoveDocument = (action$: EpicAction) =>
   action$.ofType(REMOVE_DOCUMENT)
-    .mergeMap((action: any) => {
+    .mergeMap((action: Action) => {
       return fetch.post(removeDocument, action.data)
-        .map((response: any) => {
-          console.log(response);
+        .map((response: Response) => {
           if (response.state.code === 1) {
             removeDocumentSuccess(response.state.msg)
             return removeLocalDocument(action.data);
@@ -86,18 +91,17 @@ export const EremoveDocument = (action$: any) =>
           }
         })
         // 只有服务器崩溃才捕捉错误
-        .catch((e: any): any => {
+        .catch((e: Error): Observable<Action> => {
           return Observable.of(({ type: ERROR_DOCUMENT })).startWith(loadingError())
         })
 
     });
 
-export const EaddDocument = (action$: any) =>
+export const EaddDocument = (action$: EpicAction) =>
   action$.ofType(ADD_DOCUMENT)
-    .mergeMap((action: any) => {
+    .mergeMap((action: Action) => {
       return fetch.post(addDocument, action.data)
-        .map((response: any) => {
-          console.log(response);
+        .map((response: Response) => {
           if (response.state.code === 1) {
             addDocumentSuccess(response.state.msg)
             return nothing();
@@ -107,7 +111,7 @@ export const EaddDocument = (action$: any) =>
           }
         })
         // 只有服务器崩溃才捕捉错误
-        .catch((e: any): any => {
+        .catch((e: Error): Observable<Action> => {
           return Observable.of(({ type: ERROR_DOCUMENT })).startWith(loadingError())
         })
 

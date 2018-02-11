@@ -13,13 +13,13 @@ const history = createBrowserHistory();
 
 ReactDOM.render(
   <Provider store={store}>
-  <Router history={history}>
-    <Switch>
-      <Route path="/" component={App} />
-      
-    </Switch>
-  </Router>
-</Provider>,
+    <Router history={history}>
+      <Switch>
+        <Route path="/" component={App} />
+
+      </Switch>
+    </Router>
+  </Provider>,
   document.getElementById('root') as HTMLElement
 );
 registerServiceWorker();

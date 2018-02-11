@@ -1,6 +1,6 @@
 
-export const DemoProject = async(username: string) => {
-  console.log(username)
+export const DemoProject = async(userName: string) => {
+  console.log(userName)
 
   const data = [
       {
@@ -15,13 +15,13 @@ export const DemoProject = async(username: string) => {
       teamMember: [
         {
           _id: 'user001',
-          username: '2333',
+          userName: '2333',
           role: '前端工程师',
           avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
         },
         {
           _id: 'user002',
-          username: '宋青树',
+          userName: '宋青树',
           role: '后端工程师',
           avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
         },
@@ -73,19 +73,19 @@ export const DemoProject = async(username: string) => {
       teamMember: [
         {
           _id: 'user001',
-          username: '2333',
+          userName: '2333',
           role: '前端工程师',
           avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
         },
         {
           _id: 'user002',
-          username: '妮妮',
+          userName: '妮妮',
           role: '前端工程师',
           avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
         },
         {
           _id: 'user003',
-          username: '苏苏',
+          userName: '苏苏',
           role: '后端工程师',
           avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
         },
@@ -129,8 +129,8 @@ export const DemoProject = async(username: string) => {
   return await data
 }
 
-export const UserProject = async(username: string) => {
-  console.log(username)
+export const UserProject = async(userName: string) => {
+  console.log(userName)
 
   const data = [
       {
@@ -145,13 +145,13 @@ export const UserProject = async(username: string) => {
       teamMember: [
         {
           _id: 'user001',
-          username: '2333',
+          userName: '2333',
           role: '前端工程师',
           avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
         },
         {
           _id: 'user002',
-          username: '宋青树',
+          userName: '宋青树',
           role: '后端工程师',
           avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
         },
@@ -203,19 +203,19 @@ export const UserProject = async(username: string) => {
       teamMember: [
         {
           _id: 'user001',
-          username: '2333',
+          userName: '2333',
           role: '前端工程师',
           avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
         },
         {
           _id: 'user002',
-          username: '妮妮',
+          userName: '妮妮',
           role: '前端工程师',
           avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
         },
         {
           _id: 'user003',
-          username: '苏苏',
+          userName: '苏苏',
           role: '后端工程师',
           avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
         },

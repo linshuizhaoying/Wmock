@@ -1,120 +1,112 @@
 import * as React from 'react';
-import {
-  Form,
-  Input
-  } from 'antd';
-import './index.less';
-import  Validator  from '../../../util/validator';
+import md5 from 'md5';
+import Validator from '../../../util/validator';
 import { connect } from 'react-redux';
-import { userLogin } from '../../../actions';
+import { Form, Input } from 'antd';
+import { FormComponentProps } from 'antd/lib/form';
 import { Link } from 'react-router-dom';
-import md5 from 'md5'
+import { userLogin } from '../../../actions';
+import './index.less';
+import { ChangeEvent } from 'react';
 const FormItem = Form.Item
-class Login extends React.Component<any, any> {
+interface LoginProps extends FormComponentProps {
+  dispatch: Function
+}
+class Login extends React.Component<LoginProps, LoginState> {
 
-  constructor (props: any) {
+  constructor(props: LoginProps) {
     super(props)
     this.state = {
-      username: '',
-      password: '',
+      userName: '',
+      passWord: '',
       currentForm: 'login',
     }
   }
 
-  componentDidMount() {
-  }
-
-  componentWillReceiveProps(nextProps: any) {
-  }
-
-  checkUsername = (rule: any, value: any, callback: any) =>{
-    if(!Validator.userCheck(value)){
+  checkUserName = (rule: Array<string>, value: string, callback: Function) => {
+    if (!Validator.userCheck(value)) {
       callback('用户名长度为4-12位,只允许字母数字组合');
-    }else{
+    } else {
       callback();
     }
   }
 
-  checkPassword = (rule: any, value: any, callback: any) =>{
-    if(!Validator.passCheck(value)){
+  checkPassWord = (rule: Array<string>, value: string, callback: Function) => {
+    if (!Validator.passCheck(value)) {
       callback('密码必须6位或以上,必须有字母和数字混合');
-    }else{
+    } else {
       callback();
     }
   }
 
-  handleChange(e: any, value: any) {
+  handleChange(e: ChangeEvent<HTMLInputElement>, value: string) {
     this.setState({
       [value]: e.target.value
-    }, () => {
-      // console.log(this.state)
     })
   }
 
-  handleSubmit = (e: any) => {
+  handleSubmit = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const { dispatch } = this.props;
-    this.props.form.validateFields((err: any, values: any) => {
-      let {username, password} = values;
-      if (!err && username.length > 0 && password.length > 0) {
-       
-          const user = {
-            username: username,
-            password: md5(password)
-          }
-          dispatch(userLogin(user))
-          console.log(user)
-        
+    this.props.form.validateFields((err: Error, values: LoginFormValue) => {
+      let { userName, passWord } = values;
+      if (!err && userName.length > 0 && passWord.length > 0) {
+
+        const user = {
+          userName: userName,
+          passWord: md5(passWord)
+        }
+        dispatch(userLogin(user))
       }
-      
+
     });
   }
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
       <div id="NormalLogin" >
-         <div className="wrapper fadeInDown">
+        <div className="wrapper fadeInDown">
           <div id="formContent">
             <h2 className="active"> 登录 </h2>
             <div className="fadeIn first">
               <img src={require('./icon.svg')} id="icon" alt="User Icon" />
             </div>
             <Form onSubmit={this.handleSubmit} className="signup">
-                <FormItem>
-                  {getFieldDecorator('username', {
-                    rules: [{ required: true, message: '请输入你的账户' }, {
-                      validator: this.checkUsername,
-                    }],
-                  })(
-                    <Input type="text" id="username" className="fadeIn second" name="username" placeholder="用户"/>
+              <FormItem>
+                {getFieldDecorator('userName', {
+                  rules: [{ required: true, message: '请输入你的账户' }, {
+                    validator: this.checkUserName,
+                  }],
+                })(
+                  <Input type="text" id="userName" className="fadeIn second" name="userName" placeholder="用户" />
                   )}
-                </FormItem>
+              </FormItem>
 
-                 <FormItem>
-                  {getFieldDecorator('password', {
-                    rules: [{ required: true, message: '请输入密码!' }, {
-                      validator: this.checkPassword,
-                    }],
-                  })(
-                   <Input type="password" id="password" className="fadeIn third" name="password" placeholder="密码"/>
+              <FormItem>
+                {getFieldDecorator('passWord', {
+                  rules: [{ required: true, message: '请输入密码!' }, {
+                    validator: this.checkPassWord,
+                  }],
+                })(
+                  <Input type="password" id="passWord" className="fadeIn third" name="passWord" placeholder="密码" />
                   )}
-                </FormItem>
-                <input type="submit" className="fadeIn fourth" value="登录"/>
+              </FormItem>
+              <input type="submit" className="fadeIn fourth" value="登录" />
             </Form>
             <div id="formFooter">
-              <Link to='/reg' >
+              <Link to="/reg" >
                 <div className="underlineHover">还未注册?</div>
               </Link>
             </div>
           </div>
         </div>
       </div>
-    ) 
+    )
   }
 }
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: LoginState) => ({
   isLogin: state.user.isLogin,
-  username : state.user.username
+  userName: state.user.userName
 })
 
 const NormalLogin = Form.create()(Login)

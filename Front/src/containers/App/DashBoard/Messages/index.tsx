@@ -4,59 +4,53 @@ import Table from 'antd/lib/table';
 import './index.less';
 const columns = [{
   title: '操作者',
-  key:'operatorName',
+  key: 'operatorName',
   dataIndex: 'operatorName',
 }, {
   title: '动作',
-  key:'action',
+  key: 'action',
   dataIndex: 'action',
-  render : (action: any)=> (
+  render: (action: string) => (
     <div>
-      {action === 'add' ? '增加' :''}
-      {action === 'delete' ? '删除' :''}
-      {action === 'update' ? '更新' :''}
+      {action === 'add' ? '增加' : ''}
+      {action === 'delete' ? '删除' : ''}
+      {action === 'update' ? '更新' : ''}
     </div>
   ),
 }, {
   title: '操作对象',
   dataIndex: 'objectName',
-  key:'objectName',
+  key: 'objectName',
 }, {
   title: '描述',
   dataIndex: 'desc',
-  key:'desc',
-},{
+  key: 'desc',
+}, {
   title: '发布时间',
   dataIndex: 'time',
-  key:'time',
-  render: (time: any) => `${time}`,
+  key: 'time',
+  render: (time: Date) => `${time}`,
 }];
 
-export class Message extends React.Component<any, any> {
-  constructor (props: any) {
+export class Messages extends React.Component<AdvanceAny, MessageState> {
+  constructor(props: AdvanceAny) {
     super(props)
     this.state = {
-      oldData:[],
+      oldData: [],
       data: [],
       loading: false,
     };
   }
-  componentDidMount() {
-
-  }
-
-  componentWillReceiveProps(nextProps: any) {
-    if(nextProps.data.length > 0 && nextProps.data != this.state.oldData){
-      let arr: any[] = []
-      nextProps.data.map((item: any, index: any) =>{
-          item.key = index
-          arr.push(item)
-     })
+  componentWillReceiveProps(nextProps: AdvanceAny) {
+    if (nextProps.data.length > 0 && nextProps.data !== this.state.oldData) {
+      let arr: Array<Message> = []
+      nextProps.data.map((item: Message, index: number) => {
+        item.key = index
+        arr.push(item)
+      })
       this.setState({
-        data:arr,
-        oldData:nextProps.data
-      },()=>{
-       // console.log(this.state.data)
+        data: arr,
+        oldData: nextProps.data
       })
     }
   }
@@ -67,24 +61,23 @@ export class Message extends React.Component<any, any> {
 
   fetch = () => {
     this.setState({ loading: !this.state.loading });
-    setTimeout(()=>{
+    setTimeout(() => {
       this.setState({ loading: !this.state.loading });
-    },250)
+    }, 250)
   }
 
-  render () {
-    return(
+  render() {
+    return (
       <div id="Message">
-      <Table columns={columns}
-              dataSource={this.state.data}
-              loading={this.state.loading}
-              onChange={this.handleTableChange}
-            />
+        <Table
+          columns={columns}
+          dataSource={this.state.data}
+          loading={this.state.loading}
+          onChange={this.handleTableChange}
+        />
       </div>
     )
   }
 }
 
-
-
-export default Message;
+export default Messages;

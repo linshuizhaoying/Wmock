@@ -33,7 +33,7 @@ const success = (data) => {
 exports.documentList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // console.log('allNews')
     // console.log(ctx.request.body)
-    // const { username } = ctx.request.body;
+    // const { userName } = ctx.request.body;
     const result = yield index_1.AllDocument();
     return ctx.body = success(result);
 });

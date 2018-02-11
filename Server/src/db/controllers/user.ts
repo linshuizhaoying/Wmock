@@ -1,20 +1,20 @@
 
 const User = require('../models/user.js');
 interface RegUser  {
-  username: string,
-  password: string,
+  userName: string,
+  passWord: string,
   role: string,
   email: string
 }
 interface LoginUser  {
-  username: string,
-  password: string
+  userName: string,
+  passWord: string
 }
 
 interface Result {
   status: string,
-  userid: string,
-  username: string,
+  userId: string,
+  userName: string,
   msg: string,
   avatar: string,
   email: string,
@@ -24,13 +24,13 @@ interface Result {
 
 export const AddRegUser = async(user: RegUser) => {
   console.log(user)
-  const {username, password, email, role} = user
-  const newUser = new User({username, password, email, role})
+  const {userName, passWord, email, role} = user
+  const newUser = new User({userName, passWord, email, role})
   let hadUser: any = ''
   const result: Result = {
     status: '',
-    userid: '',
-    username: '',
+    userId: '',
+    userName: '',
     msg: '',
     avatar: '',
     email: '',
@@ -39,10 +39,10 @@ export const AddRegUser = async(user: RegUser) => {
   }
 
   // 先对用户名进行重复校验
-  hadUser = await User.findOne({'username': username}, (err: any, data: any) => {
+  hadUser = await User.findOne({'userName': userName}, (err: any, data: any) => {
     return data
   })
-  if (hadUser && hadUser.username === username) {
+  if (hadUser && hadUser.userName === userName) {
     result.msg = '用户名不能重复'
     result.status = 'error'
     return result
@@ -53,8 +53,8 @@ export const AddRegUser = async(user: RegUser) => {
       console.log(data)
       result.msg = '用户注册成功!'
       result.status = 'success'
-      result.userid = data._id
-      result.username = data.username
+      result.userId = data._id
+      result.userName = data.userName
       result.avatar = data.avatar
       result.email = data.email
       result.regDate = data.regDate
@@ -66,11 +66,11 @@ export const AddRegUser = async(user: RegUser) => {
 }
 
 export const LoginUser = async(user: LoginUser) => {
-  const {username, password} = user
+  const {userName, passWord} = user
   console.log('用户正在登录:')
   console.log(user)
 
-  return User.findOne({'username': username})
+  return User.findOne({'userName': userName})
 }
 
 export const FindUserById = async(id: string) => {

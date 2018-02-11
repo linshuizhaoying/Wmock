@@ -11,13 +11,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const User = require('../models/user.js');
 exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
     console.log(user);
-    const { username, password, email, role } = user;
-    const newUser = new User({ username, password, email, role });
+    const { userName, passWord, email, role } = user;
+    const newUser = new User({ userName, passWord, email, role });
     let hadUser = '';
     const result = {
         status: '',
-        userid: '',
-        username: '',
+        userId: '',
+        userName: '',
         msg: '',
         avatar: '',
         email: '',
@@ -25,10 +25,10 @@ exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
         regDate: undefined
     };
     // 先对用户名进行重复校验
-    hadUser = yield User.findOne({ 'username': username }, (err, data) => {
+    hadUser = yield User.findOne({ 'userName': userName }, (err, data) => {
         return data;
     });
-    if (hadUser && hadUser.username === username) {
+    if (hadUser && hadUser.userName === userName) {
         result.msg = '用户名不能重复';
         result.status = 'error';
         return result;
@@ -40,8 +40,8 @@ exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
             console.log(data);
             result.msg = '用户注册成功!';
             result.status = 'success';
-            result.userid = data._id;
-            result.username = data.username;
+            result.userId = data._id;
+            result.userName = data.userName;
             result.avatar = data.avatar;
             result.email = data.email;
             result.regDate = data.regDate;
@@ -52,10 +52,10 @@ exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
     }
 });
 exports.LoginUser = (user) => __awaiter(this, void 0, void 0, function* () {
-    const { username, password } = user;
+    const { userName, passWord } = user;
     console.log('用户正在登录:');
     console.log(user);
-    return User.findOne({ 'username': username });
+    return User.findOne({ 'userName': userName });
 });
 exports.FindUserById = (id) => __awaiter(this, void 0, void 0, function* () {
     console.log('正在查找Id:');

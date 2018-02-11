@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DemoProject = (username) => __awaiter(this, void 0, void 0, function* () {
-    console.log(username);
+exports.DemoProject = (userName) => __awaiter(this, void 0, void 0, function* () {
+    console.log(userName);
     const data = [
         {
             _id: 'project001',
@@ -23,13 +23,13 @@ exports.DemoProject = (username) => __awaiter(this, void 0, void 0, function* ()
             teamMember: [
                 {
                     _id: 'user001',
-                    username: '2333',
+                    userName: '2333',
                     role: '前端工程师',
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 },
                 {
                     _id: 'user002',
-                    username: '宋青树',
+                    userName: '宋青树',
                     role: '后端工程师',
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 },
@@ -81,19 +81,19 @@ exports.DemoProject = (username) => __awaiter(this, void 0, void 0, function* ()
             teamMember: [
                 {
                     _id: 'user001',
-                    username: '2333',
+                    userName: '2333',
                     role: '前端工程师',
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 },
                 {
                     _id: 'user002',
-                    username: '妮妮',
+                    userName: '妮妮',
                     role: '前端工程师',
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 },
                 {
                     _id: 'user003',
-                    username: '苏苏',
+                    userName: '苏苏',
                     role: '后端工程师',
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 },
@@ -136,8 +136,8 @@ exports.DemoProject = (username) => __awaiter(this, void 0, void 0, function* ()
     ];
     return yield data;
 });
-exports.UserProject = (username) => __awaiter(this, void 0, void 0, function* () {
-    console.log(username);
+exports.UserProject = (userName) => __awaiter(this, void 0, void 0, function* () {
+    console.log(userName);
     const data = [
         {
             _id: 'project003',
@@ -151,13 +151,13 @@ exports.UserProject = (username) => __awaiter(this, void 0, void 0, function* ()
             teamMember: [
                 {
                     _id: 'user001',
-                    username: '2333',
+                    userName: '2333',
                     role: '前端工程师',
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 },
                 {
                     _id: 'user002',
-                    username: '宋青树',
+                    userName: '宋青树',
                     role: '后端工程师',
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 },
@@ -209,19 +209,19 @@ exports.UserProject = (username) => __awaiter(this, void 0, void 0, function* ()
             teamMember: [
                 {
                     _id: 'user001',
-                    username: '2333',
+                    userName: '2333',
                     role: '前端工程师',
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 },
                 {
                     _id: 'user002',
-                    username: '妮妮',
+                    userName: '妮妮',
                     role: '前端工程师',
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 },
                 {
                     _id: 'user003',
-                    username: '苏苏',
+                    userName: '苏苏',
                     role: '后端工程师',
                     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 },

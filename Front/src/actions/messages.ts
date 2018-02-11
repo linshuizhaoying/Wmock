@@ -1,24 +1,19 @@
-import { FETCH_MESSAGES } from '../constants/messages'
-import  notification  from 'antd/lib/notification';
+import notification from 'antd/lib/notification';
+import { FETCH_MESSAGES } from '../constants/messages';
 
-const fetch_messages = () => ({
+const fetchMessagesData = () => ({
   type: FETCH_MESSAGES
 })
 
-// const add_message = (data: any) => ({
-//   type: ADD_MESSAGE,
-//   data: data
-// })
-
-export function fetchMessages () {
-  return (dispatch: any) => {
-    dispatch(fetch_messages())
+export function fetchMessages() {
+  return (dispatch: Function) => {
+    dispatch(fetchMessagesData())
   }
 }
 
-export function errorMessages (msg: string) {
+export function errorMessages(msg: string) {
   notification.error({
-    message:' 获取列表失败!',
+    message: ' 获取列表失败!',
     description: msg,
     duration: 2
   })

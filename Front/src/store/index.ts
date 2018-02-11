@@ -7,7 +7,7 @@ import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 
 const epicMiddleware = createEpicMiddleware(epics)
-export function configureStore (preloadState: any = {}) {
+export function configureStore (preloadState: {} = {}) {
   const store = createStore(
     reducers,
     preloadState,
