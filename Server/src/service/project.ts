@@ -48,8 +48,8 @@ const success = ( data: any) => {
 export const userProjectList = async(ctx: any) => {
   // console.log('allNews')
   // console.log(ctx.request.body)
-  const { username } = ctx.request.body;
-  const result = await UserProject(username)
+  const { userName } = ctx.request.body;
+  const result = await UserProject(userName)
   // console.log(result)
   return ctx.body = success(result)
 }
@@ -57,8 +57,8 @@ export const userProjectList = async(ctx: any) => {
 export const demoProjectList = async(ctx: any) => {
   // console.log('allNews')
   // console.log(ctx.request.body)
-  const { username } = ctx.request.body;
-  const result = await DemoProject(username)
+  const { userName } = ctx.request.body;
+  const result = await DemoProject(userName)
   // console.log(result)
   return ctx.body = success(result)
 }

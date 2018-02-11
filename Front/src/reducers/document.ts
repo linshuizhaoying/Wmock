@@ -1,70 +1,61 @@
-import { RECEIVE_DOCUMENT, 
+import {
+  RECEIVE_DOCUMENT,
   ERROR_DOCUMENT,
   REMOVE_LOCALDOCUMENT,
   UPDATE_LOCALDOCUMENT
-   // ADD_MESSAGE
- } from '../constants/document';
+  // ADD_MESSAGE
+} from '../constants/document';
 const initialState = {
-  data:[]
+  data: []
 }
-const removeDocument = ( list:any, id:any ) =>{
-  console.log(list,id)
-  let temp:any[] = []
-  list.map((item:any,key:any)=>{
-    if(item._id !== id.id){
+const removeDocument = (list: Array<Document>, id: Id) => {
+  let temp: Array<Document> = []
+  list.map((item: Document) => {
+    if (item._id !== id.id) {
       temp.push(item)
     }
     return item
-  }) 
+  })
   return temp
 }
 
-const updateDocument = ( list:any, data:any ) =>{
-  console.log(list)
-  console.log(data)
-  let temp:any[] = []
-  list.map((item:any,key:any)=>{
-    if(item._id === data._id){
+const updateDocument = (list: Array<Document>, data: Document) => {
+  let temp: Array<Document> = []
+  list.map((item: Document) => {
+    if (item._id === data._id) {
       temp.push(data)
-    }else{
+    } else {
       temp.push(item)
     }
-    
     return item
-  }) 
+  })
   return temp
 }
 
-const document = (state = initialState, action: any) => {
-// console.log(action)
+const document = (state = initialState, action: Action) => {
   switch (action.type) {
-  case RECEIVE_DOCUMENT:
-    return{
-    ...state,
-    data: action.data.data,
-    }
-  case ERROR_DOCUMENT:
-    return{
-    ...state,
-    data: []
-    }
-  case REMOVE_LOCALDOCUMENT:
-  return{
-    ...state,
-    data: removeDocument(state.data,action.data),
-    }
-  case UPDATE_LOCALDOCUMENT:
-  return{
-    ...state,
-    data: updateDocument(state.data,action.data),
-    }
-  // case ADD_PROJECT:
-  //   return{
-  //     ...state,
-  //     data: [...state.data, action.data]
-  //   }
-  default:
-  return state
+    case RECEIVE_DOCUMENT:
+      return {
+        ...state,
+        data: action.data.data,
+      }
+    case ERROR_DOCUMENT:
+      return {
+        ...state,
+        data: []
+      }
+    case REMOVE_LOCALDOCUMENT:
+      return {
+        ...state,
+        data: removeDocument(state.data, action.data),
+      }
+    case UPDATE_LOCALDOCUMENT:
+      return {
+        ...state,
+        data: updateDocument(state.data, action.data),
+      }
+    default:
+      return state
   }
 }
 

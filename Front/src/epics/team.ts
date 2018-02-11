@@ -1,21 +1,30 @@
-import { Observable } from 'rxjs/Observable'
-import { combineEpics } from 'redux-observable';
 import * as fetch from '../service/fetch';
-
-import { LOADING_START, LOADING_ERROR, LOADING_SUCCESS } from '../constants/loading';
+import './typing'
 import {
-  teamList, sendApply,
-  allowedJoinGroup, rejectJoinGroup,
-  removeGroupMember, invitedGroupMember
-} from '../service/api'
-
-import {
-  ERROR_TEAM, FETCH_TEAM, RECEIVE_TEAM, SEND_APPLY, NOTHING,
-  ALLOWED_JOINGROUP, REJECT_JOINGROUP,
-  REMOVE_GROUPMEMBER, INVITED_GROUPMEMBER,
-  REMOVE_USER
+  ALLOWED_JOINGROUP,
+  ERROR_TEAM,
+  FETCH_TEAM,
+  INVITED_GROUPMEMBER,
+  NOTHING,
+  RECEIVE_TEAM,
+  REJECT_JOINGROUP,
+  REMOVE_GROUPMEMBER,
+  REMOVE_USER,
+  SEND_APPLY
 } from '../constants/team';
-import { DEAL_JOINGROUP } from '../constants/messages'
+import {
+  allowedJoinGroup,
+  invitedGroupMember,
+  rejectJoinGroup,
+  removeGroupMember,
+  sendApply,
+  teamList
+} from '../service/api';
+import { combineEpics } from 'redux-observable';
+import { DEAL_JOINGROUP } from '../constants/messages';
+import { LOADING_ERROR, LOADING_START, LOADING_SUCCESS } from '../constants/loading';
+import { Observable } from 'rxjs/Observable';
+
 import {
   errorTeam,
   sendApplySuccess, sendApplyError,
@@ -24,23 +33,21 @@ import {
   removeGroupMemberError, removeGroupMemberSuccess,
   invitedGroupMemberSuccess, invitedGroupMemberError,
 } from '../actions/index';
+import { Response } from './typing'
+
 export const loadingStart = () => ({ type: LOADING_START });
 export const loadingError = () => ({ type: LOADING_ERROR });
 export const loadingSuccess = () => ({ type: LOADING_SUCCESS });
-
-export const teamReceive = (data: any) => ({ type: RECEIVE_TEAM, data: data });
-
+export const teamReceive = (data: Team) => ({ type: RECEIVE_TEAM, data: data });
 export const dealJoinGroup = (id: string) => ({ type: DEAL_JOINGROUP, data: id })
-export const removeUser = (data: any) => ({ type: REMOVE_USER, data: data })
-
+export const removeUser = (data: User) => ({ type: REMOVE_USER, data: data })
 export const nothing = () => ({ type: NOTHING });
 
-export const fetchTeam = (action$: any) =>
+export const fetchTeam = (action$: EpicAction) =>
   action$.ofType(FETCH_TEAM)
-    .mergeMap((action: any) => {
+    .mergeMap((action: Action) => {
       return fetch.post(teamList, action.data)
-        .map((response: any) => {
-          console.log(response);
+        .map((response: Response) => {
           if (response.state.code === 1) {
             let temp = response.data;
             return teamReceive(temp);
@@ -49,19 +56,17 @@ export const fetchTeam = (action$: any) =>
           }
         })
         // 只有服务器崩溃才捕捉错误
-        .catch((e: any): any => {
-          console.log(e)
+        .catch((e: Error): Observable<Action> => {
           return Observable.of(({ type: ERROR_TEAM })).startWith(loadingError())
         }).startWith(loadingSuccess()).delay(200).startWith(loadingStart())
 
     });
 
-export const EsendApply = (action$: any) =>
+export const EsendApply = (action$: EpicAction) =>
   action$.ofType(SEND_APPLY)
-    .mergeMap((action: any) => {
+    .mergeMap((action: Action) => {
       return fetch.post(sendApply, action.data)
-        .map((response: any) => {
-          console.log(response);
+        .map((response: Response) => {
           if (response.state.code === 1) {
             sendApplySuccess(response.state.msg)
             return nothing();
@@ -71,18 +76,17 @@ export const EsendApply = (action$: any) =>
           }
         })
         // 只有服务器崩溃才捕捉错误
-        .catch((e: any): any => {
+        .catch((e: Error): Observable<Action> => {
           return Observable.of(({ type: ERROR_TEAM })).startWith(loadingError())
         })
 
     });
 
-export const ErejectJoinGroup = (action$: any) =>
+export const ErejectJoinGroup = (action$: EpicAction) =>
   action$.ofType(REJECT_JOINGROUP)
-    .mergeMap((action: any) => {
+    .mergeMap((action: Action) => {
       return fetch.post(rejectJoinGroup, action.data)
-        .map((response: any) => {
-          console.log(response);
+        .map((response: Response) => {
           if (response.state.code === 1) {
             rejectJoinSuccess(response.state.msg)
             return dealJoinGroup(action.data.messageId);
@@ -92,18 +96,17 @@ export const ErejectJoinGroup = (action$: any) =>
           }
         })
         // 只有服务器崩溃才捕捉错误
-        .catch((e: any): any => {
+        .catch((e: Error): Observable<Action> => {
           return Observable.of(({ type: ERROR_TEAM })).startWith(loadingError())
         })
 
     });
 
-export const EallowedJoinGroup = (action$: any) =>
+export const EallowedJoinGroup = (action$: EpicAction) =>
   action$.ofType(ALLOWED_JOINGROUP)
-    .mergeMap((action: any) => {
+    .mergeMap((action: Action) => {
       return fetch.post(allowedJoinGroup, action.data)
-        .map((response: any) => {
-          console.log(response);
+        .map((response: Response) => {
           if (response.state.code === 1) {
             allowedJoinSuccess(response.state.msg)
             return dealJoinGroup(action.data.messageId);
@@ -113,18 +116,17 @@ export const EallowedJoinGroup = (action$: any) =>
           }
         })
         // 只有服务器崩溃才捕捉错误
-        .catch((e: any): any => {
+        .catch((e: Error): Observable<Action> => {
           return Observable.of(({ type: ERROR_TEAM })).startWith(loadingError())
         })
 
     });
 
-export const EremoveGroupMember = (action$: any) =>
+export const EremoveGroupMember = (action$: EpicAction) =>
   action$.ofType(REMOVE_GROUPMEMBER)
-    .mergeMap((action: any) => {
+    .mergeMap((action: Action) => {
       return fetch.post(removeGroupMember, action.data)
-        .map((response: any) => {
-          console.log(response);
+        .map((response: Response) => {
           if (response.state.code === 1) {
             removeGroupMemberSuccess(response.state.msg)
             return removeUser(action.data);
@@ -134,18 +136,17 @@ export const EremoveGroupMember = (action$: any) =>
           }
         })
         // 只有服务器崩溃才捕捉错误
-        .catch((e: any): any => {
+        .catch((e: Error): Observable<Action> => {
           return Observable.of(({ type: ERROR_TEAM })).startWith(loadingError())
         })
 
     });
 
-export const EinvitedGroupMember = (action$: any) =>
+export const EinvitedGroupMember = (action$: EpicAction) =>
   action$.ofType(INVITED_GROUPMEMBER)
-    .mergeMap((action: any) => {
+    .mergeMap((action: Action) => {
       return fetch.post(invitedGroupMember, action.data)
-        .map((response: any) => {
-          console.log(response);
+        .map((response: Response) => {
           if (response.state.code === 1) {
             invitedGroupMemberSuccess(response.state.msg)
             return nothing();
@@ -155,10 +156,16 @@ export const EinvitedGroupMember = (action$: any) =>
           }
         })
         // 只有服务器崩溃才捕捉错误
-        .catch((e: any): any => {
+        .catch((e: Error): Observable<Action> => {
           return Observable.of(({ type: ERROR_TEAM })).startWith(loadingError())
         })
 
     });
 
-export default combineEpics(fetchTeam, EsendApply, EallowedJoinGroup, ErejectJoinGroup, EremoveGroupMember, EinvitedGroupMember);
+export default combineEpics(
+  fetchTeam,
+  EsendApply,
+  EallowedJoinGroup,
+  ErejectJoinGroup,
+  EremoveGroupMember,
+  EinvitedGroupMember);

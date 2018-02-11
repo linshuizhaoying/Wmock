@@ -1,11 +1,11 @@
+import document from './document';
+import loading from './loading';
+import messages from './messages';
+import model from './model';
+import project from './project';
+import team from './team';
+import user from './user';
 import { combineReducers } from 'redux';
-import user from './user'
-import loading from './loading'
-import messages from './messages'
-import project from './project'
-import document from './document'
-import team from './team'
-import model from './model'
 export default combineReducers({
   loading,
   user,

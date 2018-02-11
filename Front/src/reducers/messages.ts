@@ -1,41 +1,35 @@
-import { RECEIVE_MESSAGES, 
-         ERROR_MESSAGES,
-         DEAL_JOINGROUP
-          // ADD_MESSAGE
-        } from '../constants/messages';
+import { DEAL_JOINGROUP, ERROR_MESSAGES, RECEIVE_MESSAGES } from '../constants/messages';
 const initialState = {
-   data:[],
-   teamMessages:[],
+  data: [],
+  teamMessages: [],
 }
-const removeMessages = ( list: any, id: string ) =>{
-  // console.log(list)
-  // console.log(id)
-  const temp: any[] = []
-  list.map((item: any)=>{
-    if(item._id !== id){
+const removeMessages = (list: Array<Message>, id: string) => {
+  const temp: Array<Message> = []
+  list.map((item: Message) => {
+    if (item._id !== id) {
       temp.push(item)
     }
     return item
-  }) 
+  })
   return temp
 }
 
-const messages = (state = initialState, action: any) => {
+const messages = (state = initialState, action: Action) => {
   // console.log(action)
   switch (action.type) {
     case RECEIVE_MESSAGES:
-      return{
+      return {
         ...state,
         data: action.data[0],
-        teamMessages:action.data[1]
+        teamMessages: action.data[1]
       }
     case ERROR_MESSAGES:
-      return{
+      return {
         ...state,
         data: []
       }
     case DEAL_JOINGROUP:
-      return{
+      return {
         ...state,
         teamMessages: removeMessages(state.teamMessages, action.data)
       }

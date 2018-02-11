@@ -1,154 +1,160 @@
-import { FETCH_PROJECT, FETCH_UNJOINPROJECT, FETCH_DEMO, ADD_PROJECT, REMOVE_PROJECT, UPDATE_PROJECT, IMPORT_PROJECT, CLONE_PROJECT, VERIFY_PROJECT,
-         ADD_INTERFACE, REMOVE_INTERFACE, UPDATE_INTERFACE, CLONE_INTERFACE
-} from '../constants/project'
 import notification from 'antd/lib/notification';
+import {
+  ADD_INTERFACE,
+  ADD_PROJECT,
+  CLONE_INTERFACE,
+  CLONE_PROJECT,
+  FETCH_DEMO,
+  FETCH_PROJECT,
+  FETCH_UNJOINPROJECT,
+  IMPORT_PROJECT,
+  REMOVE_INTERFACE,
+  REMOVE_PROJECT,
+  UPDATE_INTERFACE,
+  UPDATE_PROJECT,
+  VERIFY_PROJECT,
+  } from '../constants/project';
 
-const fetch_project = (data: any) => ({
+const fetchProjectData = (id: Id) => ({
   type: FETCH_PROJECT,
-  data: data
+  data: id
 })
 
-
-const import_project = (data: any) => ({
+const importProjectData = (project: Project) => ({
   type: IMPORT_PROJECT,
-  data: data
+  data: project
 })
 
-const clone_project = (data: any) => ({
+const cloneProjectData = (project: CloneProject) => ({
   type: CLONE_PROJECT,
-  data: data
+  data: project
 })
 
-const clone_interface = (data: any) => ({
+const cloneInterfaceData = (interfaceData: CloneInterface) => ({
   type: CLONE_INTERFACE,
-  data: data
+  data: interfaceData
 })
 
-
-const verify_project = (data: any) => ({
+const verifyProjectData = (id: Id) => ({
   type: VERIFY_PROJECT,
-  data: data
+  data: id
 })
 
-
-const fetch_demo = (data: any) => ({
+const fetchDemoData = (id: Id) => ({
   type: FETCH_DEMO,
-  data: data
+  data: id
 })
 
-const fetch_unJoinproject = (data: any) => ({
+const fetchUnJoinprojectData = (id: Id) => ({
   type: FETCH_UNJOINPROJECT,
-  data: data
+  data: id
 })
 
-const add_project = (data: any) => ({
+const addProjectData = (project: ProjectNoId) => ({
   type: ADD_PROJECT,
-  data: data
+  data: project
 })
 
-const update_project = (data: any) => ({
+const updateProjectData = (project: Project) => ({
   type: UPDATE_PROJECT,
-  data: data
+  data: project
 })
 
-const remove_project = (data: any) => ({
+const removeProjectData = (id: Id) => ({
   type: REMOVE_PROJECT,
-  data: data
+  data: id
 })
 
-
-const add_interface = (data: any) => ({
+const addInterfaceData = (data: Interface) => ({
   type: ADD_INTERFACE,
   data: data
 })
 
-const update_interface = (data: any) => ({
+const updateInterfaceData = (data: Interface) => ({
   type: UPDATE_INTERFACE,
   data: data
 })
 
-const remove_interface = (data: any) => ({
+const removeInterfaceData = (id: Id) => ({
   type: REMOVE_INTERFACE,
-  data: data
+  data: id
 })
 
-
-export function fetchProject(user: any) {
-  return (dispatch: any) => {
-    dispatch(fetch_project(user))
+export function fetchProject(id: Id) {
+  return (dispatch: Function) => {
+    dispatch(fetchProjectData(id))
   }
 }
 
-export function importProject(data: any) {
-  return (dispatch: any) => {
-    dispatch(import_project(data))
+export function importProject(project: Project) {
+  return (dispatch: Function) => {
+    dispatch(importProjectData(project))
   }
 }
 
-export function cloneProject(data: any) {
-  return (dispatch: any) => {
-    dispatch(clone_project(data))
+export function cloneProject(project: CloneProject) {
+  return (dispatch: Function) => {
+    dispatch(cloneProjectData(project))
   }
 }
 
-export function cloneInterface(data: any) {
-  return (dispatch: any) => {
-    dispatch(clone_interface(data))
+export function cloneInterface(interfaceData: CloneInterface) {
+  return (dispatch: Function) => {
+    dispatch(cloneInterfaceData(interfaceData))
   }
 }
 
-export function verifyProject(data: any) {
-  return (dispatch: any) => {
-    dispatch(verify_project(data))
+export function verifyProject(id: Id) {
+  return (dispatch: Function) => {
+    dispatch(verifyProjectData(id))
   }
 }
 
-export function fetchDemo(user: any) {
-  return (dispatch: any) => {
-    dispatch(fetch_demo(user))
+export function fetchDemo(id: Id) {
+  return (dispatch: Function) => {
+    dispatch(fetchDemoData(id))
   }
 }
 
-export function fetchUnJoinProject(user: any) {
-  return (dispatch: any) => {
-    dispatch(fetch_unJoinproject(user))
+export function fetchUnJoinProject(id: Id) {
+  return (dispatch: Function) => {
+    dispatch(fetchUnJoinprojectData(id))
   }
 }
-
 
 export function removeProject(id: Id) {
-  return (dispatch: any) => {
-    dispatch(remove_project(id))
+  return (dispatch: Function) => {
+    dispatch(removeProjectData(id))
   }
 }
 
 export function updateProject(project: Project) {
-  return (dispatch: any) => {
-    dispatch(update_project(project))
+  return (dispatch: Function) => {
+    dispatch(updateProjectData(project))
   }
 }
 
-export function addProject(project: Project) {
-  return (dispatch: any) => {
-    dispatch(add_project(project))
+export function addProject(project: ProjectNoId) {
+  return (dispatch: Function) => {
+    dispatch(addProjectData(project))
   }
 }
 
 export function removeInterface(id: Id) {
-  return (dispatch: any) => {
-    dispatch(remove_interface(id))
+  return (dispatch: Function) => {
+    dispatch(removeInterfaceData(id))
   }
 }
 
 export function updateInterface(data: Interface) {
-  return (dispatch: any) => {
-    dispatch(update_interface(data))
+  return (dispatch: Function) => {
+    dispatch(updateInterfaceData(data))
   }
 }
 
 export function addInterface(data: Interface) {
-  return (dispatch: any) => {
-    dispatch(add_interface(data))
+  return (dispatch: Function) => {
+    dispatch(addInterfaceData(data))
   }
 }
 
@@ -330,7 +336,6 @@ export function cloneInterfaceError(msg: string) {
   })
   return
 }
-
 
 export function errorProject(msg: string) {
   notification.error({

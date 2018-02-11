@@ -37,7 +37,7 @@ const success = ( data: any) => {
 export const documentList = async(ctx: any) => {
   // console.log('allNews')
   // console.log(ctx.request.body)
-  // const { username } = ctx.request.body;
+  // const { userName } = ctx.request.body;
   const result = await AllDocument()
   return ctx.body = success(result)
 }

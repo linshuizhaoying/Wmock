@@ -1,32 +1,33 @@
 import * as React from 'react';
-import Input from 'antd/lib/input';
-import Icon from 'antd/lib/icon';
-import './index.less';
-import Upload from 'antd/lib/upload';
 import Button from 'antd/lib/button';
+import Icon from 'antd/lib/icon';
+import Input from 'antd/lib/input';
+import md5 from 'md5';
 import message from 'antd/lib/message';
-import { upload, imgBaseUrl } from '../../../../service/api/index'
-import Validator from '../../../../util/validator';
-import md5 from 'md5'
 import Radio from 'antd/lib/radio';
-import { updateUser } from '../../../../actions/index';
+import Upload from 'antd/lib/upload';
+import Validator from '../../../../util/validator';
 import { connect } from 'react-redux';
+import { imgBaseUrl, upload } from '../../../../service/api/index';
+import { updateUser } from '../../../../actions/index';
+import './index.less';
+import { ChangeEvent } from 'react';
+import { UploadFile } from 'antd/es/upload/interface';
+
 const RadioGroup = Radio.Group;
 
-// import FileUpload from 'react-fileupload'
-
-class EditableCell extends React.Component<any, any> {
+class EditableCell extends React.Component<EditableProps, EditableState> {
   state = {
     value: this.props.value,
     editable: false,
   }
-  componentWillReceiveProps(nextProps: any) {
+  componentWillReceiveProps(nextProps: EditableProps) {
     this.setState({
       value: nextProps.value
     })
   }
 
-  handleChange = (e: any) => {
+  handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     this.setState({ value });
   }
@@ -72,10 +73,8 @@ class EditableCell extends React.Component<any, any> {
     );
   }
 }
-
-
-export class UserInfo extends React.Component<any, any> {
-  constructor(props: any) {
+export class UserInfo extends React.Component<AppProps, UserInfoState> {
+  constructor(props: AppProps) {
     super(props)
     this.state = {
       loading: false,
@@ -93,30 +92,27 @@ export class UserInfo extends React.Component<any, any> {
     })
   }
 
-
-  componentWillReceiveProps(nextProps: any) {
+  componentWillReceiveProps(nextProps: AppProps) {
     if (imgBaseUrl + nextProps.userData.avatar !== this.state.imgUrl || this.state.role !== nextProps.userData.role) {
       this.setState({
         imgUrl: imgBaseUrl + nextProps.userData.avatar,
         role: nextProps.userData.role
-      }, () => {
-        console.log('get ok')
       })
     }
   }
 
   changeUserName = () => {
-    return (value: any) => {
+    return (value: string) => {
       const { dispatch } = this.props;
       dispatch(updateUser(
         {
-          username: value
+          userName: value
         }
       ))
     };
   }
   changeUserEmail = () => {
-    return (value: any) => {
+    return (value: string) => {
       if (!Validator.emailCheck(value)) {
         message.error('请输入符合规范的邮箱地址');
       } else {
@@ -131,14 +127,12 @@ export class UserInfo extends React.Component<any, any> {
     };
   }
 
-
-
-  getBase64 = (img: any, callback: any) => {
+  getBase64 = (img: File, callback: Function) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
   }
-  beforeUpload = (file: any) => {
+  beforeUpload = (file: UploadFile) => {
     const isJPG = file.type === 'image/jpeg';
     if (!isJPG) {
       message.error('只允许上传jpg格式头像!');
@@ -149,14 +143,9 @@ export class UserInfo extends React.Component<any, any> {
     }
     return isJPG && isLt2M;
   }
-  handleChange = (info: any) => {
-    console.log(info)
-
+  handleChange = ( info: MyUploadChangeParam) => {
     this.setState({ loading: true });
-
     if (info.file.status === 'done') {
-      console.log('done')
-      // Get this url from response in real world.
       this.getBase64(info.file.originFileObj, () => this.setState({
         imgUrl: imgBaseUrl + info.file.response.image,
         loading: false,
@@ -167,19 +156,16 @@ export class UserInfo extends React.Component<any, any> {
           avatar: info.file.response.image
         }
       ))
-      // this.props.getUserInfo()
     }
   }
 
-  changeOldPass = (e: any) => {
-    console.log(e.target.value)
+  changeOldPass = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       oldPass: e.target.value
     })
   }
 
-  changeNewPass = (e: any) => {
-    console.log(e.target.value)
+  changeNewPass = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       newPass: e.target.value
     })
@@ -192,24 +178,24 @@ export class UserInfo extends React.Component<any, any> {
     if (this.state.newPass === '') {
       message.error('请填写新密码');
     }
-    if (this.state.oldPass.length >=6 && this.state.newPass.length >=6) {
-      console.log(this.props.userData.userid)
-      console.log(md5(this.state.oldPass))
-      console.log(md5(this.state.newPass))
+    if (this.state.oldPass.length >= 6 && this.state.newPass.length >= 6) {
       const { dispatch } = this.props;
       dispatch(updateUser(
         {
-          oldPass: this.state.oldPass,
-          newPass: this.state.newPass
+          oldPass: md5(this.state.oldPass),
+          newPass: md5(this.state.newPass)
         }
       ))
-    }else{
+      this.setState({
+        oldPass: '',
+        newPass: ''
+      })
+    } else {
       message.error('密码长度不能小于6位!');
     }
 
   }
-  changeRole = (e: any) => {
-    console.log('角色切换', e.target.value);
+  changeRole = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       role: e.target.value
     })
@@ -250,7 +236,7 @@ export class UserInfo extends React.Component<any, any> {
           <li>
             <h3>用户名</h3>
             <EditableCell
-              value={this.props.userData.username}
+              value={this.props.userData.userName}
               onChange={this.changeUserName()}
             />
           </li>
@@ -278,24 +264,22 @@ export class UserInfo extends React.Component<any, any> {
               </h3>
             <div className="editPassword">
               <div className="oldPass">
-              <span>原密码:</span>
+                <span>原密码:</span>
                 <div>
                   <Input type="password" value={this.state.oldPass} onChange={this.changeOldPass} />
                 </div>
               </div>
-             <div className="newPass">
-              <span>新密码:</span>
+              <div className="newPass">
+                <span>新密码:</span>
                 <div>
                   <Input type="password" value={this.state.newPass} onChange={this.changeNewPass} />
                 </div>
-             </div>
-            <div className="commitChange">
-              <div>
-                <Button type="primary" onClick={this.submitPass}>更改</Button>
               </div>
-            </div>
-
-
+              <div className="commitChange">
+                <div>
+                  <Button type="primary" onClick={this.submitPass}>更改</Button>
+                </div>
+              </div>
             </div>
 
           </li>
@@ -304,7 +288,5 @@ export class UserInfo extends React.Component<any, any> {
     )
   }
 }
-
-
 
 export default connect()(UserInfo);

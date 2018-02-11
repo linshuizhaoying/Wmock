@@ -1,16 +1,15 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import DashBoard from '../../containers/App/DashBoard/index';
+import LoadingBar from '../../components/LoadingBar';
 import Login from './Login';
 import Reg from './Reg';
-import { userToken, tokenOut } from '../../actions';
-import LoadingBar from '../../components/LoadingBar';
-import DashBoard from '../../containers/App/DashBoard/index';
+import { connect } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
+import { tokenOut, userToken } from '../../actions';
 import './index.less';
 
-
-class App extends React.Component<any, any> {
-  constructor (props: any) {
+class App extends React.Component<AppProps, AppState> {
+  constructor(props: AppProps) {
     super(props);
     this.state = {
       progress: 0,
@@ -19,50 +18,41 @@ class App extends React.Component<any, any> {
     }
   }
 
-  componentWillMount() {
-
-  }
-
   componentDidMount() {
     const { dispatch, history } = this.props;
-    console.log('token查询中')
-
     const token = localStorage.getItem('token')
-    console.log(token)
-    if(token){
-       dispatch(userToken({'token':token}))
-    }else{
-      dispatch(tokenOut()) 
+    if (token) {
+      dispatch(userToken({ 'token': token }))
+    } else {
+      dispatch(tokenOut())
       history.push('/login')
     }
-    // if(!this.props.isLogin){
-    //   
-    // }
   }
-  componentWillReceiveProps(nextProps: any) {
-    console.log(nextProps)
+  componentWillReceiveProps(nextProps: AppProps) {
     // 处理loading bar 状态
-    if (nextProps.loadingState === 'start'){
+    if (nextProps.loadingState === 'start') {
       this.setState({
         progress: 75,
         error: false
       })
     }
-    if (nextProps.loadingState === 'error'){
+    if (nextProps.loadingState === 'error') {
       this.setState({ error: true })
     }
-    if (nextProps.loadingState === 'success'){
+    if (nextProps.loadingState === 'success') {
       this.setState({
         progress: 100
       })
     }
-    if(!this.state.login && nextProps.username.length > 0 && nextProps.isLogin && nextProps.loadingState === 'success'){
+    if (!this.state.login &&
+      nextProps.userName.length > 0 &&
+      nextProps.isLogin &&
+      nextProps.loadingState === 'success') {
       const { history } = this.props;
-      console.log(history.location.pathname)
       this.setState({
         login: true
       })
-      if( history.location.pathname === '/' || history.location.pathname.length < 8){
+      if (history.location.pathname === '/' || history.location.pathname.length < 8) {
         history.push('/wmock/OverView')
       } else {
         history.push(history.location.pathname)
@@ -70,11 +60,11 @@ class App extends React.Component<any, any> {
     }
 
   }
-  errorDone(){
+  errorDone = () => {
     this.setState({ error: true })
   }
 
-  progressDone() {
+  progressDone = () => {
     this.setState({ progress: 0 })
   }
 
@@ -83,29 +73,28 @@ class App extends React.Component<any, any> {
       <div className="App">
 
         <LoadingBar
-          progress={ this.state.progress }
-          error={ this.state.error }
-          onErrorDone={ this.errorDone.bind(this) }
-          onProgressDone={ this.progressDone.bind(this) } 
-          direction='right'
+          progress={this.state.progress}
+          error={this.state.error}
+          onErrorDone={this.errorDone}
+          onProgressDone={this.progressDone}
+          direction="right"
         />
 
         <Switch>
           <Route path="/wmock" component={DashBoard} />
-          <Route path="/login" component={ Login }/> 
-          <Route path="/reg" component={ Reg }/> 
+          <Route path="/login" component={Login} />
+          <Route path="/reg" component={Reg} />
         </Switch>
-        
+
       </div>
     );
   }
 }
-const mapStateToProps = (state: any) => ({
-   username: state.user.username,
-   isLogin:state.user.isLogin,
-   loadingState: state.loading.loadingState
+const mapStateToProps = (state: AppState) => ({
+  userName: state.user.userName,
+  isLogin: state.user.isLogin,
+  loadingState: state.loading.loadingState
 })
-let AppWrapper = App
-AppWrapper = connect(mapStateToProps)(App);
+const AppWrapper = connect(mapStateToProps)(App);
 
 export default AppWrapper;

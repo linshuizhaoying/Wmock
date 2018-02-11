@@ -1,78 +1,69 @@
-import { FETCHBASE_MODEL, FETCHCUSTOM_MODEL, ADD_MODEL, UPDATE_MODEL, REMOVE_MODEL } from '../constants/model'
 import notification from 'antd/lib/notification';
+import {
+  ADD_MODEL,
+  FETCHBASE_MODEL,
+  FETCHCUSTOM_MODEL,
+  REMOVE_MODEL,
+  UPDATE_MODEL
+  } from '../constants/model';
 
-interface Id {
-  id: String
-}
-
-interface Model {
-  modelDesc: String,
-  modelMode: String,
-  modelName: String,
-  _id?: String
-}
-
-const fetchbase_model = () => ({
+// 获取通用的基础Mock模型
+const fetchBaseModelData = () => ({
   type: FETCHBASE_MODEL,
 })
 
-const fetchcustom_model = (data: any) => ({
+// 获取当前用户的自定义Mock模型
+const fetchCustomModelData = (id: Id) => ({
   type: FETCHCUSTOM_MODEL,
-  data: data
+  data: id
 })
 
-const add_model = (data: any) => ({
+const addModelData = (model: Model) => ({
   type: ADD_MODEL,
-  data: data
+  data: model
 })
 
-const update_model = (data: any) => ({
+const updateModelData = (model: Model) => ({
   type: UPDATE_MODEL,
-  data: data
+  data: model
 })
 
-const remove_model = (data: any) => ({
+const removeModelData = (id: Id) => ({
   type: REMOVE_MODEL,
-  data: data
+  data: id
 })
-
-// const add_message = (data: any) => ({
-//   type: ADD_MESSAGE,
-//   data: data
-// })
 
 export function fetchBaseModel() {
-  return (dispatch: any) => {
-    dispatch(fetchbase_model())
+  return (dispatch: Function) => {
+    dispatch(fetchBaseModelData())
   }
 }
 
 export function fetchCustomModel(id: Id) {
-  return (dispatch: any) => {
-    dispatch(fetchcustom_model(id))
+  return (dispatch: Function) => {
+    dispatch(fetchCustomModelData(id))
   }
 }
 
 export function removeModel(id: Id) {
-  return (dispatch: any) => {
-    dispatch(remove_model(id))
+  return (dispatch: Function) => {
+    dispatch(removeModelData(id))
   }
 }
 
 export function updateModel(model: Model) {
-  return (dispatch: any) => {
-    dispatch(update_model(model))
+  return (dispatch: Function) => {
+    dispatch(updateModelData(model))
   }
 }
 
 export function addModel(model: Model) {
-  return (dispatch: any) => {
-    dispatch(add_model(model))
+  return (dispatch: Function) => {
+    dispatch(addModelData(model))
   }
 }
 
-
-export function updateModelSuccess (msg: string) {
+export function updateModelSuccess(msg: string) {
   notification.success({
     message: '更新成功!',
     description: '更新成功!',
@@ -81,15 +72,15 @@ export function updateModelSuccess (msg: string) {
   return
 }
 
-export function updateModelError (msg: string) {
+export function updateModelError(msg: string) {
   notification.error({
     message: '更新失败!',
-    description:  '更新失败!',
+    description: '更新失败!',
     duration: 1
   })
   return
 }
-export function removeModelSuccess (msg: string) {
+export function removeModelSuccess(msg: string) {
   notification.success({
     message: '移除成功!',
     description: '移除成功!',
@@ -98,16 +89,16 @@ export function removeModelSuccess (msg: string) {
   return
 }
 
-export function removeModelError (msg: string) {
+export function removeModelError(msg: string) {
   notification.error({
     message: '移除失败!',
-    description:  '移除失败!',
+    description: '移除失败!',
     duration: 1
   })
   return
 }
 
-export function addModelSuccess (msg: string) {
+export function addModelSuccess(msg: string) {
   notification.success({
     message: '添加成功!',
     description: '添加成功!',
@@ -116,15 +107,14 @@ export function addModelSuccess (msg: string) {
   return
 }
 
-export function addModelError (msg: string) {
+export function addModelError(msg: string) {
   notification.error({
     message: '添加失败!',
-    description:  '添加失败!',
+    description: '添加失败!',
     duration: 1
   })
   return
 }
-
 
 export function errorModel(msg: string) {
   notification.error({

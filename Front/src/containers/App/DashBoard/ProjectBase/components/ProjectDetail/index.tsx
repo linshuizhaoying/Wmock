@@ -1,38 +1,37 @@
-import * as React from 'react';
 import * as copy from 'copy-to-clipboard';
-import './index.less';
-import Tabs from 'antd/lib/tabs';
-import Input from 'antd/lib/input';
-import Icon from 'antd/lib/icon';
-import Button from 'antd/lib/button';
-import Tooltip from 'antd/lib/tooltip';
+import * as React from 'react';
+import Alert from 'antd/lib/alert';
 import Avatar from 'antd/lib/avatar';
-import Popover from 'antd/lib/popover';
-import Message from 'antd/lib/message';
-import Timeline from 'antd/lib/timeline';
-// import Popconfirm from 'antd/lib/popconfirm';
-import TimeAgo from 'timeago-react'
+import Button from 'antd/lib/button';
+import Divider from 'antd/lib/divider';
+import Icon from 'antd/lib/icon';
+import Input from 'antd/lib/input';
 import InterfaceList from './components/InterfaceList';
-import Divider from 'antd/lib/divider'
-import Alert from 'antd/lib/alert'
-import ProjectSpec from '../../../ProjectSpec'
-import { MockUrl } from '../../../../../../service/api'
+import Message from 'antd/lib/message';
+import Popover from 'antd/lib/popover';
+import ProjectSpec from '../../../ProjectSpec';
+import Tabs from 'antd/lib/tabs';
+import TimeAgo from 'timeago-react';
+import Timeline from 'antd/lib/timeline';
+import Tooltip from 'antd/lib/tooltip';
+import { ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
+import { MockUrl } from '../../../../../../service/api';
+import './index.less';
 const TabPane = Tabs.TabPane;
 
-class EditableCell extends React.Component<any, any> {
+class EditableCell extends React.Component<EditableCellProps, EditableCellState> {
   state = {
     value: this.props.value,
     editable: false,
   }
-  componentWillReceiveProps(nextProps: any) {
+  componentWillReceiveProps(nextProps: EditableCellProps) {
     this.setState({
       value: nextProps.value
     })
   }
 
-  handleChange = (e: any) => {
-    console.log(e.target.value)
+  handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     this.setState({ value });
   }
@@ -79,59 +78,41 @@ class EditableCell extends React.Component<any, any> {
   }
 }
 
-
-export class ProjectDetail extends React.Component<any, any> {
-  constructor(props: any) {
+export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDetailState> {
+  constructor(props: ProjectDetailProps) {
     super(props)
     this.state = {
       selectUserId: '', // 从项目选择的用户ID
       projectMessagesList: [], // 项目的动态信息
-      currentDocument: []
     };
   }
-  componentDidMount() {
 
-  }
-
-  componentWillReceiveProps(nextProps: any) {
-    console.log('detail', nextProps)
-  }
-  changeProjectName = (origin: any, id: any) => {
-    return (value: any) => {
+  changeProjectName = (origin: string, id: string) => {
+    return (value: string) => {
       this.props.update({
         _id: id,
         projectName: value
       })
-      console.log(id, value)
     };
   }
-  changeProjectDesc = (origin: any, id: any) => {
-    return (value: any) => {
-      this.props.update({
-        _id: id,
-        projectDesc: value
-      })
-      console.log(id, value)
-    };
+  changeProjectDesc = () => {
+    this.props.update({
+      _id: this.props.data._id,
+      projectDesc: this.props.data.projectDesc
+    })
   }
-  changeProjectVersion = (origin: any, id: any) => {
-    return (value: any) => {
-      this.props.update({
-        _id: id,
-        version: value
-      })
-      console.log(id, value)
-    };
+  changeProjectVersion = () => {
+    this.props.update({
+      _id: this.props.data._id,
+      version: this.props.data.version
+    })
   }
 
-  changeTransferUrl = (origin: any, id: any) => {
-    return (value: any) => {
-      this.props.update({
-        _id: id,
-        transferUrl: value
-      })
-      console.log(id, value)
-    };
+  changeTransferUrl = () => {
+    this.props.update({
+      _id: this.props.data._id,
+      transferUrl: this.props.data.transferUrl
+    })
   }
 
   copyToClipBoard = (text: string) => {
@@ -142,17 +123,11 @@ export class ProjectDetail extends React.Component<any, any> {
     }
   }
 
-  removeTeamUser = (userId: string, projectId: string) => {
-    console.log(userId)
-    console.log(projectId)
-  }
-
   toggleTransfer = (id: string) => {
     this.props.update({
       _id: id,
       status: 'transfer'
     })
-    console.log('start transfer')
   }
 
   toggleMock = (id: string) => {
@@ -162,15 +137,15 @@ export class ProjectDetail extends React.Component<any, any> {
     })
   }
   selectTab = (key: string) => {
-    console.log(key)
     if (key === '4') {
       // 让加载数据的方法能够在组件加载后执行
-      setTimeout(() => {
-        this.props.selectDocument(this.props.data._id)
-      }, 0)
+      setTimeout(() => { this.props.selectDocument(this.props.data._id) }, 0)
     }
   }
 
+  pasteCopy = () => {
+    this.copyToClipBoard(MockUrl + '/' + this.props.data._id + this.props.data.projectUrl)
+  }
   render() {
     return (
       <div id="ProjectDetail">
@@ -183,8 +158,7 @@ export class ProjectDetail extends React.Component<any, any> {
             </div>
             <div className="proejctName title">
               项目名称
-
-                <EditableCell
+              <EditableCell
                 value={this.props.data.projectName}
                 onChange={this.changeProjectName(this.props.data.projectName, this.props.data._id)}
               />
@@ -193,7 +167,7 @@ export class ProjectDetail extends React.Component<any, any> {
               Mock地址
 
               <Tooltip placement="top" title={'点击复制到粘贴板'}>
-                <Button type="dashed" className="projectUrl" onClick={() => this.copyToClipBoard(MockUrl + '/' + this.props.data._id + this.props.data.projectUrl)}>
+                <Button type="dashed" className="projectUrl" onClick={this.pasteCopy}>
                   {MockUrl + '/' + this.props.data._id + this.props.data.projectUrl}
                 </Button>
               </Tooltip>
@@ -202,55 +176,32 @@ export class ProjectDetail extends React.Component<any, any> {
             <div className="proejctGroup title">
               团队成员
                  <ul className="userList">
-                {this.props.data.teamMember.length > 0 ? this.props.data.teamMember.map((user: any, key: any) => {
-                  return (
-                    <li key={key}>
-                      <Popover content={
-                        <div>
-                          <div>
-                            用户名: {user.username}
-                          </div>
-                          <div>
-                            职位: {user.role}
-                          </div>
-                        </div>
-                      }>
-                        <Avatar src={user.avatar} />
-                      </Popover>
-                      {/* <div className="projectUserDelete">
-                        <Popconfirm title="确定删除该项目么?" onConfirm={() => { this.removeTeamUser(user._id, this.props.data._id) }} okText="确定删除" cancelText="取消">
-                          <Icon type="close" />
-                        </Popconfirm>
-
-                      </div> */}
-                    </li>
-                  )
-                }) :
-                  <div>  </div>
-                }
+                {this.props.data.teamMember.length > 0 ?
+                  this.props.data.teamMember.map((user: TeamMember, key: number) => {
+                    return (
+                      <li key={key}>
+                        <Popover content={<div><div>用户名: {user.userName}</div><div>职位: {user.role} </div></div>}>
+                          <Avatar src={user.avatar} />
+                        </Popover>
+                      </li>
+                    )
+                  }) : null}
                 <Tooltip placement="top" title={'管理项目团队'}>
-                  <Link to='/wmock/teamManage'>
+                  <Link to="/wmock/teamManage">
                     <li className="addProjectUser">
                       <Icon type="team" />
                     </li>
                   </Link>
-
                 </Tooltip>
               </ul>
             </div>
             <div className="proejctDesc title">
               项目描述
-                  <EditableCell
-                value={this.props.data.projectDesc}
-                onChange={this.changeProjectDesc(this.props.data.projectDesc, this.props.data._id)}
-              />
+                <EditableCell value={this.props.data.projectDesc} onChange={this.changeProjectDesc} />
             </div>
             <div className="proejctVersion title">
               项目版本
-                  <EditableCell
-                value={this.props.data.version}
-                onChange={this.changeProjectVersion(this.props.data.version, this.props.data._id)}
-              />
+                <EditableCell value={this.props.data.version} onChange={this.changeProjectVersion} />
             </div>
           </TabPane>
           <TabPane tab="接口列表" key="2">
@@ -264,39 +215,51 @@ export class ProjectDetail extends React.Component<any, any> {
               <div className="backOperate">
                 <EditableCell
                   value={this.props.data.transferUrl}
-                  onChange={this.changeTransferUrl(this.props.data.transferUrl, this.props.data._id)}
+                  onChange={this.changeTransferUrl}
                 />
                 {
                   this.props.data.status === 'mock' ?
-                    <Button onClick={() => this.toggleTransfer(this.props.data._id)}>接口转发<Icon type="retweet" /></Button>
-                    : <Button onClick={() => this.toggleMock(this.props.data._id)}>Mock代理<Icon type="retweet" /></Button>
+                    <Button onClick={() => this.toggleTransfer(this.props.data._id)}>
+                      接口转发<Icon type="retweet" />
+                    </Button>
+                    : <Button onClick={() => this.toggleMock(this.props.data._id)}>
+                      Mock代理<Icon type="retweet" />
+                    </Button>
                 }
 
-                <Button onClick={() => this.props.showAutoCheckVisible(this.props.data._id)}>自动校验<Icon type="check-circle-o" /></Button>
+                <Button onClick={() => this.props.showAutoCheckVisible(this.props.data._id)}>
+                  自动校验<Icon type="check-circle-o" />
+                </Button>
               </div>
 
               <Divider />
               <div className="addInterFace">
                 <Tooltip placement="right" title={'添加接口'}>
-                  <Icon type="plus-circle-o" onClick={this.props.addInterFace} />
+                  <Icon type="plus-circle-o" onClick={() => { this.props.addInterFace() }} />
                 </Tooltip>
               </div>
-              <InterfaceList removeInterface={this.props.removeInterface} copyToClipBoard={this.copyToClipBoard} selectCurrentInterface={this.props.selectCurrentInterface} showInterfaceMode={this.props.showInterfaceMode} data={this.props.data.interfaceList} projectId={this.props.data._id} baseUrl={MockUrl + '/' + this.props.data._id + this.props.data.projectUrl} />
+              <InterfaceList
+                removeInterface={this.props.removeInterface}
+                copyToClipBoard={this.copyToClipBoard}
+                selectCurrentInterface={this.props.selectCurrentInterface}
+                showInterfaceMode={this.props.showInterfaceMode}
+                data={this.props.data.interfaceList}
+                projectId={this.props.data._id}
+                baseUrl={MockUrl + '/' + this.props.data._id + this.props.data.projectUrl}
+              />
             </div>
 
           </TabPane>
           <TabPane tab="项目动态" key="3" >
             <div className="projectTimeline">
-              <Timeline pending={
-                <div>已经是全部信息了~</div>}>
+              <Timeline pending={<div>已经是全部信息了~</div>}>
                 {
-                  this.props.messages.map((item: any, index: any) => {
+                  this.props.messages.map((item: Message, index: number) => {
                     return <Timeline.Item dot={<Avatar src={item.avatar} />} color="red" key={index} >
                       <div className="timeline">
-                        <p className="date"><TimeAgo
-                          datetime={item.time}
-                          locale='zh_CN' /></p>
-
+                        <p className="date">
+                          <TimeAgo datetime={item.time} locale="zh_CN" />
+                        </p>
                         <div>
                           <div className="user">用户: {item.operatorName}</div>
                           <div className="content">{item.desc}</div>
@@ -311,15 +274,16 @@ export class ProjectDetail extends React.Component<any, any> {
             </div>
           </TabPane>
           <TabPane tab="项目文档" key="4">
-            <ProjectSpec userid={this.props.userid} documentList={this.props.documentList} projectList={this.props.projectList} ></ProjectSpec>
+            <ProjectSpec
+              userId={this.props.userId}
+              documentList={this.props.documentList}
+              projectList={this.props.projectList}
+            />
           </TabPane>
         </Tabs>
       </div>
     )
   }
 }
-
-
-
 
 export default ProjectDetail;

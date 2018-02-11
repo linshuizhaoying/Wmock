@@ -1,77 +1,62 @@
-import { FETCH_DOCUMENT, REMOVE_DOCUMENT, UPDATE_DOCUMENT, ADD_DOCUMENT } from '../constants/document'
-import  notification  from 'antd/lib/notification';
+import notification from 'antd/lib/notification';
+import {
+  ADD_DOCUMENT,
+  FETCH_DOCUMENT,
+  REMOVE_DOCUMENT,
+  UPDATE_DOCUMENT
+  } from '../constants/document';
 
-const fetch_document = () => ({
+const fetchDocumentData = () => ({
   type: FETCH_DOCUMENT
 })
 
-interface Id {
-  id: String
-}
-
-interface Document{
-  _id? : String,
-  type: String,
-  assign: Array<String>,
-  content: String,
-  desc: String,
-  name: String,
-  ownerId? : String,
-  ownerName? : String,
-}
-
-
-const add_document = (data: any) => ({
+const addDocumentData = (document: Document) => ({
   type: ADD_DOCUMENT,
-  data: data
+  data: document
 })
 
-const update_document = (data: any) => ({
+const updateDocumentData = (document: Document) => ({
   type: UPDATE_DOCUMENT,
-  data: data
+  data: document
 })
 
-const remove_document = (data: any) => ({
+const removeDocumentData = (id: Id) => ({
   type: REMOVE_DOCUMENT,
-  data: data
+  data: id
 })
-export function fetchDocument () {
-  return (dispatch: any) => {
-    dispatch(fetch_document())
+export function fetchDocument() {
+  return (dispatch: Function) => {
+    dispatch(fetchDocumentData())
   }
 }
 
-export function errorDocument (msg: string) {
+export function errorDocument(msg: string) {
   notification.error({
-    message:' 获取列表失败!',
+    message: ' 获取列表失败!',
     description: msg,
     duration: 2
   })
 }
 
-
-
 export function removeDocument(id: Id) {
-  return (dispatch: any) => {
-    dispatch(remove_document(id))
+  return (dispatch: Function) => {
+    dispatch(removeDocumentData(id))
   }
 }
 
 export function updateDocument(Document: Document) {
-  return (dispatch: any) => {
-    dispatch(update_document(Document))
+  return (dispatch: Function) => {
+    dispatch(updateDocumentData(Document))
   }
 }
 
 export function addDocument(Document: Document) {
-  return (dispatch: any) => {
-    dispatch(add_document(Document))
+  return (dispatch: Function) => {
+    dispatch(addDocumentData(Document))
   }
 }
 
-
-
-export function updateDocumentSuccess (msg: string) {
+export function updateDocumentSuccess(msg: string) {
   notification.success({
     message: '更新成功!',
     description: '更新成功!',
@@ -80,15 +65,15 @@ export function updateDocumentSuccess (msg: string) {
   return
 }
 
-export function updateDocumentError (msg: string) {
+export function updateDocumentError(msg: string) {
   notification.error({
     message: '更新失败!',
-    description:  '更新失败!',
+    description: '更新失败!',
     duration: 1
   })
   return
 }
-export function removeDocumentSuccess (msg: string) {
+export function removeDocumentSuccess(msg: string) {
   notification.success({
     message: '移除成功!',
     description: '移除成功!',
@@ -97,16 +82,16 @@ export function removeDocumentSuccess (msg: string) {
   return
 }
 
-export function removeDocumentError (msg: string) {
+export function removeDocumentError(msg: string) {
   notification.error({
     message: '移除失败!',
-    description:  '移除失败!',
+    description: '移除失败!',
     duration: 1
   })
   return
 }
 
-export function addDocumentSuccess (msg: string) {
+export function addDocumentSuccess(msg: string) {
   notification.success({
     message: '添加成功!',
     description: '添加成功!',
@@ -115,10 +100,10 @@ export function addDocumentSuccess (msg: string) {
   return
 }
 
-export function addDocumentError (msg: string) {
+export function addDocumentError(msg: string) {
   notification.error({
     message: '添加失败!',
-    description:  '添加失败!',
+    description: '添加失败!',
     duration: 1
   })
   return

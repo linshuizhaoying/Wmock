@@ -1,24 +1,21 @@
-import * as React from 'react';
-import './index.less';
-// import brace from 'brace';
-import AceEditor from 'react-ace';
 import * as copy from 'copy-to-clipboard';
-// import Select from 'antd/lib/select';
-import Input from 'antd/lib/input';
+import * as React from 'react';
+import AceEditor from 'react-ace';
 import Button from 'antd/lib/button';
-import Mock from 'mockjs'
-import 'brace/mode/javascript';
-import 'brace/theme/monokai';
 import Divider from 'antd/lib/divider';
-import jsBeautify from 'js-beautify/js/lib/beautify'
+import Input from 'antd/lib/input';
+import jsBeautify from 'js-beautify/js/lib/beautify';
 import Message from 'antd/lib/message';
+import Mock from 'mockjs';
 import Select from 'antd/lib/select';
+import { ChangeEvent } from 'react';
+import './index.less';
+import 'brace/theme/monokai';
+import 'brace/mode/javascript';
 const { Option, OptGroup } = Select;
-// import { MockUrl } from '../../service/api'
-// const Option = Select.Option;
 
-export class ModelMode extends React.Component<any, any> {
-  constructor(props: any) {
+export class ModelMode extends React.Component<ModelModeProps, ModelModeState> {
+  constructor(props: ModelModeProps) {
     super(props)
     this.state = {
       status: 'add',
@@ -32,13 +29,8 @@ export class ModelMode extends React.Component<any, any> {
 
     };
   }
-  componentDidMount() {
-
-  }
-
-  componentWillReceiveProps(nextProps: any) {
+  componentWillReceiveProps(nextProps: AdvanceAny) {
     // 如果有传入数据说明是编辑状态
-    console.log(nextProps)
     if (nextProps.data) {
       this.setState({
         id: nextProps.data._id,
@@ -46,9 +38,9 @@ export class ModelMode extends React.Component<any, any> {
         modelDesc: nextProps.data.modelDesc,
         modelMode: nextProps.data.modelMode,
         editorContent: nextProps.data.modelMode,
-        status: 'update'
+        status: 'update',
       }, () => {
-        this.editorOnChange(this.state.editorContent)
+        this.editorOnChange(this.state.editorContent);
         this.format()
       })
     } else {
@@ -61,13 +53,11 @@ export class ModelMode extends React.Component<any, any> {
   "data": {}
 }`,
         status: 'add'
-      }, () => {
-        this.format()
-      })
+      }, () => { this.format() })
     }
   }
 
-  formatCode = (oldStrig: string) =>{
+  formatCode = (oldStrig: string) => {
     let tpl, data
     try {
       tpl = oldStrig.replace(/^([\r\n]*)/i, '')
@@ -86,21 +76,18 @@ export class ModelMode extends React.Component<any, any> {
     return data
   }
   editorOnChange = (newValue: string) => {
-
     this.setState({
       editorContent: newValue,
       result: this.formatCode(newValue)
     })
   }
 
-  changeName = (e: any) => {
-    console.log(e.target.value)
+  changeName = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       modelName: e.target.value
     })
   }
-  changeDesc = (e: any) => {
-    console.log(e.target.value)
+  changeDesc = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       modelDesc: e.target.value
     })
@@ -113,38 +100,34 @@ export class ModelMode extends React.Component<any, any> {
   }
   update = () => {
     let newInterface = {
-      "_id": this.state.id,
-      "modelName": this.state.modelName,
-      "modelDesc": this.state.modelDesc,
-      "modelMode": this.state.editorContent,
+      '_id': this.state.id,
+      'modelName': this.state.modelName,
+      'modelDesc': this.state.modelDesc,
+      'modelMode': this.state.editorContent,
     }
-    if(this.state.modelName === '' || this.state.modelDesc === '' || this.state.editorContent === '' ){
+    if (this.state.modelName === '' || this.state.modelDesc === '' || this.state.editorContent === '') {
       Message.error(`有内容为空，请填写!!`);
     } else {
       this.props.update(newInterface)
-     // Message.success(`添加成功!`);
       this.props.hideModelMode()
     }
   }
 
   add = () => {
     let newInterface = {
-      "modelName": this.state.modelName,
-      "modelDesc": this.state.modelDesc,
-      "modelMode": this.state.editorContent,
+      'modelName': this.state.modelName,
+      'modelDesc': this.state.modelDesc,
+      'modelMode': this.state.editorContent,
     }
-    console.log(newInterface)
-    if(this.state.modelName === '' || this.state.modelDesc === '' || this.state.editorContent === '' ){
+    if (this.state.modelName === '' || this.state.modelDesc === '' || this.state.editorContent === '') {
       Message.error(`有内容为空，请填写!!`);
     } else {
       this.props.add(newInterface)
-     // Message.success(`添加成功!`);
       this.props.hideModelMode()
     }
 
   }
-  selectModel = (value: any) => {
-    console.log(`selected ${value}`);
+  selectModel = (value: string) => {
     if (copy(this.formatCode(value))) {
       Message.success('复制模型成功,可直接用于模型编辑!');
     } else {
@@ -154,7 +137,7 @@ export class ModelMode extends React.Component<any, any> {
 
   render() {
     return (
-      <div id="ModelMode" className={this.props.visible === true ? "show" : 'hide'} >
+      <div id="ModelMode" className={this.props.visible === true ? 'show' : 'hide'} >
         <div className="editor">
           <AceEditor
             mode="javascript"
@@ -174,7 +157,8 @@ export class ModelMode extends React.Component<any, any> {
               enableSnippets: false,
               showLineNumbers: true,
               tabSize: 2,
-            }} />
+            }}
+          />
 
         </div>
         <div className="result">
@@ -198,10 +182,10 @@ export class ModelMode extends React.Component<any, any> {
                 enableSnippets: false,
                 showLineNumbers: true,
                 tabSize: 2,
-              }} />
+              }}
+            />
           </div>
-
-          <Divider></Divider>
+          <Divider />
           <h3>选择模型</h3>
           <div className="selectModel">
             <Select
@@ -209,7 +193,7 @@ export class ModelMode extends React.Component<any, any> {
               onChange={this.selectModel}
             >
               <OptGroup label="基础模型">
-                {this.props.baseModelList.map((item: any) => {
+                {this.props.baseModelList.map((item: Model) => {
                   return (
                     <Option key={item.modelMode}>{item.modelName}</Option>
                   )
@@ -217,7 +201,7 @@ export class ModelMode extends React.Component<any, any> {
                 })}
               </OptGroup>
               <OptGroup label="自定义模型">
-                {this.props.customModelList.map((item: any) => {
+                {this.props.customModelList.map((item: Model) => {
                   return (
                     <Option key={item.modelMode}>{item.modelName}</Option>
                   )
@@ -246,8 +230,9 @@ export class ModelMode extends React.Component<any, any> {
 
               <div className="item">
                 <div style={{ width: '100%' }}>
-                  {this.state.status === 'update' ? <Button type="primary" className="update" onClick={this.update}>更新</Button>
-                    : <Button type="primary" className="add" onClick={this.add}>创建</Button>}
+                  {this.state.status === 'update' ?
+                    <Button type="primary" className="update" onClick={this.update}>更新</Button> :
+                    <Button type="primary" className="add" onClick={this.add}>创建</Button>}
                 </div>
 
               </div>
@@ -264,8 +249,5 @@ export class ModelMode extends React.Component<any, any> {
     )
   }
 }
-
-
-
 
 export default ModelMode;

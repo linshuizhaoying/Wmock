@@ -37,8 +37,8 @@ const error = (data) => {
  *  用户注册
  *  请求参数
  *  参数名	类型	必填	描述	默认值	参考值
- *  username	string	是	用户id	-	qianyuhui
- *  password	string	是	用户密码,md5加密	-	78e731027d8fd50ed642340b7c9a63b3
+ *  userName	string	是	用户id	-	qianyuhui
+ *  passWord	string	是	用户密码,md5加密	-	78e731027d8fd50ed642340b7c9a63b3
  *  email	string	否	用户邮箱	-	4799109@qq.com
  *  返回参数
  *  {
@@ -54,13 +54,13 @@ const error = (data) => {
  */
 exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
     console.log(ctx.request.body);
-    const { username, password, email, role } = ctx.request.body;
+    const { userName, passWord, email, role } = ctx.request.body;
     // 后端先做初步的数据校验和非法字符处理
-    if (validator_1.default.userCheck(username) && validator_1.default.passCheck(password) && validator_1.default.emailCheck(email)) {
+    if (validator_1.default.userCheck(userName) && validator_1.default.passCheck(passWord) && validator_1.default.emailCheck(email)) {
         // 数据符合规范
         // 插入数据库并验证重名
         let result = '';
-        result = yield controllers_1.AddRegUser({ username, password, email, role });
+        result = yield controllers_1.AddRegUser({ userName, passWord, email, role });
         console.log('添加用户状况:\n', result);
         if (result.status === 'error') {
             // 用户名重复
@@ -70,13 +70,13 @@ exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
             });
         }
         else {
-            const { username, userid, msg, avatar, regDate, email } = result;
+            const { userName, userId, msg, avatar, regDate, email } = result;
             const token = jwt.sign({
-                userid: userid,
-                username: username,
+                userId: userId,
+                userName: userName,
                 exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
             }, config_1.config.app.keys);
-            return ctx.body = success({ username, userid, token, msg, avatar, regDate, email, role });
+            return ctx.body = success({ userName, userId, token, msg, avatar, regDate, email, role });
         }
     }
     else {
@@ -91,8 +91,8 @@ exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
  * 用户登录
  * 请求参数
  *  参数名	类型	必填	描述	默认值	参考值
- *  username	string	是	用户id	-	qianyuhui
- *  password	string	是	用户密码,md5加密	-	78e731027d8fd50ed642340b7c9a63b3
+ *  userName	string	是	用户id	-	qianyuhui
+ *  passWord	string	是	用户密码,md5加密	-	78e731027d8fd50ed642340b7c9a63b3
  * 返回参数
  *  "state": {
  *      "code": 1,
@@ -105,24 +105,24 @@ exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
  *  }
  */
 exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const { username, password, email } = ctx.request.body;
+    const { userName, passWord, email } = ctx.request.body;
     // 后端先做初步的数据校验和非法字符处理
-    if (validator_1.default.userCheck(username) && validator_1.default.passCheck(password)) {
+    if (validator_1.default.userCheck(userName) && validator_1.default.passCheck(passWord)) {
         // 数据符合规范
         // 查询数据库
         const result = {
             status: '',
-            userid: '',
-            username: '',
+            userId: '',
+            userName: '',
             avatar: '',
             email: '',
             msg: '',
             role: '',
             regDate: undefined
         };
-        const hadUser = yield controllers_1.LoginUser({ username, password });
+        const hadUser = yield controllers_1.LoginUser({ userName, passWord });
         console.log('登录用户状况:\n', result);
-        if (hadUser === null || hadUser.password !== password) {
+        if (hadUser === null || hadUser.passWord !== passWord) {
             result.msg = '账户不存在或者密码错误';
             result.status = 'error';
         }
@@ -131,8 +131,8 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
             console.log(hadUser);
             result.msg = '用户登录成功!';
             result.status = 'success';
-            result.userid = hadUser._id;
-            result.username = hadUser.username;
+            result.userId = hadUser._id;
+            result.userName = hadUser.userName;
         }
         if (result.status === 'error') {
             // 用户不存在 或者 用户密码错误
@@ -142,13 +142,13 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
             });
         }
         else {
-            const { username, userid, msg, avatar, regDate, email, role } = result;
+            const { userName, userId, msg, avatar, regDate, email, role } = result;
             const token = jwt.sign({
-                userid: userid,
-                username: username,
+                userId: userId,
+                userName: userName,
                 exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
             }, config_1.config.app.keys);
-            return ctx.body = success({ username, userid, token, msg, avatar, regDate, email, role });
+            return ctx.body = success({ userName, userId, token, msg, avatar, regDate, email, role });
         }
     }
     else {
@@ -160,11 +160,11 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
     }
 });
 exports.userInfo = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const { userid, token } = ctx.request.body;
+    const { userId, token } = ctx.request.body;
     let hadUser = undefined;
-    hadUser = yield controllers_1.FindUserById(userid);
-    const { username, avatar, regDate, email, role } = hadUser;
-    return ctx.body = success({ username, userid, avatar, token, regDate, email, role, msg: '获取成功!' });
+    hadUser = yield controllers_1.FindUserById(userId);
+    const { userName, avatar, regDate, email, role } = hadUser;
+    return ctx.body = success({ userName, userId, avatar, token, regDate, email, role, msg: '获取成功!' });
 });
 exports.tokenLogin = (ctx) => __awaiter(this, void 0, void 0, function* () {
     console.log('token校验Ing:');
@@ -182,12 +182,12 @@ exports.tokenLogin = (ctx) => __awaiter(this, void 0, void 0, function* () {
         yield jwt.verify(token, config_1.config.app.keys, function (err, result) {
             decode = result;
         });
-        const userid = JSON.parse(JSON.stringify(decode)).userid;
-        const username = JSON.parse(JSON.stringify(decode)).username;
-        hadUser = yield controllers_1.FindUserById(userid);
+        const userId = JSON.parse(JSON.stringify(decode)).userId;
+        const userName = JSON.parse(JSON.stringify(decode)).userName;
+        hadUser = yield controllers_1.FindUserById(userId);
         const { avatar, regDate, email, role } = hadUser;
         if (hadUser !== null) {
-            return ctx.body = success({ username, userid, token, avatar, regDate, email, role, msg: '登录成功!' });
+            return ctx.body = success({ userName, userId, token, avatar, regDate, email, role, msg: '登录成功!' });
         }
         else {
             return ctx.body = error({
@@ -206,6 +206,6 @@ exports.tokenLogin = (ctx) => __awaiter(this, void 0, void 0, function* () {
 exports.updateUser = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const data = ctx.request.body;
     console.log(data);
-    return ctx.body = success({ msg: '登录成功!' });
+    return ctx.body = success({ msg: '更新成功!' });
 });
 //# sourceMappingURL=user.js.map

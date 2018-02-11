@@ -1,31 +1,20 @@
 import * as React from 'react';
-
+import ProjectBase from '../ProjectBase/index';
 import './index.less';
-import ProjectBase from '../ProjectBase/index'
-class ProjectDemo extends React.Component<any, any> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-
-    }
-  }
-
-  componentWillMount() {
-
-  }
-
-  componentDidMount() {
-
-  }
-  componentWillReceiveProps(nextProps: any) {
-    //  console.log(nextProps)
-  }
-
+class ProjectDemo extends React.Component<ProjectProps, {}> {
 
   render() {
     return (
       <div className="ProjectDemo">
-        <ProjectBase  otherList={this.props.otherList} documentList={this.props.documentList} projectVerify={this.props.projectVerify} projectList={this.props.projectList} messagesList={this.props.messagesList} userid={this.props.userid} type={"demo"}></ProjectBase>
+        <ProjectBase
+          otherList={this.props.otherList}
+          documentList={this.props.documentList}
+          projectVerify={this.props.projectVerify}
+          projectList={this.props.projectList}
+          messagesList={this.props.messagesList}
+          userId={this.props.userId}
+          type={'demo'}
+        />
       </div>
     );
   }
