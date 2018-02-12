@@ -12,27 +12,7 @@ const jwt = require("jsonwebtoken");
 const validator_1 = require("../utils/validator");
 const controllers_1 = require("../db/controllers");
 const config_1 = require("../config");
-// 返回正常数据
-const success = (data) => {
-    return {
-        'state': {
-            'code': 1,
-            'msg': data.msg
-        },
-        'data': {
-            data
-        }
-    };
-};
-// 返回错误提醒
-const error = (data) => {
-    return {
-        'state': {
-            'code': data.code,
-            'msg': data.msg
-        }
-    };
-};
+const dataHandle_1 = require("../utils/dataHandle");
 /**
  *  用户注册
  *  请求参数
@@ -42,13 +22,13 @@ const error = (data) => {
  *  email	string	否	用户邮箱	-	4799109@qq.com
  *  返回参数
  *  {
- *    "state": {
- *        "code": 1,
- *        "msg": "注册成功!"
+ *    'state': {
+ *        'code': 1,
+ *        'msg': '注册成功!'
  *    },
- *    "data": {
- *        "userID":"1111",
- *        "userName":"666"
+ *    'data': {
+ *        'userID':'1111',
+ *        'userName':'666'
  *    }
  * }
  */
@@ -64,10 +44,7 @@ exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
         console.log('添加用户状况:\n', result);
         if (result.status === 'error') {
             // 用户名重复
-            return ctx.body = error({
-                code: 2,
-                msg: result.msg
-            });
+            return ctx.body = dataHandle_1.error(result.msg);
         }
         else {
             const { userName, userId, msg, avatar, regDate, email } = result;
@@ -76,15 +53,12 @@ exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
                 userName: userName,
                 exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
             }, config_1.config.app.keys);
-            return ctx.body = success({ userName, userId, token, msg, avatar, regDate, email, role });
+            return ctx.body = dataHandle_1.success({ userName, userId, token, msg, avatar, regDate, email, role }, '注册成功');
         }
     }
     else {
         // 用户提交数据异常
-        return ctx.body = error({
-            code: 2,
-            msg: '用户名或者密码错误!'
-        });
+        return ctx.body = dataHandle_1.error('用户名或者密码错误!');
     }
 });
 /**
@@ -94,14 +68,14 @@ exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
  *  userName	string	是	用户id	-	qianyuhui
  *  passWord	string	是	用户密码,md5加密	-	78e731027d8fd50ed642340b7c9a63b3
  * 返回参数
- *  "state": {
- *      "code": 1,
- *      "msg": "登录成功"
+ *  'state': {
+ *      'code': 1,
+ *      'msg': '登录成功'
  *  },
- *  "data": {
- *      "userId":'',
- *      "userName":'',
- *      "token": xxx
+ *  'data': {
+ *      'userId':'',
+ *      'userName':'',
+ *      'token': xxx
  *  }
  */
 exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -136,10 +110,7 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
         }
         if (result.status === 'error') {
             // 用户不存在 或者 用户密码错误
-            return ctx.body = error({
-                code: 2,
-                msg: result.msg
-            });
+            return ctx.body = dataHandle_1.error(result.msg);
         }
         else {
             const { userName, userId, msg, avatar, regDate, email, role } = result;
@@ -148,15 +119,12 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
                 userName: userName,
                 exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
             }, config_1.config.app.keys);
-            return ctx.body = success({ userName, userId, token, msg, avatar, regDate, email, role });
+            return ctx.body = dataHandle_1.success({ userName, userId, token, msg, avatar, regDate, email, role }, '登录成功');
         }
     }
     else {
         // 用户提交数据异常
-        return ctx.body = error({
-            code: 2,
-            msg: '用户数据不正常'
-        });
+        return ctx.body = dataHandle_1.error('用户数据不正常');
     }
 });
 exports.userInfo = (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -164,7 +132,7 @@ exports.userInfo = (ctx) => __awaiter(this, void 0, void 0, function* () {
     let hadUser = undefined;
     hadUser = yield controllers_1.FindUserById(userId);
     const { userName, avatar, regDate, email, role } = hadUser;
-    return ctx.body = success({ userName, userId, avatar, token, regDate, email, role, msg: '获取成功!' });
+    return ctx.body = dataHandle_1.success({ userName, userId, avatar, token, regDate, email, role, msg: '获取成功!' }, '获取成功!');
 });
 exports.tokenLogin = (ctx) => __awaiter(this, void 0, void 0, function* () {
     console.log('token校验Ing:');
@@ -172,10 +140,7 @@ exports.tokenLogin = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { token } = ctx.request.body;
     let hadUser = undefined;
     if (!token) {
-        return ctx.body = error({
-            code: 2,
-            msg: '请重新登录!'
-        });
+        return ctx.body = dataHandle_1.error('请重新登录!');
     }
     try {
         let decode = '';
@@ -187,25 +152,19 @@ exports.tokenLogin = (ctx) => __awaiter(this, void 0, void 0, function* () {
         hadUser = yield controllers_1.FindUserById(userId);
         const { avatar, regDate, email, role } = hadUser;
         if (hadUser !== null) {
-            return ctx.body = success({ userName, userId, token, avatar, regDate, email, role, msg: '登录成功!' });
+            return ctx.body = dataHandle_1.success({ userName, userId, token, avatar, regDate, email, role, msg: '登录成功!' }, '登录成功!');
         }
         else {
-            return ctx.body = error({
-                code: 2,
-                msg: '验证失败!'
-            });
+            return ctx.body = dataHandle_1.error('验证失败!');
         }
     }
     catch (err) {
-        return ctx.body = error({
-            code: 2,
-            msg: '会话过期!'
-        });
+        return ctx.body = dataHandle_1.error('会话过期!');
     }
 });
 exports.updateUser = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const data = ctx.request.body;
     console.log(data);
-    return ctx.body = success({ msg: '更新成功!' });
+    return ctx.body = dataHandle_1.success({}, '更新成功!');
 });
 //# sourceMappingURL=user.js.map

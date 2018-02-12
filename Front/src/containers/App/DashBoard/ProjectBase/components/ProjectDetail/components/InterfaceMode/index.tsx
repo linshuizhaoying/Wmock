@@ -30,7 +30,7 @@ export class InterfaceMode extends React.Component<InterfaceModeProps, Interface
   }
   componentWillReceiveProps(nextProps: AdvanceAny) {
     // 如果有传入数据说明是编辑状态
-    if (nextProps.data) {
+    if (nextProps.data._id !== undefined) {
       this.setState({
         id: nextProps.data._id,
         method: nextProps.data.method,
@@ -112,7 +112,7 @@ export class InterfaceMode extends React.Component<InterfaceModeProps, Interface
     if (this.state.interfaceName === '' ||
       this.state.desc === '' ||
       this.state.method === '' ||
-      this.state.mode === '' ||
+      this.state.editorContent === '' ||
       this.state.url === '') {
       Message.error(`有内容为空，请填写!!`);
     } else {
@@ -133,7 +133,7 @@ export class InterfaceMode extends React.Component<InterfaceModeProps, Interface
     if (this.state.interfaceName === '' ||
       this.state.desc === '' ||
       this.state.method === '' ||
-      this.state.mode === '' ||
+      this.state.editorContent === '' ||
       this.state.url === '') {
       Message.error(`有内容为空，请填写!!`);
     } else {

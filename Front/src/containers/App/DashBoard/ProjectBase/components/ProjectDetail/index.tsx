@@ -235,7 +235,7 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
               <Divider />
               <div className="addInterFace">
                 <Tooltip placement="right" title={'添加接口'}>
-                  <Icon type="plus-circle-o" onClick={() => { this.props.addInterFace() }} />
+                  <Icon type="plus-circle-o" onClick={() => { this.props.showAddInterface() }} />
                 </Tooltip>
               </div>
               <InterfaceList

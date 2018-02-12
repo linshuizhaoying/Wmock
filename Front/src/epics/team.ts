@@ -26,12 +26,8 @@ import { LOADING_ERROR, LOADING_START, LOADING_SUCCESS } from '../constants/load
 import { Observable } from 'rxjs/Observable';
 
 import {
-  errorTeam,
-  sendApplySuccess, sendApplyError,
-  allowedJoinSuccess, allowedJoinError,
-  rejectJoinError, rejectJoinSuccess,
-  removeGroupMemberError, removeGroupMemberSuccess,
-  invitedGroupMemberSuccess, invitedGroupMemberError,
+  errorMsg,
+  successMsg
 } from '../actions/index';
 import { Response } from './typing'
 
@@ -52,7 +48,7 @@ export const fetchTeam = (action$: EpicAction) =>
             let temp = response.data;
             return teamReceive(temp);
           } else {
-            return errorTeam(response.state.msg);
+            return errorMsg(response.state.msg);
           }
         })
         // 只有服务器崩溃才捕捉错误
@@ -68,10 +64,10 @@ export const EsendApply = (action$: EpicAction) =>
       return fetch.post(sendApply, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            sendApplySuccess(response.state.msg)
+            successMsg(response.state.msg)
             return nothing();
           } else {
-            sendApplyError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -88,10 +84,10 @@ export const ErejectJoinGroup = (action$: EpicAction) =>
       return fetch.post(rejectJoinGroup, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            rejectJoinSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return dealJoinGroup(action.data.messageId);
           } else {
-            rejectJoinError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -108,10 +104,10 @@ export const EallowedJoinGroup = (action$: EpicAction) =>
       return fetch.post(allowedJoinGroup, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            allowedJoinSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return dealJoinGroup(action.data.messageId);
           } else {
-            allowedJoinError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -128,10 +124,10 @@ export const EremoveGroupMember = (action$: EpicAction) =>
       return fetch.post(removeGroupMember, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            removeGroupMemberSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return removeUser(action.data);
           } else {
-            removeGroupMemberError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -148,10 +144,10 @@ export const EinvitedGroupMember = (action$: EpicAction) =>
       return fetch.post(invitedGroupMember, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            invitedGroupMemberSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return nothing();
           } else {
-            invitedGroupMemberError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })

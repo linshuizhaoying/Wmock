@@ -9,58 +9,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../db/controllers/index");
-// 返回正常数据
-const success = (data) => {
-    return {
-        'state': {
-            'code': 1,
-            'msg': 'success'
-        },
-        'data': {
-            data
-        }
-    };
-};
-// // 返回错误提醒
-// const error = () => {
-//   return{
-//     'state': {
-//         'code': 2,
-//         'msg':  'error'
-//     }
-//   }
-// }
+const dataHandle_1 = require("../utils/dataHandle");
 exports.teamList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // console.log('allNews')
     // console.log(ctx.request.body)
     const { id } = ctx.request.body;
     const result = yield index_1.myTeam(id);
     // console.log(result)
-    return ctx.body = success(result);
+    return ctx.body = dataHandle_1.success(result, '获取成功');
 });
 exports.sendApply = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const apply = ctx.request.body;
     console.log(apply);
-    return ctx.body = success('发送成功!');
+    return ctx.body = dataHandle_1.success({}, '发送成功!');
 });
 exports.rejectJoinGroup = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const member = ctx.request.body;
     console.log(member);
-    return ctx.body = success('拒绝成功!');
+    return ctx.body = dataHandle_1.success({}, '拒绝成功!');
 });
 exports.removeGroupMember = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const member = ctx.request.body;
     console.log(member);
-    return ctx.body = success('移除成功!');
+    return ctx.body = dataHandle_1.success({}, '移除成功!');
 });
 exports.allowedJoinGroup = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const member = ctx.request.body;
     console.log(member);
-    return ctx.body = success('加入成功!');
+    return ctx.body = dataHandle_1.success({}, '加入成功!');
 });
 exports.invitedGroupMember = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const member = ctx.request.body;
     console.log(member);
-    return ctx.body = success('邀请成功!');
+    return ctx.body = dataHandle_1.success({}, '邀请成功!');
 });
 //# sourceMappingURL=team.js.map

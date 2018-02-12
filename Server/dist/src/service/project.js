@@ -9,34 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../db/controllers/index");
-// 返回正常数据
-const success = (data) => {
-    return {
-        'state': {
-            'code': 1,
-            'msg': 'success'
-        },
-        'data': {
-            data
-        }
-    };
-};
-// // 返回错误提醒
-// const error = () => {
-//   return{
-//     'state': {
-//         'code': 2,
-//         'msg':  'error'
-//     }
-//   }
-// }
+const dataHandle_1 = require("../utils/dataHandle");
 exports.userProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // console.log('allNews')
     // console.log(ctx.request.body)
     const { userName } = ctx.request.body;
     const result = yield index_1.UserProject(userName);
     // console.log(result)
-    return ctx.body = success(result);
+    return ctx.body = dataHandle_1.success(result, '获取成功');
 });
 exports.demoProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // console.log('allNews')
@@ -44,7 +24,7 @@ exports.demoProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () 
     const { userName } = ctx.request.body;
     const result = yield index_1.DemoProject(userName);
     // console.log(result)
-    return ctx.body = success(result);
+    return ctx.body = dataHandle_1.success(result, '获取成功');
 });
 exports.unJoinProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // console.log('allNews')
@@ -52,42 +32,42 @@ exports.unJoinProjectList = (ctx) => __awaiter(this, void 0, void 0, function* (
     const { id } = ctx.request.body;
     const result = yield index_1.UnJoinProjectList(id);
     // console.log(result)
-    return ctx.body = success(result);
+    return ctx.body = dataHandle_1.success(result, '获取成功');
 });
 exports.addProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const project = ctx.request.body;
     console.log(project);
-    return ctx.body = success('添加成功!');
+    return ctx.body = dataHandle_1.success({}, '添加成功!');
 });
 exports.updateProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const project = ctx.request.body;
     console.log(project);
-    return ctx.body = success('更新成功!');
+    return ctx.body = dataHandle_1.success({}, '更新成功!');
 });
 exports.removeProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const project = ctx.request.body;
     console.log(project);
-    return ctx.body = success('删除成功!');
+    return ctx.body = dataHandle_1.success({}, '删除成功!');
 });
 exports.importProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { data } = ctx.request.body;
     console.log(data);
-    return ctx.body = success('导入成功!');
+    return ctx.body = dataHandle_1.success({}, '导入成功!');
 });
 exports.cloneProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { data } = ctx.request.body;
     console.log(data);
-    return ctx.body = success('克隆成功!');
+    return ctx.body = dataHandle_1.success({}, '克隆成功!');
 });
 exports.cloneInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { data } = ctx.request.body;
     console.log(data);
-    return ctx.body = success('克隆成功!');
+    return ctx.body = dataHandle_1.success({}, '克隆成功!');
 });
 exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { data } = ctx.request.body;
     console.log(data);
-    return ctx.body = success({
+    return ctx.body = dataHandle_1.success({
         result: 'no',
         data: [
             {
@@ -107,21 +87,21 @@ exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
                 'compare': 'match'
             }
         ]
-    });
+    }, '验证成功');
 });
 exports.addInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const interfaceData = ctx.request.body;
     console.log(interfaceData);
-    return ctx.body = success('添加成功!');
+    return ctx.body = dataHandle_1.success({}, '添加成功!');
 });
 exports.updateInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const interfaceData = ctx.request.body;
     console.log(interfaceData);
-    return ctx.body = success('更新成功!');
+    return ctx.body = dataHandle_1.success({}, '更新成功!');
 });
 exports.removeInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const interfaceData = ctx.request.body;
     console.log(interfaceData);
-    return ctx.body = success('删除成功!');
+    return ctx.body = dataHandle_1.success({}, '删除成功!');
 });
 //# sourceMappingURL=project.js.map

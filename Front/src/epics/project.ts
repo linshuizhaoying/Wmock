@@ -40,27 +40,8 @@ import {
   verifyProject
 } from '../service/api';
 import {
-  addInterfaceError,
-  addInterfaceSuccess,
-  addProjectError,
-  addProjectSuccess,
-  cloneInterfaceError,
-  cloneInterfaceSuccess,
-  cloneProjectError,
-  cloneProjectSuccess,
-  errorProject,
-  importProjectError,
-  importProjectSuccess,
-  removeInterfaceError,
-  removeInterfaceSuccess,
-  removeProjectError,
-  removeProjectSuccess,
-  updateInterfaceError,
-  updateInterfaceSuccess,
-  updateProjectError,
-  updateProjectSuccess,
-  verifyProjectError,
-  verifyProjectSuccess
+  errorMsg,
+  successMsg
 } from '../actions/index';
 import { combineEpics } from 'redux-observable';
 import { LOADING_ERROR, LOADING_START, LOADING_SUCCESS } from '../constants/loading';
@@ -90,7 +71,7 @@ export const fetchProject = (action$: EpicAction) =>
             let temp = response.data;
             return projectReceive(temp);
           } else {
-            return errorProject(response.state.msg);
+            return errorMsg(response.state.msg);
           }
         })
         // 只有服务器崩溃才捕捉错误
@@ -109,7 +90,7 @@ export const fetchUnJoinProject = (action$: EpicAction) =>
             let temp = response.data;
             return unJoinprojectReceive(temp);
           } else {
-            return errorProject(response.state.msg);
+            return errorMsg(response.state.msg);
           }
         })
         // 只有服务器崩溃才捕捉错误
@@ -128,7 +109,7 @@ export const fetchDemo = (action$: EpicAction) =>
             let temp = response.data;
             return demoReceive(temp);
           } else {
-            return errorProject(response.state.msg);
+            return errorMsg(response.state.msg);
           }
         })
         // 只有服务器崩溃才捕捉错误
@@ -144,10 +125,10 @@ export const EupdateProject = (action$: EpicAction) =>
       return fetch.post(updateProject, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            updateProjectSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return updateLocalProject(action.data);
           } else {
-            updateProjectError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -164,10 +145,10 @@ export const EremoveProject = (action$: EpicAction) =>
       return fetch.post(removeProject, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            removeProjectSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return removeLocalProject(action.data);
           } else {
-            removeProjectError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -184,10 +165,10 @@ export const EaddProject = (action$: EpicAction) =>
       return fetch.post(addProject, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            addProjectSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return nothing();
           } else {
-            addProjectError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -204,10 +185,10 @@ export const EimportProject = (action$: EpicAction) =>
       return fetch.post(importProject, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            importProjectSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return nothing();
           } else {
-            importProjectError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -224,10 +205,10 @@ export const EcloneProject = (action$: EpicAction) =>
       return fetch.post(cloneProject, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            cloneProjectSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return nothing();
           } else {
-            cloneProjectError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -244,10 +225,10 @@ export const EcloneInterface = (action$: EpicAction) =>
       return fetch.post(cloneInterface, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            cloneInterfaceSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return nothing();
           } else {
-            cloneInterfaceError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -264,10 +245,10 @@ export const EverifyProject = (action$: EpicAction) =>
       return fetch.post(verifyProject, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            verifyProjectSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return verifyLocalProject(response.data);
           } else {
-            verifyProjectError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -284,10 +265,10 @@ export const EupdateInterface = (action$: EpicAction) =>
       return fetch.post(updateInterFace, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            updateInterfaceSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return updateLocalInterface(action.data);
           } else {
-            updateInterfaceError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -304,10 +285,10 @@ export const EremoveInterface = (action$: EpicAction) =>
       return fetch.post(removeInterFace, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            removeInterfaceSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return removeLocalInterface(action.data);
           } else {
-            removeInterfaceError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -324,10 +305,10 @@ export const EaddInterface = (action$: EpicAction) =>
       return fetch.post(addInterFace, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            addInterfaceSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return nothing();
           } else {
-            addInterfaceError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
