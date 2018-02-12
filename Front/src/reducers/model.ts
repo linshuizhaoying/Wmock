@@ -21,10 +21,10 @@ const updateModel = (list: Array<Model>, modelData: Model) => {
   return temp
 }
 
-const removeModel = (list: Array<Model>, id: string) => {
+const removeModel = (list: Array<Model>, id: Id) => {
   const temp: Array<Model> = []
   list.map((item: Model) => {
-    if (item._id !== id) {
+    if (item._id !== id.id) {
       temp.push(item)
     }
   })

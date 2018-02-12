@@ -1,32 +1,9 @@
 // import { AllProject } from '../db/controllers/index';
 const { VM } = require('vm2')
 const Mock = require('mockjs')
-// 返回正常数据
-const success = ( data: any) => {
-  return {
-    'state': {
-        'code': 1,
-        'msg': 'success'
-    },
-    'data': {
-       data
-    }
- }
-}
-// 返回错误提醒
-const error = () => {
-  return{
-    'state': {
-        'code': 2,
-        'msg':  'error'
-    }
-  }
-}
+import { error, success } from '../utils/dataHandle';
 
 export const mock = async(ctx: any) => {
-  console.log('mock')
-  console.log(ctx)
-  console.log(ctx.params)
   const method = ctx.request.method.toLowerCase()
   // let { projectId, mockURL } = ctx.pathNode
   // 获取接口路径内容
@@ -90,22 +67,22 @@ const temp = JSON.stringify(testMode)
   let result
   switch (method) {
     case 'get':
-      result = success({'msg': '你调用了get方法'})
+      result = success({'msg': '你调用了get方法'}, '返回成功')
       break;
     case 'post':
-      result = success({'msg': '你调用了post方法'})
+      result = success({'msg': '你调用了post方法'}, '返回成功')
       break;
     case 'put' :
-      result = success({'msg': '你调用了put方法'})
+      result = success({'msg': '你调用了put方法'}, '返回成功')
       break;
     case 'patch' :
-      result = success({'msg': '你调用了patch方法'})
+      result = success({'msg': '你调用了patch方法'}, '返回成功')
       break;
     case 'delete' :
-      result = success({'msg': '你调用了delete方法'})
+      result = success({'msg': '你调用了delete方法'}, '返回成功')
       break;
     default:
-      result = error()
+      result = error('返回失败')
   }
   // console.log(result)
   return ctx.body = result

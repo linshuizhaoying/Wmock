@@ -24,14 +24,9 @@ import {
 } from '../constants/user';
 import { Observable } from 'rxjs/Observable';
 import {
-  updateUserError,
-  updateUserSuccess,
-  userLoginError,
-  userLoginSuccess,
-  userRegError,
-  userRegSuccess,
-  userTokenError
-} from '../actions/user';
+  errorMsg,
+  successMsg
+} from '../actions';
 import { Response } from './typing'
 
 export const loadingStart = () => ({ type: LOADING_START });
@@ -55,10 +50,10 @@ export const userReg = (action$: EpicAction) =>
         // 注册验证情况
         .map((response: Response) => {
           if (response.state.code === 1) {
-            userRegSuccess();
+            successMsg(response.state.msg)
             return RegSuccess(response.data.data);
           } else {
-            userRegError(response.state.msg);
+            errorMsg(response.state.msg);
             return RegError();
           }
         })
@@ -75,10 +70,10 @@ export const userLogin = (action$: EpicAction) =>
         // 登录验证情况
         .map((response: Response) => {
           if (response.state.code === 1) {
-            userLoginSuccess();
+            successMsg(response.state.msg)
             return LoginSuccess(response.data.data);
           } else {
-            userLoginError(response.state.msg);
+            errorMsg(response.state.msg);
             return LoginError();
           }
         })
@@ -98,7 +93,7 @@ export const userToken = (action$: EpicAction) =>
           if (response.state.code === 1) {
             return LoginSuccess(response.data.data);
           } else {
-            userTokenError(response.state.msg);
+            errorMsg(response.state.msg);
             return TokenOut();
           }
         })
@@ -118,7 +113,7 @@ export const userInfo = (action$: EpicAction) =>
           if (response.state.code === 1) {
             return SetUserInfo(response.data.data);
           } else {
-            userTokenError(response.state.msg);
+            errorMsg(response.state.msg);
             return TokenOut();
           }
         })
@@ -136,10 +131,10 @@ export const userUpdate = (action$: EpicAction) =>
         // 登录验证情况
         .map((response: Response) => {
           if (response.state.code === 1) {
-            updateUserSuccess(response.state.msg);
+            successMsg(response.state.msg);
             return updateLocalUser(action.data);
           } else {
-            updateUserError(response.state.msg);
+            errorMsg(response.state.msg);
             return nothing();
           }
         })

@@ -5,7 +5,6 @@ import { createEpicMiddleware } from 'redux-observable'
 import epics from '../epics'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
-
 const epicMiddleware = createEpicMiddleware(epics)
 export function configureStore (preloadState: {} = {}) {
   const store = createStore(

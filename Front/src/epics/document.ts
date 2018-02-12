@@ -17,13 +17,8 @@ import {
   updateDocument
 } from '../service/api';
 import {
-  addDocumentError,
-  addDocumentSuccess,
-  errorDocument,
-  removeDocumentError,
-  removeDocumentSuccess,
-  updateDocumentError,
-  updateDocumentSuccess
+  errorMsg,
+  successMsg
 } from '../actions/index';
 import { combineEpics } from 'redux-observable';
 import { LOADING_ERROR, LOADING_START, LOADING_SUCCESS } from '../constants/loading';
@@ -47,7 +42,7 @@ export const fetchAllDocument = (action$: EpicAction) =>
             let temp = response.data;
             return documentReceive(temp);
           } else {
-            return errorDocument(response.state.msg);
+            return errorMsg(response.state.msg);
           }
         })
         // 只有服务器崩溃才捕捉错误
@@ -63,10 +58,10 @@ export const EupdateDocument = (action$: EpicAction) =>
       return fetch.post(updateDocument, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            updateDocumentSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return updateLocalDocument(action.data);
           } else {
-            updateDocumentError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -83,10 +78,10 @@ export const EremoveDocument = (action$: EpicAction) =>
       return fetch.post(removeDocument, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            removeDocumentSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return removeLocalDocument(action.data);
           } else {
-            removeDocumentError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -103,10 +98,10 @@ export const EaddDocument = (action$: EpicAction) =>
       return fetch.post(addDocument, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            addDocumentSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return nothing();
           } else {
-            addDocumentError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })

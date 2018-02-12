@@ -437,7 +437,7 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
     })
   }
 
-  addInterFace = () => {
+  showAddInterface = () => {
     this.setState({
       currentInterfaceData: {},
       interfaceModeVisible: true
@@ -599,7 +599,7 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
                       projectList={this.props.projectList}
                       removeInterface={this.removeInterface}
                       showAutoCheckVisible={this.showAutoCheckVisible}
-                      addInterFace={this.addInterFace}
+                      showAddInterface={this.showAddInterface}
                       data={this.state.currentProjectData}
                       messages={this.state.currentProjectMessages}
                       showExportProject={this.showExportProject}

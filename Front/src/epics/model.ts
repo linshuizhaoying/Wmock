@@ -20,13 +20,8 @@ import {
   updateModel
 } from '../service/api';
 import {
-  addModelError,
-  addModelSuccess,
-  errorModel,
-  removeModelError,
-  removeModelSuccess,
-  updateModelError,
-  updateModelSuccess
+  errorMsg,
+  successMsg
 } from '../actions/index';
 import { combineEpics } from 'redux-observable';
 import { LOADING_ERROR, LOADING_START, LOADING_SUCCESS } from '../constants/loading';
@@ -51,7 +46,7 @@ export const fetchBaseModel = (action$: EpicAction) =>
             let temp = response.data;
             return baseModelReceive(temp);
           } else {
-            return errorModel(response.state.msg);
+            return errorMsg(response.state.msg);
           }
         })
         // 只有服务器崩溃才捕捉错误
@@ -70,7 +65,7 @@ export const fetchCustomModel = (action$: EpicAction) =>
             let temp = response.data;
             return customModelReceive(temp);
           } else {
-            return errorModel(response.state.msg);
+            return errorMsg(response.state.msg);
           }
         })
         // 只有服务器崩溃才捕捉错误
@@ -86,10 +81,10 @@ export const EupdateModel = (action$: EpicAction) =>
       return fetch.post(updateModel, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            updateModelSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return updateLocalModel(action.data);
           } else {
-            updateModelError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -106,10 +101,10 @@ export const EremoveModel = (action$: EpicAction) =>
       return fetch.post(removeModel, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            removeModelSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return removeLocalModel(action.data);
           } else {
-            removeModelError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })
@@ -126,10 +121,10 @@ export const EaddModel = (action$: EpicAction) =>
       return fetch.post(addModel, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            addModelSuccess(response.state.msg)
+            successMsg(response.state.msg)
             return nothing();
           } else {
-            addModelError(response.state.msg)
+            errorMsg(response.state.msg)
             return nothing();
           }
         })

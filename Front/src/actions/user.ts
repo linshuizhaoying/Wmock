@@ -67,62 +67,6 @@ export function updateUser(user: User) {
   }
 }
 
-export function userLoginSuccess() {
-  notification.success({
-    message: ' 登录成功!',
-    description: '登录成功',
-    duration: 2
-  })
-}
-
-export function userLoginError(msg: string) {
-  notification.error({
-    message: ' 登录失败!',
-    description: msg,
-    duration: 2
-  })
-}
-
-export function userRegSuccess() {
-  notification.success({
-    message: ' 注册成功!',
-    description: '注册成功',
-    duration: 2
-  })
-}
-
-export function userRegError(msg: string) {
-  notification.error({
-    message: ' 注册失败!',
-    description: msg,
-    duration: 2
-  })
-}
-
-export function updateUserSuccess(msg: string) {
-  notification.success({
-    message: ' 更新成功!',
-    description: msg,
-    duration: 2
-  })
-}
-
-export function updateUserError(msg: string) {
-  notification.error({
-    message: ' 更新失败!',
-    description: msg,
-    duration: 2
-  })
-}
-
-export function userTokenError(msg: string) {
-  notification.error({
-    message: ' Token无效!',
-    description: msg,
-    duration: 2
-  })
-  window.location.reload();
-}
 export function tokenOut() {
   return (dispatch: Function) => {
     dispatch(logout())
@@ -132,6 +76,7 @@ export function tokenOut() {
 export function userLogout() {
   return (dispatch: Function) => {
     dispatch(logout())
+    
     notification.success({
       message: ' 退出成功!',
       description: '退出成功',

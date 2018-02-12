@@ -1,11 +1,11 @@
 import * as fetch from '../service/fetch';
 import { combineEpics } from 'redux-observable';
 import { ERROR_MESSAGES, FETCH_MESSAGES, RECEIVE_MESSAGES } from '../constants/messages';
-import { errorMessages } from '../actions/index';
+import { errorMsg } from '../actions/index';
 import { LOADING_ERROR, LOADING_START, LOADING_SUCCESS } from '../constants/loading';
 import { messagesList } from '../service/api';
 import { Observable } from 'rxjs/Observable';
-import { Response } from './typing'
+import { Response } from './typing';
 
 export const loadingStart = () => ({ type: LOADING_START });
 export const loadingError = () => ({ type: LOADING_ERROR });
@@ -41,7 +41,7 @@ export const fetchMessages = (action$: EpicAction) =>
             })
             return messagesReceive([messages, teamMessages])
           } else {
-            return errorMessages(response.state.msg)
+            return errorMsg(response.state.msg)
           }
         })
         // 只有服务器崩溃才捕捉错误

@@ -1,4 +1,5 @@
 import { myTeam } from '../db/controllers/index';
+import { error, success } from '../utils/dataHandle'
 
 interface Apply {
   operatorId: String,
@@ -20,67 +21,43 @@ interface GroupMember {
 }
 
 
-
-// 返回正常数据
-const success = ( data: any) => {
-  return {
-    'state': {
-        'code': 1,
-        'msg': 'success'
-    },
-    'data': {
-       data
-    }
- }
-}
-// // 返回错误提醒
-// const error = () => {
-//   return{
-//     'state': {
-//         'code': 2,
-//         'msg':  'error'
-//     }
-//   }
-// }
-
-
 export const teamList = async(ctx: any) => {
   // console.log('allNews')
   // console.log(ctx.request.body)
   const { id } = ctx.request.body;
   const result = await myTeam(id)
   // console.log(result)
-  return ctx.body = success(result)
+  return ctx.body = success(result, '获取成功')
 }
 
 
 export const sendApply = async(ctx: any) => {
   const apply: Apply = ctx.request.body;
   console.log(apply)
-  return ctx.body = success('发送成功!')
+  return ctx.body = success({}, '发送成功!')
 }
 
 export const rejectJoinGroup = async(ctx: any) => {
   const member: GroupMember = ctx.request.body;
   console.log(member)
-  return ctx.body = success('拒绝成功!')
+  return ctx.body = success({}, '拒绝成功!')
 }
 
 export const removeGroupMember = async(ctx: any) => {
   const member: GroupMember = ctx.request.body;
   console.log(member)
-  return ctx.body = success('移除成功!')
+  return ctx.body = success({}, '移除成功!')
 }
 
 
 export const allowedJoinGroup = async(ctx: any) => {
   const member: GroupMember = ctx.request.body;
   console.log(member)
-  return ctx.body = success('加入成功!')
+  return ctx.body = success({}, '加入成功!')
 }
 
 export const invitedGroupMember = async(ctx: any) => {
   const member: GroupMember = ctx.request.body;
   console.log(member)
-  return ctx.body = success('邀请成功!')
+  return ctx.body = success({}, '邀请成功!')
 }
