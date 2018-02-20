@@ -8,10 +8,12 @@
 import { Observable } from 'rxjs/Rx'
 import { AjaxResponse } from 'rxjs/Rx'
 import { AjaxError } from 'rxjs/Rx'
+import { replace } from 'react-router-redux'
+import { USER_LOGOUT } from '../constants/user'
 import notification from 'antd/lib/notification';
 
 const defaultHeaders = {
-  // Authorization: "<put here in future>",
+  'Authorization': localStorage.getItem('token'),
   'Content-Type': 'application/json'
 };
 export const handleAjaxError = (ajaxError: AjaxError) => {
@@ -21,23 +23,20 @@ export const handleAjaxError = (ajaxError: AjaxError) => {
       description: '服务器可能崩溃了~',
       duration: 2
     })
+    return Observable.of(USER_LOGOUT);
   }
-  // if (ajaxError.status === 403)
-  // 	return Observable.of(replace('/'))
-  // else if (ajaxError.status === 401)
-  //   return Observable.of(replace('/login'))
-  // if ( ajaxError.status === 401 ) {
-  //   return Observable.of( TokenActions.tokenRemove() );
-  // }
-  // return Observable.of( {
-  //   type: 'TOKEN_ERROR',
-  //   error: ajaxError.status
-  // } );
-  return Observable.empty();
+  if (ajaxError.status !== 200) {
+    localStorage.setItem('token', '')
+    return Observable.of(replace('/login'))
+  }
+  return
 
 }
 
-export const get = (url: string, headers: {} = {}) => {
+export const get = (url: string, headers: {} = {
+  'Authorization': localStorage.getItem('token'),
+  'Content-Type': 'application/json'
+}) => {
   return Observable.ajax.get(url, Object.assign({}, defaultHeaders, headers))
     .map((ajaxResponse: AjaxResponse) => {
       return ajaxResponse.response
@@ -48,7 +47,10 @@ export const get = (url: string, headers: {} = {}) => {
     })
 }
 
-export const post = (url: string, body: {}, headers: {} = {}): Observable<AjaxResponse> => {
+export const post = (url: string, body: {}, headers: {} = {
+  'Authorization': localStorage.getItem('token'),
+  'Content-Type': 'application/json'
+}): Observable<AjaxResponse> => {
   return Observable.ajax.post(url, body, Object.assign({}, defaultHeaders, headers))
     .map((ajaxResponse: AjaxResponse) => {
       return ajaxResponse.response
@@ -59,7 +61,10 @@ export const post = (url: string, body: {}, headers: {} = {}): Observable<AjaxRe
     })
 }
 
-export const put = (url: string, body: {}, headers: {} = {}): Observable<AjaxResponse> => {
+export const put = (url: string, body: {}, headers: {} = {
+  'Authorization': localStorage.getItem('token'),
+  'Content-Type': 'application/json'
+}): Observable<AjaxResponse> => {
   return Observable.ajax.put(url, body, Object.assign({}, defaultHeaders, headers))
     .map((ajaxResponse: AjaxResponse) => {
       return ajaxResponse.response.state
@@ -70,7 +75,10 @@ export const put = (url: string, body: {}, headers: {} = {}): Observable<AjaxRes
     })
 }
 
-export const del = (url: string, headers: {} = {}): Observable<AjaxResponse> => {
+export const del = (url: string, headers: {} = {
+  'Authorization': localStorage.getItem('token'),
+  'Content-Type': 'application/json'
+}): Observable<AjaxResponse> => {
   return Observable.ajax.delete(url, Object.assign({}, defaultHeaders, headers))
     .map((ajaxResponse: AjaxResponse) => {
       return ajaxResponse.response.state

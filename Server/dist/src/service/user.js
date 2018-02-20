@@ -113,13 +113,14 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
             return ctx.body = dataHandle_1.error(result.msg);
         }
         else {
-            const { userName, userId, msg, avatar, regDate, email, role } = result;
+            console.log('result', result);
+            const { userName, _id, msg, avatar, regDate, email, role } = hadUser;
             const token = jwt.sign({
-                userId: userId,
+                userId: _id,
                 userName: userName,
                 exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
             }, config_1.config.app.keys);
-            return ctx.body = dataHandle_1.success({ userName, userId, token, msg, avatar, regDate, email, role }, '登录成功');
+            return ctx.body = dataHandle_1.success({ userName, userId: _id, token, msg, avatar, regDate, email, role }, '登录成功');
         }
     }
     else {

@@ -91,9 +91,10 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
   }
   logout = (e: ClickParam) => {
     if (e.key === 'logout') {
+      // this.props.changeLoginState()
       const { dispatch, history } = this.props;
       dispatch(userLogout())
-      history.push('/login')
+      history.push('/login');
     }
     if (e.key === 'userinfo') {
       this.showUserInfoVisible()

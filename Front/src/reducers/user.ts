@@ -57,6 +57,7 @@ const user = (state = initialState, action: Action) => {
 
     case USER_LOGINSUCCESS:
       // 本地缓存token
+      console.log('login success')
       localStorage.setItem('token', action.data.token)
       return {
         ...state,

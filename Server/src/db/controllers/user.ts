@@ -1,12 +1,12 @@
 
 const User = require('../models/user.js');
-interface RegUser  {
+interface RegUser {
   userName: string,
   passWord: string,
   role: string,
   email: string
 }
-interface LoginUser  {
+interface LoginUser {
   userName: string,
   passWord: string
 }
@@ -22,10 +22,10 @@ interface Result {
   role: string
 }
 
-export const AddRegUser = async(user: RegUser) => {
+export const AddRegUser = async (user: RegUser) => {
   console.log(user)
-  const {userName, passWord, email, role} = user
-  const newUser = new User({userName, passWord, email, role})
+  const { userName, passWord, email, role } = user
+  const newUser = new User({ userName, passWord, email, role })
   let hadUser: any = ''
   const result: Result = {
     status: '',
@@ -39,7 +39,7 @@ export const AddRegUser = async(user: RegUser) => {
   }
 
   // 先对用户名进行重复校验
-  hadUser = await User.findOne({'userName': userName}, (err: any, data: any) => {
+  hadUser = await User.findOne({ 'userName': userName }, (err: any, data: any) => {
     return data
   })
   if (hadUser && hadUser.userName === userName) {
@@ -48,8 +48,8 @@ export const AddRegUser = async(user: RegUser) => {
     return result
   } else {
     console.log('添加用户成功')
-    await newUser.save().then( (data: any) => {
-      console.log('保存后的信息为:' )
+    await newUser.save().then((data: any) => {
+      console.log('保存后的信息为:')
       console.log(data)
       result.msg = '用户注册成功!'
       result.status = 'success'
@@ -65,15 +65,15 @@ export const AddRegUser = async(user: RegUser) => {
   }
 }
 
-export const LoginUser = async(user: LoginUser) => {
-  const {userName, passWord} = user
+export const LoginUser = async (user: LoginUser) => {
+  const { userName, passWord } = user
   console.log('用户正在登录:')
   console.log(user)
 
-  return User.findOne({'userName': userName})
+  return User.findOne({ 'userName': userName })
 }
 
-export const FindUserById = async(id: string) => {
+export const FindUserById = async (id: string) => {
   console.log('正在查找Id:')
-  return User.findOne({_id: id})
+  return User.findOne({ _id: id })
 }

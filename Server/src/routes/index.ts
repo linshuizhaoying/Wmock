@@ -9,135 +9,135 @@ const router = new Irouter()
 
 export const Router = (app: any) => {
   const { reg,
-          login,
-          tokenLogin,
-          userInfo,
-          updateUser,
-          messagesList,
-          userProjectList,
-          demoProjectList,
+    login,
+    tokenLogin,
+    userInfo,
+    updateUser,
+    messagesList,
+    userProjectList,
+    demoProjectList,
 
-          documentList,
-          removeDocument,
-          addDocument,
-          updateDocument,
-          uploadFile,
+    documentList,
+    removeDocument,
+    addDocument,
+    updateDocument,
+    uploadFile,
 
-          teamList,
-          sendApply,
-          allowedJoinGroup,
-          rejectJoinGroup,
-          removeGroupMember,
-          invitedGroupMember,
+    teamList,
+    sendApply,
+    allowedJoinGroup,
+    rejectJoinGroup,
+    removeGroupMember,
+    invitedGroupMember,
 
-          mock,
-          unJoinProjectList,
-          addProject,
-          removeProject,
-          updateProject,
-          importProject,
-          cloneProject,
-          verifyProject,
-          addInterface,
-          removeInterface,
-          updateInterface,
-          cloneInterface,
+    mock,
+    unJoinProjectList,
+    addProject,
+    removeProject,
+    updateProject,
+    importProject,
+    cloneProject,
+    verifyProject,
+    addInterface,
+    removeInterface,
+    updateInterface,
+    cloneInterface,
 
 
-          baseModelList,
-          customModelList,
-          addModel,
-          updateModel,
-          removeModel,
+    baseModelList,
+    customModelList,
+    addModel,
+    updateModel,
+    removeModel,
 
         } = Service
 
   router.post('/api/reg', Service.reg)
-        .post('/api/login', Service.login)
-        // .get('/api/userInfo', tokenPermission, Service.userInfo)
-        .get('/api/userInfo', Service.userInfo)
-        // 用于持久化登录,只要auth头有未过期的token验证就能证明用户的登录状态
-        .post('/api/token', Service.tokenLogin)
-        // 更新用户信息
-        .post('/api/updateUser', Service.updateUser)
-        .get('/api/messagesList', Service.messagesList)
+    .post('/api/login', Service.login)
+    // .get('/api/userInfo', tokenPermission, Service.userInfo)
+    .get('/api/userInfo', tokenPermission, Service.userInfo)
+    // 用于持久化登录,只要auth头有未过期的token验证就能证明用户的登录状态
+    .post('/api/token', tokenPermission, Service.tokenLogin)
+    // 更新用户信息
+    .post('/api/updateUser', tokenPermission, Service.updateUser)
+    .get('/api/messagesList', tokenPermission, Service.messagesList)
 
-        // 获取示例项目列表
-        .post('/api/demoList', Service.demoProjectList)
-        // 获取用户项目列表
-        .post('/api/projectList', Service.userProjectList)
-        // 获取未加入的项目列表
-        .post('/api/unJoinProjectList', Service.unJoinProjectList)
-        // 添加项目
-        .post('/api/addProject', Service.addProject)
-        // 更新项目
-        .post('/api/updateProject', Service.updateProject)
-        // 删除项目
-        .post('/api/removeProject', Service.removeProject)
-        // 导入项目
-        .post('/api/importProject', Service.importProject)
-        // 克隆项目
-        .post('/api/cloneProject', Service.cloneProject)
-        // 克隆接口
-        .post('/api/cloneInterface', Service.cloneInterface)
-        // 校验项目
-        .post('/api/verifyProject', Service.verifyProject)
-         // 添加接口
-         .post('/api/addInterface', Service.addInterface)
-         // 更新接口
-         .post('/api/updateInterface', Service.updateInterface)
-         // 删除接口
-         .post('/api/removeInterface', Service.removeInterface)
+    // 获取示例项目列表
+    .post('/api/demoList', tokenPermission, Service.demoProjectList)
+    // 获取用户项目列表
+    .post('/api/projectList', tokenPermission, Service.userProjectList)
+    // 获取未加入的项目列表
+    .post('/api/unJoinProjectList', tokenPermission, Service.unJoinProjectList)
+    // 添加项目
+    .post('/api/addProject', tokenPermission, Service.addProject)
+    // 更新项目
+    .post('/api/updateProject', tokenPermission, Service.updateProject)
+    // 删除项目
+    .post('/api/removeProject', tokenPermission, Service.removeProject)
+    // 导入项目
+    .post('/api/importProject', tokenPermission, Service.importProject)
+    // 克隆项目
+    .post('/api/cloneProject', tokenPermission, Service.cloneProject)
+    // 克隆接口
+    .post('/api/cloneInterface', tokenPermission, Service.cloneInterface)
+    // 校验项目
+    .post('/api/verifyProject', tokenPermission, Service.verifyProject)
+    // 添加接口
+    .post('/api/addInterface', tokenPermission, Service.addInterface)
+    // 更新接口
+    .post('/api/updateInterface', tokenPermission, Service.updateInterface)
+    // 删除接口
+    .post('/api/removeInterface', tokenPermission, Service.removeInterface)
 
-        // 获取团队列表
-        .post('/api/teamList', Service.teamList)
-        // 申请加入团队
-        .post('/api/sendApply', Service.sendApply)
-        // 允许加入团队
-        .post('/api/allowedJoinGroup', Service.allowedJoinGroup)
-        // 拒绝加入团队
-        .post('/api/rejectJoinGroup', Service.rejectJoinGroup)
-        // 将用户移除团队
-        .post('/api/removeGroupMember', Service.removeGroupMember)
-        // 邀请用户加入团队
-        .post('/api/invitedGroupMember', Service.invitedGroupMember)
+    // 获取团队列表
+    .post('/api/teamList', tokenPermission, Service.teamList)
+    // 申请加入团队
+    .post('/api/sendApply', tokenPermission, Service.sendApply)
+    // 允许加入团队
+    .post('/api/allowedJoinGroup', tokenPermission, Service.allowedJoinGroup)
+    // 拒绝加入团队
+    .post('/api/rejectJoinGroup', tokenPermission, Service.rejectJoinGroup)
+    // 将用户移除团队
+    .post('/api/removeGroupMember', tokenPermission, Service.removeGroupMember)
+    // 邀请用户加入团队
+    .post('/api/invitedGroupMember', tokenPermission, Service.invitedGroupMember)
 
 
-        // 获取文档列表
-        .post('/api/documentList', Service.documentList)
-        // 添加文档
-        .post('/api/addDocument', Service.addDocument)
-        // 更新文档
-        .post('/api/updateDocument', Service.updateDocument)
-        // 删除文档
-        .post('/api/removeDocument', Service.removeDocument)
+    // 获取文档列表
+    .post('/api/documentList', tokenPermission, Service.documentList)
+    // 添加文档
+    .post('/api/addDocument', tokenPermission, Service.addDocument)
+    // 更新文档
+    .post('/api/updateDocument', tokenPermission, Service.updateDocument)
+    // 删除文档
+    .post('/api/removeDocument', tokenPermission, Service.removeDocument)
 
-        // 获取Mock模型
-        .get('/api/baseModelList', Service.baseModelList)
-        .post('/api/customModelList', Service.customModelList)
-        // 添加Mock模型
-        .post('/api/addModel', Service.addModel)
-        // 更新Mock模型
-        .post('/api/updateModel', Service.updateModel)
-        // 删除Mock模型
-        .post('/api/removeModel', Service.removeModel)
+    // 获取Mock模型
+    .get('/api/baseModelList', tokenPermission, Service.baseModelList)
+    .post('/api/customModelList', tokenPermission, Service.customModelList)
+    // 添加Mock模型
+    .post('/api/addModel', tokenPermission, Service.addModel)
+    // 更新Mock模型
+    .post('/api/updateModel', tokenPermission, Service.updateModel)
+    // 删除Mock模型
+    .post('/api/removeModel', tokenPermission, Service.removeModel)
 
-        // 图片上传
-        .post('/api/upload', async (ctx, next) => {
-          let result = {}
-          const serverFilePath = path.join( __dirname, '../images' )
-          // 上传文件事件
-          result = await uploadFile( ctx, {
-            fileType: 'up', // common or album
-            path: serverFilePath
-          })
-          console.log(result)
-          ctx.body = result
-        });
+    // 图片上传
+    .post('/api/upload', async (ctx, next) => {
+      let result = {}
+      const serverFilePath = path.join(__dirname, '../images')
+      // 上传文件事件
+      result = await uploadFile(ctx, {
+        fileType: 'up', // common or album
+        path: serverFilePath
+      })
+      console.log(result)
+      ctx.body = result
+    });
 
   // 根据对应请求返回 mock数据
   router.use('/mock', middleware.mockFilter, Service.mock)
-  router.all('/*',  async (ctx, next) => {
+  router.all('/*', async (ctx, next) => {
     ctx.body = {
       'state': {
         'code': 404,
@@ -147,7 +147,7 @@ export const Router = (app: any) => {
     }
   })
 
- app.use(router.routes())
+  app.use(router.routes())
 
 }
 
