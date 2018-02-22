@@ -7,9 +7,8 @@ import {
   SEND_APPLY
   } from '../constants/team';
 
-const fetchTeamData = (id: Id) => ({
+const fetchTeamData = () => ({
   type: FETCH_TEAM,
-  data: id
 })
 const sendApplyData = (apply: Apply) => ({
   type: SEND_APPLY,
@@ -36,9 +35,9 @@ const invitedGroupMemberData = (member: GroupMember) => ({
   data: member
 })
 
-export function fetchTeam(id: Id) {
+export function fetchTeam() {
   return (dispatch: Function) => {
-    dispatch(fetchTeamData(id))
+    dispatch(fetchTeamData())
   }
 }
 

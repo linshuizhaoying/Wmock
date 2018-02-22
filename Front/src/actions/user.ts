@@ -18,14 +18,12 @@ const reg = (data: RegUser) => ({
   data: data
 })
 
-const token = (data: object) => ({
-  type: USER_TOKEN,
-  data: data
+const token = () => ({
+  type: USER_TOKEN
 })
 
-const info = (userInfoData: object) => ({
-  type: USER_INFO,
-  data: userInfoData
+const info = () => ({
+  type: USER_INFO
 })
 
 const updateUserData = (user: User) => ({
@@ -43,15 +41,15 @@ export function userLogin(user: LoginUser) {
   }
 }
 
-export function userToken(data: object) {
+export function userToken() {
   return (dispatch: Function) => {
-    dispatch(token(data))
+    dispatch(token())
   }
 }
 
-export function userInfo(userInfoData: object) {
+export function userInfo() {
   return (dispatch: Function) => {
-    dispatch(info(userInfoData))
+    dispatch(info())
   }
 }
 

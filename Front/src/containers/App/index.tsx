@@ -22,7 +22,7 @@ class App extends React.Component<AppProps, AppState> {
     const { dispatch, history } = this.props;
     const token = localStorage.getItem('token')
     if (token) {
-      dispatch(userToken({ 'token': token }))
+      dispatch(userToken())
     } else {
       dispatch(tokenOut())
       history.push('/login')
@@ -45,13 +45,13 @@ class App extends React.Component<AppProps, AppState> {
       })
     }
     const { history } = this.props;
-    if(!nextProps.isLogin && nextProps.userName.length === 0){
+    if (!nextProps.isLogin && nextProps.userName.length === 0) {
       this.setState({
         login: false
       })
 
     }
-    if (!this.state.login  && nextProps.isLogin) {
+    if (!this.state.login && nextProps.isLogin) {
       if (history.location.pathname === '/' || history.location.pathname === '/login') {
         this.setState({
           login: true
@@ -59,25 +59,6 @@ class App extends React.Component<AppProps, AppState> {
         history.push('/wmock/OverView')
       }
     }
-    // console.log(this.state)
-    // if (
-    //   !this.state.login &&
-    //   nextProps.userName.length > 0 &&
-    //   nextProps.isLogin) {
-    //   const { history } = this.props;
-    //   this.setState({
-    //     login: true
-    //   },()=>{
-    //     console.log('set login')
-    //   })
-    //   console.log(history.location)
-    //   if (history.location.pathname === '/' || history.location.pathname === '/login') {
-    //     console.log('跳转')
-    //     history.push('/wmock/OverView')
-    //   } else {
-    //     history.push(history.location.pathname)
-    //   }
-    // }
 
   }
   changeLoginState = () => {

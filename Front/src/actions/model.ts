@@ -9,13 +9,12 @@ import {
 
 // 获取通用的基础Mock模型
 const fetchBaseModelData = () => ({
-  type: FETCHBASE_MODEL,
+  type: FETCHBASE_MODEL
 })
 
 // 获取当前用户的自定义Mock模型
-const fetchCustomModelData = (id: Id) => ({
-  type: FETCHCUSTOM_MODEL,
-  data: id
+const fetchCustomModelData = () => ({
+  type: FETCHCUSTOM_MODEL
 })
 
 const addModelData = (model: Model) => ({
@@ -39,9 +38,9 @@ export function fetchBaseModel() {
   }
 }
 
-export function fetchCustomModel(id: Id) {
+export function fetchCustomModel() {
   return (dispatch: Function) => {
-    dispatch(fetchCustomModelData(id))
+    dispatch(fetchCustomModelData())
   }
 }
 

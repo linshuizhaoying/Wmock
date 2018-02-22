@@ -144,7 +144,8 @@ export const login = async (ctx: any) => {
 }
 
 export const userInfo = async (ctx: any) => {
-  const { userId, token } = ctx.request.body;
+  const { userId } = ctx.tokenContent;
+  const token = ctx.token
   let hadUser = undefined;
   hadUser = await FindUserById(userId);
   const { userName, avatar, regDate, email, role } = hadUser
@@ -152,20 +153,18 @@ export const userInfo = async (ctx: any) => {
 }
 
 export const tokenLogin = async (ctx: any) => {
-  console.log('token校验Ing:')
-  console.log(ctx.request.body)
-  const { token } = ctx.request.body;
+  const token = ctx.token
   let hadUser = undefined;
   if (!token) {
     return ctx.body = error('请重新登录!')
   }
   try {
-    let decode = '';
-    await jwt.verify(token, config.app.keys, function (err: any, result: any) {
-      decode = result
-    })
-    const userId = JSON.parse(JSON.stringify(decode)).userId;
-    const userName = JSON.parse(JSON.stringify(decode)).userName;
+    // await jwt.verify(token, config.app.keys, function (err: any, result: any) {
+    //   decode = result
+    // })
+    // const userId = JSON.parse(JSON.stringify(decode)).userId;
+    // const userName = JSON.parse(JSON.stringify(decode)).userName;
+    const { userId, userName } = ctx.tokenContent;
     hadUser = await FindUserById(userId);
     const { avatar, regDate, email, role } = hadUser
     if (hadUser !== null) {

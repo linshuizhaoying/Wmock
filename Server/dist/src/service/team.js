@@ -11,10 +11,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../db/controllers/index");
 const dataHandle_1 = require("../utils/dataHandle");
 exports.teamList = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    // console.log('allNews')
-    // console.log(ctx.request.body)
-    const { id } = ctx.request.body;
-    const result = yield index_1.myTeam(id);
+    const { userId } = ctx.tokenContent;
+    const result = yield index_1.myTeam(userId);
     // console.log(result)
     return ctx.body = dataHandle_1.success(result, '获取成功');
 });

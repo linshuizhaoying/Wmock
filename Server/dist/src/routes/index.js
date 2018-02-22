@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Irouter = require("koa-router");
-const token_1 = require("../middleware/token");
 const Service = require("../service");
+const token_1 = require("../middleware/token");
 const path = require('path');
 const middleware = require('../middleware/index');
 const router = new Irouter();
@@ -19,12 +19,12 @@ exports.Router = (app) => {
     router.post('/api/reg', Service.reg)
         .post('/api/login', Service.login)
         .get('/api/userInfo', token_1.default, Service.userInfo)
-        .post('/api/token', token_1.default, Service.tokenLogin)
+        .get('/api/token', token_1.default, Service.tokenLogin)
         .post('/api/updateUser', token_1.default, Service.updateUser)
         .get('/api/messagesList', token_1.default, Service.messagesList)
-        .post('/api/demoList', token_1.default, Service.demoProjectList)
-        .post('/api/projectList', token_1.default, Service.userProjectList)
-        .post('/api/unJoinProjectList', token_1.default, Service.unJoinProjectList)
+        .get('/api/demoList', token_1.default, Service.demoProjectList)
+        .get('/api/projectList', token_1.default, Service.userProjectList)
+        .get('/api/unJoinProjectList', token_1.default, Service.unJoinProjectList)
         .post('/api/addProject', token_1.default, Service.addProject)
         .post('/api/updateProject', token_1.default, Service.updateProject)
         .post('/api/removeProject', token_1.default, Service.removeProject)
@@ -35,18 +35,18 @@ exports.Router = (app) => {
         .post('/api/addInterface', token_1.default, Service.addInterface)
         .post('/api/updateInterface', token_1.default, Service.updateInterface)
         .post('/api/removeInterface', token_1.default, Service.removeInterface)
-        .post('/api/teamList', token_1.default, Service.teamList)
+        .get('/api/teamList', token_1.default, Service.teamList)
         .post('/api/sendApply', token_1.default, Service.sendApply)
         .post('/api/allowedJoinGroup', token_1.default, Service.allowedJoinGroup)
         .post('/api/rejectJoinGroup', token_1.default, Service.rejectJoinGroup)
         .post('/api/removeGroupMember', token_1.default, Service.removeGroupMember)
         .post('/api/invitedGroupMember', token_1.default, Service.invitedGroupMember)
-        .post('/api/documentList', token_1.default, Service.documentList)
+        .get('/api/documentList', token_1.default, Service.documentList)
         .post('/api/addDocument', token_1.default, Service.addDocument)
         .post('/api/updateDocument', token_1.default, Service.updateDocument)
         .post('/api/removeDocument', token_1.default, Service.removeDocument)
         .get('/api/baseModelList', token_1.default, Service.baseModelList)
-        .post('/api/customModelList', token_1.default, Service.customModelList)
+        .get('/api/customModelList', token_1.default, Service.customModelList)
         .post('/api/addModel', token_1.default, Service.addModel)
         .post('/api/updateModel', token_1.default, Service.updateModel)
         .post('/api/removeModel', token_1.default, Service.removeModel)

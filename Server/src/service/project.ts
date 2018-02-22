@@ -24,28 +24,25 @@ interface Interface {
 
 
 export const userProjectList = async(ctx: any) => {
-  // console.log('allNews')
-  // console.log(ctx.request.body)
+  const { userId } = ctx.tokenContent;
+  console.log(userId)
   const { userName } = ctx.request.body;
-  const result = await UserProject(userName)
-  // console.log(result)
+  const result = await UserProject(userId)
   return ctx.body = success(result, '获取成功')
 }
 
 export const demoProjectList = async(ctx: any) => {
-  // console.log('allNews')
-  // console.log(ctx.request.body)
+  const { userId } = ctx.tokenContent;
+  console.log(userId)
   const { userName } = ctx.request.body;
-  const result = await DemoProject(userName)
-  // console.log(result)
+  const result = await DemoProject(userId)
   return ctx.body = success(result, '获取成功')
 }
 
 export const unJoinProjectList = async(ctx: any) => {
-  // console.log('allNews')
-  // console.log(ctx.request.body)
-  const { id } = ctx.request.body;
-  const result = await UnJoinProjectList(id)
+  const { userId } = ctx.tokenContent;
+  console.log(userId)
+  const result = await UnJoinProjectList(userId)
   // console.log(result)
   return ctx.body = success(result, '获取成功')
 }

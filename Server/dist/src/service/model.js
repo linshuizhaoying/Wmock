@@ -12,11 +12,14 @@ const index_1 = require("../db/controllers/index");
 const dataHandle_1 = require("../utils/dataHandle");
 exports.baseModelList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const result = yield index_1.BaseModelList();
+    const { userId } = ctx.tokenContent;
+    console.log(userId);
     return ctx.body = dataHandle_1.success(result, '获取成功');
 });
 exports.customModelList = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const { id } = ctx.request.body;
-    const result = yield index_1.CustomModelList(id);
+    const { userId } = ctx.tokenContent;
+    console.log(userId);
+    const result = yield index_1.CustomModelList(userId);
     return ctx.body = dataHandle_1.success(result, '获取成功');
 });
 exports.addModel = (ctx) => __awaiter(this, void 0, void 0, function* () {

@@ -22,10 +22,8 @@ interface GroupMember {
 
 
 export const teamList = async(ctx: any) => {
-  // console.log('allNews')
-  // console.log(ctx.request.body)
-  const { id } = ctx.request.body;
-  const result = await myTeam(id)
+  const { userId } = ctx.tokenContent;
+  const result = await myTeam(userId)
   // console.log(result)
   return ctx.body = success(result, '获取成功')
 }

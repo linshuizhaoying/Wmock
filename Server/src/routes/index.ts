@@ -1,19 +1,22 @@
 import * as Irouter from 'koa-router';
-import tokenPermission from '../middleware/token'
 import * as Service from '../service';
+import tokenPermission from '../middleware/token';
+import { config } from '../config';
 
-import { config } from '../config'
 const path = require('path');
 const middleware = require('../middleware/index')
 const router = new Irouter()
 
 export const Router = (app: any) => {
-  const { reg,
+  const {
+    reg,
     login,
     tokenLogin,
     userInfo,
     updateUser,
+
     messagesList,
+
     userProjectList,
     demoProjectList,
 
@@ -50,24 +53,24 @@ export const Router = (app: any) => {
     updateModel,
     removeModel,
 
-        } = Service
+  } = Service
 
   router.post('/api/reg', Service.reg)
     .post('/api/login', Service.login)
     // .get('/api/userInfo', tokenPermission, Service.userInfo)
     .get('/api/userInfo', tokenPermission, Service.userInfo)
     // 用于持久化登录,只要auth头有未过期的token验证就能证明用户的登录状态
-    .post('/api/token', tokenPermission, Service.tokenLogin)
+    .get('/api/token', tokenPermission, Service.tokenLogin)
     // 更新用户信息
     .post('/api/updateUser', tokenPermission, Service.updateUser)
     .get('/api/messagesList', tokenPermission, Service.messagesList)
 
     // 获取示例项目列表
-    .post('/api/demoList', tokenPermission, Service.demoProjectList)
+    .get('/api/demoList', tokenPermission, Service.demoProjectList)
     // 获取用户项目列表
-    .post('/api/projectList', tokenPermission, Service.userProjectList)
+    .get('/api/projectList', tokenPermission, Service.userProjectList)
     // 获取未加入的项目列表
-    .post('/api/unJoinProjectList', tokenPermission, Service.unJoinProjectList)
+    .get('/api/unJoinProjectList', tokenPermission, Service.unJoinProjectList)
     // 添加项目
     .post('/api/addProject', tokenPermission, Service.addProject)
     // 更新项目
@@ -90,7 +93,7 @@ export const Router = (app: any) => {
     .post('/api/removeInterface', tokenPermission, Service.removeInterface)
 
     // 获取团队列表
-    .post('/api/teamList', tokenPermission, Service.teamList)
+    .get('/api/teamList', tokenPermission, Service.teamList)
     // 申请加入团队
     .post('/api/sendApply', tokenPermission, Service.sendApply)
     // 允许加入团队
@@ -104,7 +107,7 @@ export const Router = (app: any) => {
 
 
     // 获取文档列表
-    .post('/api/documentList', tokenPermission, Service.documentList)
+    .get('/api/documentList', tokenPermission, Service.documentList)
     // 添加文档
     .post('/api/addDocument', tokenPermission, Service.addDocument)
     // 更新文档
@@ -114,7 +117,7 @@ export const Router = (app: any) => {
 
     // 获取Mock模型
     .get('/api/baseModelList', tokenPermission, Service.baseModelList)
-    .post('/api/customModelList', tokenPermission, Service.customModelList)
+    .get('/api/customModelList', tokenPermission, Service.customModelList)
     // 添加Mock模型
     .post('/api/addModel', tokenPermission, Service.addModel)
     // 更新Mock模型

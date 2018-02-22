@@ -105,8 +105,6 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
             console.log(hadUser);
             result.msg = '用户登录成功!';
             result.status = 'success';
-            result.userId = hadUser._id;
-            result.userName = hadUser.userName;
         }
         if (result.status === 'error') {
             // 用户不存在 或者 用户密码错误
@@ -129,27 +127,26 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
     }
 });
 exports.userInfo = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const { userId, token } = ctx.request.body;
+    const { userId } = ctx.tokenContent;
+    const token = ctx.token;
     let hadUser = undefined;
     hadUser = yield controllers_1.FindUserById(userId);
     const { userName, avatar, regDate, email, role } = hadUser;
     return ctx.body = dataHandle_1.success({ userName, userId, avatar, token, regDate, email, role, msg: '获取成功!' }, '获取成功!');
 });
 exports.tokenLogin = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    console.log('token校验Ing:');
-    console.log(ctx.request.body);
-    const { token } = ctx.request.body;
+    const token = ctx.token;
     let hadUser = undefined;
     if (!token) {
         return ctx.body = dataHandle_1.error('请重新登录!');
     }
     try {
-        let decode = '';
-        yield jwt.verify(token, config_1.config.app.keys, function (err, result) {
-            decode = result;
-        });
-        const userId = JSON.parse(JSON.stringify(decode)).userId;
-        const userName = JSON.parse(JSON.stringify(decode)).userName;
+        // await jwt.verify(token, config.app.keys, function (err: any, result: any) {
+        //   decode = result
+        // })
+        // const userId = JSON.parse(JSON.stringify(decode)).userId;
+        // const userName = JSON.parse(JSON.stringify(decode)).userName;
+        const { userId, userName } = ctx.tokenContent;
         hadUser = yield controllers_1.FindUserById(userId);
         const { avatar, regDate, email, role } = hadUser;
         if (hadUser !== null) {
