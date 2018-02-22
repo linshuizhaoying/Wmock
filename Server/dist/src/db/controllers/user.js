@@ -61,4 +61,17 @@ exports.FindUserById = (id) => __awaiter(this, void 0, void 0, function* () {
     console.log('正在查找Id:');
     return User.findOne({ _id: id });
 });
+exports.UpdateUser = (user) => __awaiter(this, void 0, void 0, function* () {
+    return User.update({
+        _id: user._id
+    }, {
+        $set: {
+            userName: user.userName,
+            passWord: user.passWord,
+            avatar: user.avatar,
+            role: user.role,
+            email: user.email
+        }
+    });
+});
 //# sourceMappingURL=user.js.map

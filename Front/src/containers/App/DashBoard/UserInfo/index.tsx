@@ -103,12 +103,16 @@ export class UserInfo extends React.Component<AppProps, UserInfoState> {
 
   changeUserName = () => {
     return (value: string) => {
-      const { dispatch } = this.props;
-      dispatch(updateUser(
-        {
-          userName: value
-        }
-      ))
+      if (!Validator.userCheck(value)) {
+        message.error('请输入符合规范的用户名');
+      } else {
+        const { dispatch } = this.props;
+        dispatch(updateUser(
+          {
+            userName: value
+          }
+        ))
+      }
     };
   }
   changeUserEmail = () => {
@@ -143,9 +147,9 @@ export class UserInfo extends React.Component<AppProps, UserInfoState> {
     }
     return isJPG && isLt2M;
   }
-  handleChange = ( info: MyUploadChangeParam) => {
+  handleChangeUpload = (info: MyUploadChangeParam) => {
     this.setState({ loading: true });
-    if (info.file.status === 'done') {
+    if (info.file.status === 'done' && info.file.response.image.length > 0) {
       this.getBase64(info.file.originFileObj, () => this.setState({
         imgUrl: imgBaseUrl + info.file.response.image,
         loading: false,
@@ -227,7 +231,7 @@ export class UserInfo extends React.Component<AppProps, UserInfoState> {
                 showUploadList={false}
                 action={upload}
                 beforeUpload={this.beforeUpload}
-                onChange={this.handleChange}
+                onChange={this.handleChangeUpload}
               >
                 {this.state.imgUrl ? <img src={this.state.imgUrl} alt="" /> : uploadButton}
               </Upload>
