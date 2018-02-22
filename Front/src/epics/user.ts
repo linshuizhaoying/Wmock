@@ -87,7 +87,7 @@ export const userLogin = (action$: EpicAction) =>
 export const userToken = (action$: EpicAction) =>
   action$.ofType(USER_TOKEN)
     .mergeMap((action: Action) => {
-      return fetch.post(Token, action.data)
+      return fetch.get(Token)
         // 登录验证情况
         .map((response: Response) => {
           if (response.state.code === 1) {
@@ -107,7 +107,7 @@ export const userToken = (action$: EpicAction) =>
 export const userInfo = (action$: EpicAction) =>
   action$.ofType(USER_INFO)
     .mergeMap((action: Action) => {
-      return fetch.post(UserInfo, action.data)
+      return fetch.get(UserInfo)
         // 登录验证情况
         .map((response: Response) => {
           if (response.state.code === 1) {

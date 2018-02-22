@@ -91,9 +91,10 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
   }
   logout = (e: ClickParam) => {
     if (e.key === 'logout') {
+      // this.props.changeLoginState()
       const { dispatch, history } = this.props;
       dispatch(userLogout())
-      history.push('/login')
+      history.push('/login');
     }
     if (e.key === 'userinfo') {
       this.showUserInfoVisible()
@@ -104,29 +105,29 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
     dispatch(fetchMessages())
   }
 
-  getProjectList = (user: Id) => {
+  getProjectList = () => {
     const { dispatch } = this.props;
-    dispatch(fetchProject(user))
+    dispatch(fetchProject())
   }
 
   getMyProject = () => {
     const { dispatch } = this.props;
-    dispatch(fetchProject({ 'id': this.props.userId }))
+    dispatch(fetchProject())
   }
 
   getProjectDemo = () => {
     const { dispatch } = this.props;
-    dispatch(fetchDemo({ 'id': this.props.userId }))
+    dispatch(fetchDemo())
   }
   getDocumentList = () => {
-    this.getProjectList({ 'id': this.props.userId })
+    this.getProjectList()
     const { dispatch } = this.props;
     dispatch(fetchDocument())
   }
 
   getTeamList = () => {
     const { dispatch } = this.props;
-    dispatch(fetchTeam({ 'id': this.props.userId }))
+    dispatch(fetchTeam())
   }
 
   getModel = () => {
@@ -140,7 +141,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
 
   getCustomModelList = () => {
     const { dispatch } = this.props;
-    dispatch(fetchCustomModel({ 'id': this.props.userId }))
+    dispatch(fetchCustomModel())
   }
 
   showUserInfoVisible = () => {
@@ -156,12 +157,12 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
   }
   getUserInfo = () => {
     const { dispatch } = this.props;
-    dispatch(userInfo({ userId: this.props.userId, token: localStorage.getItem('token') }))
+    dispatch(userInfo())
   }
 
   getUnJoinProjectList = () => {
     const { dispatch } = this.props;
-    dispatch(fetchUnJoinProject({ id: this.props.userId }))
+    dispatch(fetchUnJoinProject())
 
   }
   render() {

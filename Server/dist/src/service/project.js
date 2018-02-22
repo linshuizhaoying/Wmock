@@ -11,26 +11,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../db/controllers/index");
 const dataHandle_1 = require("../utils/dataHandle");
 exports.userProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    // console.log('allNews')
-    // console.log(ctx.request.body)
+    const { userId } = ctx.tokenContent;
+    console.log(userId);
     const { userName } = ctx.request.body;
-    const result = yield index_1.UserProject(userName);
-    // console.log(result)
+    const result = yield index_1.UserProject(userId);
     return ctx.body = dataHandle_1.success(result, '获取成功');
 });
 exports.demoProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    // console.log('allNews')
-    // console.log(ctx.request.body)
+    const { userId } = ctx.tokenContent;
+    console.log(userId);
     const { userName } = ctx.request.body;
-    const result = yield index_1.DemoProject(userName);
-    // console.log(result)
+    const result = yield index_1.DemoProject(userId);
     return ctx.body = dataHandle_1.success(result, '获取成功');
 });
 exports.unJoinProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    // console.log('allNews')
-    // console.log(ctx.request.body)
-    const { id } = ctx.request.body;
-    const result = yield index_1.UnJoinProjectList(id);
+    const { userId } = ctx.tokenContent;
+    console.log(userId);
+    const result = yield index_1.UnJoinProjectList(userId);
     // console.log(result)
     return ctx.body = dataHandle_1.success(result, '获取成功');
 });

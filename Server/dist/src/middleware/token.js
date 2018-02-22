@@ -11,15 +11,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = require("jsonwebtoken");
 const config_1 = require("../config");
 exports.default = (ctx, next) => __awaiter(this, void 0, void 0, function* () {
-    console.log(ctx.get('Authorization'));
     const authorization = ctx.get('Authorization');
     if (authorization === '') {
         ctx.throw(401, '在http头中没有检测到Authorization');
     }
-    const token = authorization.split(' ')[1];
     let tokenContent;
     try {
-        tokenContent = yield jwt.verify(token, config_1.config.app.keys);
+        tokenContent = yield jwt.verify(authorization, config_1.config.app.keys);
     }
     catch (err) {
         if ('TokenExpiredError' === err.name) {
@@ -27,8 +25,8 @@ exports.default = (ctx, next) => __awaiter(this, void 0, void 0, function* () {
         }
         ctx.throw(401, '无效的token');
     }
-    console.log('鉴权成功');
-    console.log(tokenContent);
+    // 将token解析的数据传递到下一个中间层、
+    ctx.token = authorization;
     ctx.tokenContent = tokenContent;
     yield next();
 });

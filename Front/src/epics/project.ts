@@ -65,7 +65,7 @@ export const nothing = () => ({ type: NOTHING });
 export const fetchProject = (action$: EpicAction) =>
   action$.ofType(FETCH_PROJECT)
     .mergeMap((action: Action) => {
-      return fetch.post(projectList, action.data)
+      return fetch.get(projectList)
         .map((response: Response) => {
           if (response.state.code === 1) {
             let temp = response.data;
@@ -84,7 +84,7 @@ export const fetchProject = (action$: EpicAction) =>
 export const fetchUnJoinProject = (action$: EpicAction) =>
   action$.ofType(FETCH_UNJOINPROJECT)
     .mergeMap((action: Action) => {
-      return fetch.post(unJoinProjectList, action.data)
+      return fetch.get(unJoinProjectList)
         .map((response: Response) => {
           if (response.state.code === 1) {
             let temp = response.data;
@@ -103,7 +103,7 @@ export const fetchUnJoinProject = (action$: EpicAction) =>
 export const fetchDemo = (action$: EpicAction) =>
   action$.ofType(FETCH_DEMO)
     .mergeMap((action: Action) => {
-      return fetch.post(demoList, action.data)
+      return fetch.get(demoList)
         .map((response: Response) => {
           if (response.state.code === 1) {
             let temp = response.data;

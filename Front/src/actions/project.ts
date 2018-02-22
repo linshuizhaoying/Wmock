@@ -14,9 +14,8 @@ import {
   VERIFY_PROJECT,
   } from '../constants/project';
 
-const fetchProjectData = (id: Id) => ({
-  type: FETCH_PROJECT,
-  data: id
+const fetchProjectData = () => ({
+  type: FETCH_PROJECT
 })
 
 const importProjectData = (project: Project) => ({
@@ -39,14 +38,12 @@ const verifyProjectData = (id: Id) => ({
   data: id
 })
 
-const fetchDemoData = (id: Id) => ({
-  type: FETCH_DEMO,
-  data: id
+const fetchDemoData = () => ({
+  type: FETCH_DEMO
 })
 
-const fetchUnJoinprojectData = (id: Id) => ({
-  type: FETCH_UNJOINPROJECT,
-  data: id
+const fetchUnJoinprojectData = () => ({
+  type: FETCH_UNJOINPROJECT
 })
 
 const addProjectData = (project: ProjectNoId) => ({
@@ -79,9 +76,9 @@ const removeInterfaceData = (id: Id) => ({
   data: id
 })
 
-export function fetchProject(id: Id) {
+export function fetchProject() {
   return (dispatch: Function) => {
-    dispatch(fetchProjectData(id))
+    dispatch(fetchProjectData())
   }
 }
 
@@ -109,15 +106,15 @@ export function verifyProject(id: Id) {
   }
 }
 
-export function fetchDemo(id: Id) {
+export function fetchDemo() {
   return (dispatch: Function) => {
-    dispatch(fetchDemoData(id))
+    dispatch(fetchDemoData())
   }
 }
 
-export function fetchUnJoinProject(id: Id) {
+export function fetchUnJoinProject() {
   return (dispatch: Function) => {
-    dispatch(fetchUnJoinprojectData(id))
+    dispatch(fetchUnJoinprojectData())
   }
 }
 

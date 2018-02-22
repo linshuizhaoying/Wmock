@@ -22,7 +22,7 @@ class App extends React.Component<AppProps, AppState> {
     const { dispatch, history } = this.props;
     const token = localStorage.getItem('token')
     if (token) {
-      dispatch(userToken({ 'token': token }))
+      dispatch(userToken())
     } else {
       dispatch(tokenOut())
       history.push('/login')
@@ -44,21 +44,27 @@ class App extends React.Component<AppProps, AppState> {
         progress: 100
       })
     }
-    if (!this.state.login &&
-      nextProps.userName.length > 0 &&
-      nextProps.isLogin &&
-      nextProps.loadingState === 'success') {
-      const { history } = this.props;
+    const { history } = this.props;
+    if (!nextProps.isLogin && nextProps.userName.length === 0) {
       this.setState({
-        login: true
+        login: false
       })
-      if (history.location.pathname === '/' || history.location.pathname.length < 8) {
+
+    }
+    if (!this.state.login && nextProps.isLogin) {
+      if (history.location.pathname === '/' || history.location.pathname === '/login') {
+        this.setState({
+          login: true
+        })
         history.push('/wmock/OverView')
-      } else {
-        history.push(history.location.pathname)
       }
     }
 
+  }
+  changeLoginState = () => {
+    this.setState({
+      login: false
+    })
   }
   errorDone = () => {
     this.setState({ error: true })

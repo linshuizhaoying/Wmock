@@ -4,7 +4,7 @@ import { AddRegUser, LoginUser, FindUserById } from '../db/controllers'
 import { config } from '../config'
 import { error, success } from '../utils/dataHandle'
 
-interface UserData  {
+interface UserData {
   userId?: string,
   userName?: string,
   avatar?: string,
@@ -15,7 +15,7 @@ interface UserData  {
   msg?: string
 }
 
-interface ErrorData  {
+interface ErrorData {
   code: number,
   msg: string
 
@@ -51,19 +51,19 @@ interface Result {
  *    }
  * }
  */
-export const reg = async(ctx: any) => {
+export const reg = async (ctx: any) => {
   console.log(ctx.request.body)
   const { userName, passWord, email, role } = ctx.request.body;
   // 后端先做初步的数据校验和非法字符处理
   if (Validator.userCheck(userName) && Validator.passCheck(passWord) && Validator.emailCheck(email)) {
-  // 数据符合规范
-  // 插入数据库并验证重名
+    // 数据符合规范
+    // 插入数据库并验证重名
     let result: any = ''
-    result = await AddRegUser( {userName, passWord, email, role} )
+    result = await AddRegUser({ userName, passWord, email, role })
     console.log('添加用户状况:\n', result)
     if (result.status === 'error') {
       // 用户名重复
-      return ctx.body =  error(result.msg)
+      return ctx.body = error(result.msg)
     } else {
       const { userName, userId, msg, avatar, regDate, email } = result
       const token = jwt.sign({
@@ -75,7 +75,7 @@ export const reg = async(ctx: any) => {
     }
   } else {
     // 用户提交数据异常
-  return ctx.body =  error('用户名或者密码错误!')
+    return ctx.body = error('用户名或者密码错误!')
   }
 }
 
@@ -96,90 +96,88 @@ export const reg = async(ctx: any) => {
  *      'token': xxx
  *  }
  */
-export const login = async(ctx: any) => {
-  const {userName, passWord, email} = ctx.request.body;
-   // 后端先做初步的数据校验和非法字符处理
-   if (Validator.userCheck(userName) && Validator.passCheck(passWord)) {
+export const login = async (ctx: any) => {
+  const { userName, passWord, email } = ctx.request.body;
+  // 后端先做初步的数据校验和非法字符处理
+  if (Validator.userCheck(userName) && Validator.passCheck(passWord)) {
     // 数据符合规范
     // 查询数据库
-      const result: Result = {
-        status: '',
-        userId: '',
-        userName: '',
-        avatar: '',
-        email: '',
-        msg: '',
-        role: '',
-        regDate: undefined
-      }
-      const hadUser = await LoginUser( {userName, passWord} )
-      console.log('登录用户状况:\n', result)
-      if (hadUser === null || hadUser.passWord !== passWord) {
-        result.msg = '账户不存在或者密码错误'
-        result.status = 'error'
-      } else {
-        console.log('查询后的信息为:' )
-        console.log(hadUser)
-        result.msg = '用户登录成功!'
-        result.status = 'success'
-        result.userId = hadUser._id
-        result.userName = hadUser.userName
-      }
-
-      if (result.status === 'error') {
-        // 用户不存在 或者 用户密码错误
-        return ctx.body =  error(result.msg)
-      } else {
-        const { userName, userId, msg, avatar, regDate, email, role  } = result
-        const token = jwt.sign({
-          userId: userId,
-          userName: userName,
-          exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
-        }, config.app.keys)
-        return ctx.body = success({ userName, userId, token, msg, avatar, regDate, email, role  }, '登录成功')
-      }
-    } else {
-      // 用户提交数据异常
-    return ctx.body =  error('用户数据不正常')
+    const result: Result = {
+      status: '',
+      userId: '',
+      userName: '',
+      avatar: '',
+      email: '',
+      msg: '',
+      role: '',
+      regDate: undefined
     }
+    const hadUser = await LoginUser({ userName, passWord })
+    console.log('登录用户状况:\n', result)
+    if (hadUser === null || hadUser.passWord !== passWord) {
+      result.msg = '账户不存在或者密码错误'
+      result.status = 'error'
+    } else {
+      console.log('查询后的信息为:')
+      console.log(hadUser)
+      result.msg = '用户登录成功!'
+      result.status = 'success'
+    }
+
+    if (result.status === 'error') {
+      // 用户不存在 或者 用户密码错误
+      return ctx.body = error(result.msg)
+    } else {
+      console.log('result', result)
+      const { userName, _id, msg, avatar, regDate, email, role } = hadUser
+      const token = jwt.sign({
+        userId: _id,
+        userName: userName,
+        exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
+      }, config.app.keys)
+      return ctx.body = success({ userName, userId: _id, token, msg, avatar, regDate, email, role }, '登录成功')
+    }
+  } else {
+    // 用户提交数据异常
+    return ctx.body = error('用户数据不正常')
+  }
 }
 
-export const userInfo = async(ctx: any) => {
-  const { userId, token } = ctx.request.body;
+export const userInfo = async (ctx: any) => {
+  const { userId } = ctx.tokenContent;
+  const token = ctx.token
   let hadUser = undefined;
-  hadUser  = await FindUserById(userId);
-  const { userName, avatar, regDate, email, role  } = hadUser
-  return ctx.body = success({ userName, userId , avatar, token, regDate, email, role, msg: '获取成功!' }, '获取成功!')
+  hadUser = await FindUserById(userId);
+  const { userName, avatar, regDate, email, role } = hadUser
+  return ctx.body = success({ userName, userId, avatar, token, regDate, email, role, msg: '获取成功!' }, '获取成功!')
 }
 
-export const tokenLogin = async(ctx: any) => {
-  console.log('token校验Ing:')
-  console.log(ctx.request.body)
-  const { token } = ctx.request.body;
+export const tokenLogin = async (ctx: any) => {
+  const token = ctx.token
   let hadUser = undefined;
-  if ( !token ) {
+  if (!token) {
     return ctx.body = error('请重新登录!')
   }
   try {
-    let decode = '';
-    await jwt.verify(token, config.app.keys, function(err: any, result: any) {
-      decode = result
-    })
-    const userId = JSON.parse(JSON.stringify(decode)).userId;
-    const userName = JSON.parse(JSON.stringify(decode)).userName;
-    hadUser  = await FindUserById(userId);
-    const { avatar, regDate, email, role  } = hadUser
-    if ( hadUser !== null) {
+    // await jwt.verify(token, config.app.keys, function (err: any, result: any) {
+    //   decode = result
+    // })
+    // const userId = JSON.parse(JSON.stringify(decode)).userId;
+    // const userName = JSON.parse(JSON.stringify(decode)).userName;
+    const { userId, userName } = ctx.tokenContent;
+    hadUser = await FindUserById(userId);
+    const { avatar, regDate, email, role } = hadUser
+    if (hadUser !== null) {
       return ctx.body = success({ userName, userId, token, avatar, regDate, email, role, msg: '登录成功!' }, '登录成功!')
     } else {
       return ctx.body = error('验证失败!')
     }
-  } catch ( err ) {
+  } catch (err) {
     return ctx.body = error('会话过期!')
   }
 }
 
-export const updateUser = async(ctx: any) => {
+export const updateUser = async (ctx: any) => {
   const data = ctx.request.body;
   console.log(data)
   return ctx.body = success({}, '更新成功!')

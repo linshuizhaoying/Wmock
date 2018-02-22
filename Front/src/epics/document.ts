@@ -36,7 +36,7 @@ export const nothing = () => ({ type: NOTHING });
 export const fetchAllDocument = (action$: EpicAction) =>
   action$.ofType(FETCH_DOCUMENT)
     .mergeMap((action: Action) => {
-      return fetch.post(documentList, action.data)
+      return fetch.get(documentList, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
             let temp = response.data;

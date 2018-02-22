@@ -59,7 +59,7 @@ export const fetchBaseModel = (action$: EpicAction) =>
 export const fetchCustomModel = (action$: EpicAction) =>
   action$.ofType(FETCHCUSTOM_MODEL)
     .mergeMap((action: Action) => {
-      return fetch.post(customModelList, action.data)
+      return fetch.get(customModelList)
         .map((response: Response) => {
           if (response.state.code === 1) {
             let temp = response.data;
