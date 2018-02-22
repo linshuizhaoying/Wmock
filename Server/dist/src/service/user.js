@@ -162,7 +162,27 @@ exports.tokenLogin = (ctx) => __awaiter(this, void 0, void 0, function* () {
 });
 exports.updateUser = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const data = ctx.request.body;
-    console.log(data);
+    const { userId } = ctx.tokenContent;
+    const passWord = data.newPass ? ctx.checkBody('newPass').notEmpty().len(6, 32).value : undefined;
+    const userName = data.userName ? ctx.checkBody('userName').notEmpty().len(4, 20).value : undefined;
+    const avatar = data.avatar ? ctx.checkBody('avatar').notEmpty().isUrl(undefined, { allow_underscores: true, allow_protocol_relative_urls: true }).value : undefined;
+    const role = data.role ? ctx.checkBody('role').notEmpty().value : undefined;
+    const email = data.email ? ctx.checkBody('email').notEmpty().isEmail('输入的邮箱格式不正确!').value : undefined;
+    if (ctx.errors) {
+        console.log(ctx.errors);
+        return ctx.body = dataHandle_1.error('用户数据不正常,更新失败!');
+    }
+    const user = yield controllers_1.FindUserById(userId);
+    if (data.oldPass && data.oldPass !== user.passWord) {
+        return ctx.body = dataHandle_1.error('用户原密码不正确!');
+    }
+    // 如果不是格式正常或者不是正在修改的属性,则保留原先数据
+    user.userName = userName || user.userName;
+    user.passWord = passWord || user.passWord;
+    user.avatar = avatar || user.avatar;
+    user.role = role || user.role;
+    user.email = email || user.email;
+    const result = yield controllers_1.UpdateUser(user);
     return ctx.body = dataHandle_1.success({}, '更新成功!');
 });
 //# sourceMappingURL=user.js.map

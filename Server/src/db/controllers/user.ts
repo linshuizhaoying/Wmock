@@ -6,6 +6,14 @@ interface RegUser {
   role: string,
   email: string
 }
+interface UpdateUserData {
+  _id: string,
+  avatar: string,
+  userName: string,
+  role: string,
+  email: string,
+  passWord: string,
+}
 interface LoginUser {
   userName: string,
   passWord: string
@@ -76,4 +84,18 @@ export const LoginUser = async (user: LoginUser) => {
 export const FindUserById = async (id: string) => {
   console.log('正在查找Id:')
   return User.findOne({ _id: id })
+}
+
+export const UpdateUser = async (user: UpdateUserData) => {
+  return User.update({
+    _id: user._id
+  }, {
+    $set: {
+      userName: user.userName,
+      passWord: user.passWord,
+      avatar: user.avatar,
+      role: user.role,
+      email: user.email
+    }
+  })
 }

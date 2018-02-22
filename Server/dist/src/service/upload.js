@@ -27,7 +27,7 @@ function mkdirsSync(dirname) {
  */
 function getSuffixName(fileName) {
     const nameList = fileName.split('.');
-    return nameList[nameList.length - 1];
+    return nameList[nameList.length - 1].toUpperCase();
 }
 /**
  * 上传文件

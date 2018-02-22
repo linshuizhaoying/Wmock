@@ -26,7 +26,7 @@ function mkdirsSync(dirname: any) {
  */
 function getSuffixName(fileName: any) {
   const nameList = fileName.split('.')
-  return nameList[nameList.length - 1]
+  return nameList[nameList.length - 1].toUpperCase()
 }
 
 /**

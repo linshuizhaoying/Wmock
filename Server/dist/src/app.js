@@ -10,6 +10,7 @@ const views = require('koa-views');
 const restc = require('restc');
 const path = require('path');
 const koaStatic = require('koa-static');
+const validate = require('koa-validate');
 const app = new Koa();
 // 如果是开发者模式
 if (process.env.NODE_ENV === 'production') {
@@ -31,6 +32,7 @@ const staticPath = './';
 app.use(koaStatic(path.join(__dirname, staticPath)));
 app.use(restc.koa2());
 routes_1.Router(app);
+validate(app);
 const port = config_1.config.app.port;
 console.log('server start:');
 console.log('服务正在监听端口:' + port);

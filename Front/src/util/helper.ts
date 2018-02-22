@@ -67,4 +67,4 @@ export function isJson(json: string) {
     } catch (e) {
     }
     return false
-}  
+}
