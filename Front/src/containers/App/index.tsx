@@ -52,7 +52,7 @@ class App extends React.Component<AppProps, AppState> {
 
     }
     if (!this.state.login && nextProps.isLogin) {
-      if (history.location.pathname === '/' || history.location.pathname === '/login') {
+      if (history.location.pathname === '/' || history.location.pathname === '/login' || history.location.pathname === '/reg') {
         this.setState({
           login: true
         })
