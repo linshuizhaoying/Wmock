@@ -24,21 +24,24 @@ export const fetchMessages = (action$: EpicAction) =>
           teamMessages = []
           if (response.state.code === 1) {
             let temp = response.data;
-            // 数据按照最新时间进行排序
-            temp.data.sort((a: Message, b: Message) => {
-              return +new Date(b.time) - +new Date(a.time);
-            })
-            // 对不同类型消息进行拆分
-            temp.data.map((item: Message) => {
-              if (item.type === 'normal') {
-                messages.push(item)
-              }
-              // 只有未读的团队消息才载入
-              if (item.type === 'team' && item.readed === false) {
-                teamMessages.push(item)
-              }
-              return item
-            })
+            // 如果返回有数据就去处理
+            if (temp.data) {
+              // 数据按照最新时间进行排序
+              temp.data.sort((a: Message, b: Message) => {
+                return +new Date(b.time) - +new Date(a.time);
+              })
+              // 对不同类型消息进行拆分
+              temp.data.map((item: Message) => {
+                if (item.type === 'normal') {
+                  messages.push(item)
+                }
+                // 只有未读的团队消息才载入
+                if (item.type === 'team' && item.readed === false) {
+                  teamMessages.push(item)
+                }
+                return item
+              })
+            }
             return messagesReceive([messages, teamMessages])
           } else {
             return errorMsg(response.state.msg)

@@ -5,7 +5,7 @@ import Login from './Login';
 import Reg from './Reg';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import { tokenOut, userToken } from '../../actions';
+import { tokenOut, userToken, userLogout } from '../../actions';
 import './index.less';
 
 class App extends React.Component<AppProps, AppState> {
@@ -30,6 +30,7 @@ class App extends React.Component<AppProps, AppState> {
   }
   componentWillReceiveProps(nextProps: AppProps) {
     // 处理loading bar 状态
+    const { history } = this.props;
     if (nextProps.loadingState === 'start') {
       this.setState({
         progress: 75,
@@ -38,13 +39,15 @@ class App extends React.Component<AppProps, AppState> {
     }
     if (nextProps.loadingState === 'error') {
       this.setState({ error: true })
+      const { dispatch } = this.props;
+      dispatch(userLogout())
     }
     if (nextProps.loadingState === 'success') {
       this.setState({
         progress: 100
       })
     }
-    const { history } = this.props;
+    
     if (!nextProps.isLogin && nextProps.userName.length === 0) {
       this.setState({
         login: false
@@ -52,7 +55,9 @@ class App extends React.Component<AppProps, AppState> {
 
     }
     if (!this.state.login && nextProps.isLogin) {
-      if (history.location.pathname === '/' || history.location.pathname === '/login' || history.location.pathname === '/reg') {
+      if (history.location.pathname === '/' ||
+        history.location.pathname === '/login' ||
+        history.location.pathname === '/reg') {
         this.setState({
           login: true
         })

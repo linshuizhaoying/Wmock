@@ -1,9 +1,8 @@
-interface Message  {
-  time: Date,
-  operator: String,
-  action: String,
-  object: String,
-  desc: String
+const Message = require('../models/message')
+
+export const FindMessageById = async (id: string) => {
+  console.log('正在查找Id:')
+  return Message.findOne({ _id: id })
 }
 
 export const AllMessages = async() => {
@@ -84,5 +83,21 @@ export const AllMessages = async() => {
       readed: false
     }
   ]
-  return await data
+  // 暂时返回所有的,实际需要过滤与用户相关的
+  return Message.findOne({})
+}
+
+export const AddMessage = async(message: MessageData) => {
+  const newMessage = new Message(message)
+  return newMessage.save()
+}
+
+export const UpdateMessage = async(message: MessageData) => {
+  return Message.update({
+    _id: message._id
+  }, {
+    $set: {
+      readed: message.readed,
+    }
+  })
 }

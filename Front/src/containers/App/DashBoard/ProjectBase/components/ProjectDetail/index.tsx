@@ -17,6 +17,7 @@ import Tooltip from 'antd/lib/tooltip';
 import { ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { MockUrl } from '../../../../../../service/api';
+import { imgBaseUrl } from '../../../../../../service/api/index';
 import './index.less';
 const TabPane = Tabs.TabPane;
 
@@ -168,7 +169,7 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
 
               <Tooltip placement="top" title={'点击复制到粘贴板'}>
                 <Button type="dashed" className="projectUrl" onClick={this.pasteCopy}>
-                  {MockUrl + '/' + this.props.data._id + this.props.data.projectUrl}
+                  {MockUrl + '/' + this.props.data._id + '/' + this.props.data.projectUrl}
                 </Button>
               </Tooltip>
 
@@ -179,9 +180,10 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
                 {this.props.data.teamMember.length > 0 ?
                   this.props.data.teamMember.map((user: TeamMember, key: number) => {
                     return (
+    
                       <li key={key}>
                         <Popover content={<div><div>用户名: {user.userName}</div><div>职位: {user.role} </div></div>}>
-                          <Avatar src={user.avatar} />
+                          <Avatar src={imgBaseUrl + user.avatar} />
                         </Popover>
                       </li>
                     )

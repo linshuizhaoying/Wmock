@@ -8,7 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.myTeam = (id) => __awaiter(this, void 0, void 0, function* () {
+const Team = require('../models/team');
+exports.FindTeamByProjectId = (id) => __awaiter(this, void 0, void 0, function* () {
+    const result = yield Team.findOne({ projectId: id });
+    return result;
+});
+exports.TeamList = (id) => __awaiter(this, void 0, void 0, function* () {
     console.log(id);
     const data = [{
             _id: 'team001',
@@ -53,5 +58,15 @@ exports.myTeam = (id) => __awaiter(this, void 0, void 0, function* () {
         }
     ];
     return yield data;
+});
+exports.AddTeam = (team) => __awaiter(this, void 0, void 0, function* () {
+    const newTeam = new Team(team);
+    let result = 'success';
+    newTeam.save((error) => {
+        if (error) {
+            result = error.toString();
+        }
+    });
+    return result;
 });
 //# sourceMappingURL=team.js.map
