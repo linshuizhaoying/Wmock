@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const UserSchema = new Schema({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose = require("mongoose");
+const UserSchema = new mongoose.Schema({
     userName: { type: String, unique: true, required: true },
     passWord: { type: String, required: true },
     role: { type: String, default: 1 },

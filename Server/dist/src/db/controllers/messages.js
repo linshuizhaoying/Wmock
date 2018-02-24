@@ -8,6 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const Message = require('../models/message');
+exports.FindMessageById = (id) => __awaiter(this, void 0, void 0, function* () {
+    console.log('正在查找Id:');
+    return Message.findOne({ _id: id });
+});
 exports.AllMessages = () => __awaiter(this, void 0, void 0, function* () {
     const data = [
         {
@@ -86,6 +91,20 @@ exports.AllMessages = () => __awaiter(this, void 0, void 0, function* () {
             readed: false
         }
     ];
-    return yield data;
+    // 暂时返回所有的,实际需要过滤与用户相关的
+    return Message.findOne({});
+});
+exports.AddMessage = (message) => __awaiter(this, void 0, void 0, function* () {
+    const newMessage = new Message(message);
+    return newMessage.save();
+});
+exports.UpdateMessage = (message) => __awaiter(this, void 0, void 0, function* () {
+    return Message.update({
+        _id: message._id
+    }, {
+        $set: {
+            readed: message.readed,
+        }
+    });
 });
 //# sourceMappingURL=messages.js.map

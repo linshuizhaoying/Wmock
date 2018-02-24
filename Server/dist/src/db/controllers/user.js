@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const User = require('../models/user.js');
+const User = require('../models/user');
 exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
     console.log(user);
     const { userName, passWord, email, role } = user;

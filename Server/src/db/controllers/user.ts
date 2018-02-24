@@ -1,34 +1,6 @@
 
-const User = require('../models/user.js');
-interface RegUser {
-  userName: string,
-  passWord: string,
-  role: string,
-  email: string
-}
-interface UpdateUserData {
-  _id: string,
-  avatar: string,
-  userName: string,
-  role: string,
-  email: string,
-  passWord: string,
-}
-interface LoginUser {
-  userName: string,
-  passWord: string
-}
+const User = require('../models/user')
 
-interface Result {
-  status: string,
-  userId: string,
-  userName: string,
-  msg: string,
-  avatar: string,
-  email: string,
-  regDate: Date,
-  role: string
-}
 
 export const AddRegUser = async (user: RegUser) => {
   console.log(user)

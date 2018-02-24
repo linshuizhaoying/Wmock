@@ -10,13 +10,11 @@ interface Model {
 export const baseModelList = async (ctx: any) => {
   const result = await BaseModelList()
   const { userId } = ctx.tokenContent;
-  console.log(userId)
   return ctx.body = success(result, '获取成功')
 }
 
 export const customModelList = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
-  console.log(userId)
   const result = await CustomModelList(userId)
   return ctx.body = success(result, '获取成功')
 }
