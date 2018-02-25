@@ -12,23 +12,17 @@ const index_1 = require("../db/controllers/index");
 const dataHandle_1 = require("../utils/dataHandle");
 const _ = require('lodash');
 const field = require('../db/models/field');
-exports.userProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const { userId } = ctx.tokenContent;
-    console.log(userId);
-    const { userName } = ctx.request.body;
-    const result = yield index_1.UserProject(userId);
-    return ctx.body = dataHandle_1.success(result, '获取成功');
-});
-exports.demoProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const { userId } = ctx.tokenContent;
+const getProjectList = (projectList) => __awaiter(this, void 0, void 0, function* () {
     const result = [];
-    // 获取项目信息
-    const projectList = yield index_1.DemoProject(userId);
     yield Promise.all(projectList.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
-        // 先洗下数据
+        // 洗下项目数据
         const item = _.pick(oldItem, field.projectField);
         // 获取团队信息
         const team = yield index_1.FindTeamByProjectId(item._id);
+        // 获取对应接口信息
+        const interfaceOldData = yield index_1.InterfaceList(item._id);
+        // 洗下接口数据
+        const interfaceList = interfaceOldData.map((item) => _.pick(item, field.interfaceField));
         const temp = {
             _id: '',
             userName: '',
@@ -52,11 +46,30 @@ exports.demoProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () 
         });
         const fullProject = item;
         fullProject['teamMember'] = yield teamMember;
+        fullProject['interfaceList'] = yield interfaceList;
         result.push(fullProject);
         return fullProject;
     })));
-    console.log('result', result);
-    // 获取对应接口信息
+    // 对名称做个排序
+    result.sort((a, b) => {
+        return a.projectName < b.projectName ? -1 : 1;
+    });
+    return result;
+});
+exports.userProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const { userId } = ctx.tokenContent;
+    let result = [];
+    // 获取项目信息
+    const projectList = yield index_1.UserProject(userId);
+    result = yield getProjectList(projectList);
+    return ctx.body = dataHandle_1.success(result, '获取成功');
+});
+exports.demoProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const { userId } = ctx.tokenContent;
+    let result = [];
+    // 获取项目信息
+    const projectList = yield index_1.DemoProject(userId);
+    result = yield getProjectList(projectList);
     return ctx.body = dataHandle_1.success(result, '获取成功');
 });
 exports.unJoinProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -119,11 +132,6 @@ exports.cloneProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     console.log(data);
     return ctx.body = dataHandle_1.success({}, '克隆成功!');
 });
-exports.cloneInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const { data } = ctx.request.body;
-    console.log(data);
-    return ctx.body = dataHandle_1.success({}, '克隆成功!');
-});
 exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { data } = ctx.request.body;
     console.log(data);
@@ -148,20 +156,5 @@ exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
             }
         ]
     }, '验证成功');
-});
-exports.addInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const interfaceData = ctx.request.body;
-    console.log(interfaceData);
-    return ctx.body = dataHandle_1.success({}, '添加成功!');
-});
-exports.updateInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const interfaceData = ctx.request.body;
-    console.log(interfaceData);
-    return ctx.body = dataHandle_1.success({}, '更新成功!');
-});
-exports.removeInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const interfaceData = ctx.request.body;
-    console.log(interfaceData);
-    return ctx.body = dataHandle_1.success({}, '删除成功!');
 });
 //# sourceMappingURL=project.js.map

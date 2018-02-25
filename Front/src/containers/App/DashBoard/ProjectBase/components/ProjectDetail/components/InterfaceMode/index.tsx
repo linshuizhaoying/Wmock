@@ -106,8 +106,8 @@ export class InterfaceMode extends React.Component<InterfaceModeProps, Interface
       'url': this.state.url,
       'method': this.state.method,
       'mode': this.state.editorContent,
-      'interfaceName': this.state.interfaceName
-
+      'interfaceName': this.state.interfaceName,
+      'projectId': this.props.projectId
     }
     if (this.state.interfaceName === '' ||
       this.state.desc === '' ||
@@ -128,7 +128,8 @@ export class InterfaceMode extends React.Component<InterfaceModeProps, Interface
       'desc': this.state.desc,
       'url': this.state.url,
       'method': this.state.method,
-      'mode': this.state.editorContent
+      'mode': this.state.editorContent,
+      'projectId': this.props.projectId
     }
     if (this.state.interfaceName === '' ||
       this.state.desc === '' ||

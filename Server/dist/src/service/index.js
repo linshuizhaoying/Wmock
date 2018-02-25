@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./user"));
 __export(require("./messages"));
 __export(require("./project"));
+__export(require("./interface"));
 __export(require("./document"));
 __export(require("./document"));
 __export(require("./upload"));
