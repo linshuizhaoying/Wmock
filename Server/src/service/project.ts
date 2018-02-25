@@ -5,54 +5,24 @@ import {
   FindTeamByProjectId,
   FindUserById,
   UnJoinProjectList,
-  UserProject
+  UserProject,
+  InterfaceList,
 } from '../db/controllers/index';
 import { error, success } from '../utils/dataHandle';
 const _ = require('lodash')
 const field = require('../db/models/field')
-interface Project {
-  _id?: string,
-  projectName?: string,
-  projectUrl?: string,
-  projectDesc?: string,
-  version?: string,
-  transferUrl?: string,
-  status?: string,
-  type?: string,
-  teamMember?: Array<any>,
-  interfaceList: Array<any>,
-  masterId?: string
-}
-interface Interface {
-  _id?: string,
-  interfaceName?: string,
-  url?: string,
-  method?: string,
-  desc?: string,
-  mode?: string,
-}
 
-
-export const userProjectList = async (ctx: any) => {
-  const { userId } = ctx.tokenContent;
-  console.log(userId)
-  const { userName } = ctx.request.body;
-  const result = await UserProject(userId)
-  return ctx.body = success(result, '获取成功')
-}
-
-export const demoProjectList = async (ctx: any) => {
-  const { userId } = ctx.tokenContent;
+const getProjectList = async (projectList: Array<ProjectData>) => {
   const result: Array<ProjectData> = []
-
-  // 获取项目信息
-  const projectList = await DemoProject(userId)
   await Promise.all(projectList.map(async (oldItem: ProjectData) => {
-    // 先洗下数据
+    // 洗下项目数据
     const item = _.pick(oldItem, field.projectField)
     // 获取团队信息
-
     const team = await FindTeamByProjectId(item._id)
+    // 获取对应接口信息
+    const interfaceOldData = await InterfaceList(item._id)
+    // 洗下接口数据
+    const interfaceList = interfaceOldData.map((item: InterfaceData) => _.pick(item, field.interfaceField))
     const temp = {
       _id: '',
       userName: '',
@@ -77,13 +47,31 @@ export const demoProjectList = async (ctx: any) => {
 
     const fullProject = item
     fullProject['teamMember'] = await teamMember
+    fullProject['interfaceList'] = await interfaceList
     result.push(fullProject)
     return fullProject
   }))
-  console.log('result', result)
+  // 对名称做个排序
+  result.sort((a: ProjectData, b: ProjectData) => {
+    return a.projectName < b.projectName ? -1 : 1
+  })
+  return result
+}
+export const userProjectList = async (ctx: any) => {
+  const { userId } = ctx.tokenContent;
+  let result: Array<ProjectData> = []
+  // 获取项目信息
+  const projectList = await UserProject(userId)
+  result = await getProjectList(projectList)
+  return ctx.body = success(result, '获取成功')
+}
 
-  // 获取对应接口信息
-
+export const demoProjectList = async (ctx: any) => {
+  const { userId } = ctx.tokenContent;
+  let result: Array<ProjectData> = []
+  // 获取项目信息
+  const projectList = await DemoProject(userId)
+  result = await getProjectList(projectList)
   return ctx.body = success(result, '获取成功')
 }
 
@@ -157,13 +145,6 @@ export const cloneProject = async (ctx: any) => {
   return ctx.body = success({}, '克隆成功!')
 }
 
-export const cloneInterface = async (ctx: any) => {
-  const { data } = ctx.request.body;
-  console.log(data)
-  return ctx.body = success({}, '克隆成功!')
-}
-
-
 export const verifyProject = async (ctx: any) => {
   const { data } = ctx.request.body;
   console.log(data)
@@ -188,23 +169,4 @@ export const verifyProject = async (ctx: any) => {
       }
     ]
   }, '验证成功')
-}
-
-export const addInterface = async (ctx: any) => {
-  const interfaceData: Interface = ctx.request.body;
-  console.log(interfaceData)
-  return ctx.body = success({}, '添加成功!')
-}
-
-
-export const updateInterface = async (ctx: any) => {
-  const interfaceData: Interface = ctx.request.body;
-  console.log(interfaceData)
-  return ctx.body = success({}, '更新成功!')
-}
-
-export const removeInterface = async (ctx: any) => {
-  const interfaceData: Interface = ctx.request.body;
-  console.log(interfaceData)
-  return ctx.body = success({}, '删除成功!')
 }

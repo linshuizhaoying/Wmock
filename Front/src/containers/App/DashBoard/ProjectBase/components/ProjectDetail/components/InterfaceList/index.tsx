@@ -12,7 +12,7 @@ class MyTable extends Table<AdvanceAny> { }
 export class InterfaceList extends React.Component<InterfaceListProps, {}> {
 
   preview = (item: Interface) => {
-    window.open(MockUrl + '/' + this.props.projectId + item.url + '#!method=' + item.method)
+    window.open(MockUrl + '/' + this.props.projectId + '/' + item.url + '#!method=' + item.method)
   }
   deleteInterface = (id: string) => {
     this.props.removeInterface({

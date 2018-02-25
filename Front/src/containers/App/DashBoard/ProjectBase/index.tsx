@@ -282,9 +282,15 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
     }))
     this.setState({
       cloneInterface: false,
-      currentCloneInterfaceId: '',
-      currentCloneInterfaceProjectId: ''
+      currentCloneInterfaceId: ''
     });
+    setTimeout(() => {
+      if (this.props.type === 'demo') {
+        this.props.getProjectDemo()
+      } else {
+        this.props.getMyProject()
+      }
+    }, 500)
   }
 
   cloneProjectCancel = (e: React.FormEvent<HTMLFormElement>) => {
@@ -364,6 +370,14 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
   addInterface = (data: Interface) => {
     const { dispatch } = this.props;
     dispatch(addInterface(data))
+    // 因为添加是没有拿到Id,因此需要刷新一下整个数据
+    setTimeout(() => {
+      if (this.props.type === 'demo') {
+        this.props.getProjectDemo()
+      } else {
+        this.props.getMyProject()
+      }
+    }, 500)
   }
 
   updateInterface = (data: Interface) => {
@@ -491,12 +505,16 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
       </div>
     )
   }
-  renderTreeInterfaceTitle = (item: InterfaceWithFull) => {
+  renderTreeInterfaceTitle = (projectId: string, item: InterfaceWithFull) => {
     return (
       <div className="interfaceType">
         <div
           className="interfaceName"
-          onClick={() => { this.selectCurrentInterface(item); this.showInterfaceMode(); }}
+          onClick={() => {
+            this.selectProject(projectId);
+            this.selectCurrentInterface(item);
+            this.showInterfaceMode();
+          }}
         >
           <Icon type="file" />
           {item.interfaceName}
@@ -546,7 +564,7 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
           if (!isLt2M) {
             Message.error('JSON文件大小必须小于 2MB!');
           }
-          const fileBlob:Blob = new Blob([file])
+          const fileBlob: Blob = new Blob([file])
           this.checkJson(fileBlob)
           return false;
         }
@@ -576,7 +594,8 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
                             {
                               project.interfaceList ?
                                 project.interfaceList.map((item: InterfaceWithFull) => {
-                                  return (<TreeNode title={this.renderTreeInterfaceTitle(item)} key={item._id} />
+                                  return (
+                                    <TreeNode title={this.renderTreeInterfaceTitle(project._id, item)} key={item._id} />
                                   )
                                 }) : null
                             }

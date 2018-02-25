@@ -24,7 +24,7 @@ import {
   fetchProject,
   fetchTeam,
   fetchUnJoinProject
-  } from '../../../actions/index';
+} from '../../../actions/index';
 import { Link, Route, Switch } from 'react-router-dom';
 import { userInfo, userLogout } from '../../../actions/user';
 import './index.less';
@@ -274,6 +274,8 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                     path="/wmock/myProject"
                     render={() =>
                       <MyProject
+                        getProjectDemo={() => this.getProjectDemo()}
+                        getMyProject={() => this.getMyProject()}
                         documentList={this.props.documentList}
                         projectVerify={this.props.projectVerify}
                         otherList={this.props.demoList}
@@ -293,6 +295,8 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                     path="/wmock/projectDemo"
                     render={() =>
                       <ProjectDemo
+                        getProjectDemo={() => this.getProjectDemo()}
+                        getMyProject={() => this.getMyProject()}
                         documentList={this.props.documentList}
                         projectVerify={this.props.projectVerify}
                         projectList={this.props.demoList}

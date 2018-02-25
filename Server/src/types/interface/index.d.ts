@@ -76,3 +76,35 @@ interface TeamData {
     avatar: string
   }>,
 }
+interface Project {
+  _id?: string,
+  projectName?: string,
+  projectUrl?: string,
+  projectDesc?: string,
+  version?: string,
+  transferUrl?: string,
+  status?: string,
+  type?: string,
+  teamMember?: Array<any>,
+  interfaceList: Array<any>,
+  masterId?: string
+}
+interface Interface {
+  _id?: string,
+  interfaceName?: string,
+  url?: string,
+  method?: string,
+  desc?: string,
+  mode?: string,
+}
+
+
+interface InterfaceData{
+  _id?: string,
+  projectId:  string,
+  interfaceName:  string,
+  url:  string,
+  method:  string,
+  desc:  string,
+  mode:  string,
+}
