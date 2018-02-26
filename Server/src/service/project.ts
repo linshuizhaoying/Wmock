@@ -2,12 +2,17 @@ import {
   AddProject,
   AddTeam,
   DemoProject,
+  FindProjectById,
   FindTeamByProjectId,
   FindUserById,
   UnJoinProjectList,
   UserProject,
   InterfaceList,
+  RemoveProject,
+  UpdateProject,
+  RemoveInterface
 } from '../db/controllers/index';
+import { cloneInterfaceItem } from './interface'
 import { error, success } from '../utils/dataHandle';
 const _ = require('lodash')
 const field = require('../db/models/field')
@@ -122,13 +127,39 @@ export const addProject = async (ctx: any) => {
 
 export const updateProject = async (ctx: any) => {
   const project: Project = ctx.request.body;
-  console.log(project)
-  return ctx.body = success({}, '更新成功!')
+  const _id = ctx.checkBody('_id').notEmpty().value
+  if (ctx.errors) {
+    console.log(ctx.errors)
+    return ctx.body = error('用户数据不正常,更新失败!')
+  }
+  const currentProject = await FindProjectById(_id)
+
+  // 如果不是格式正常或者不是正在修改的属性,则保留原先数据
+  currentProject.projectName = project.projectName || currentProject.projectName
+  currentProject.projectUrl = project.projectUrl || currentProject.projectUrl
+  currentProject.projectDesc = project.projectDesc || currentProject.projectDesc
+  currentProject.version = project.version || currentProject.version
+  currentProject.transferUrl = project.transferUrl || currentProject.transferUrl
+  currentProject.status = project.status || currentProject.status
+  currentProject.type = project.type || currentProject.type
+  currentProject.masterId = project.masterId || currentProject.masterId
+  console.log(currentProject)
+  const result = await UpdateProject(currentProject)
+  return ctx.body = success(result, '更新成功!')
 }
 
 export const removeProject = async (ctx: any) => {
   const project: Project = ctx.request.body;
-  console.log(project)
+  const id = ctx.checkBody('id').notEmpty().value
+  if (ctx.errors) {
+    return ctx.body = error('用户数据不正常,删除失败!')
+  }
+  // 先批量删除对应项目下的接口
+  const interfaceListData = await InterfaceList(id)
+  await interfaceListData.map(async (item: InterfaceData) => await RemoveInterface(item._id))
+
+  const result = await RemoveProject(id)
+
   return ctx.body = success({}, '删除成功!')
 }
 
@@ -139,9 +170,56 @@ export const importProject = async (ctx: any) => {
   return ctx.body = success({}, '导入成功!')
 }
 
+/**
+ * 项目的克隆不再是和接口一样简单的新建一个接口然后把原接口内容复制过去
+ * 因为项目其实包含了不少数组信息,不过克隆项目只需要把里面的接口信息一并克隆即可，
+ * 里面的团队信息是不需要的。
+ * 因此需要调用cloneInterface接口来批量更改接口
+ */
 export const cloneProject = async (ctx: any) => {
-  const { data } = ctx.request.body;
-  console.log(data)
+  const { userId } = ctx.tokenContent;
+  const { projectId, type } = ctx.request.body;
+  const vaildProjectId = ctx.checkBody('projectId').notEmpty().value
+  if (ctx.errors) {
+    return ctx.body = error('用户数据不正常,克隆失败!')
+  }
+  const oldProject = await FindProjectById(projectId)
+  const newProject = {
+    projectName: oldProject.projectName,
+    projectUrl: oldProject.projectUrl,
+    projectDesc: oldProject.projectDesc,
+    version: oldProject.version,
+    transferUrl: oldProject.transferUrl,
+    status: oldProject.status,
+    type: type,
+    masterId: userId
+  }
+  const newProjectId = await AddProject(newProject)
+  // 添加对应团队
+  const team: TeamData = {
+    masterAvatar: '',
+    masterId: '',
+    role: '',
+    masterName: '',
+    projectId: '',
+    projectName: '',
+    member: []
+  }
+  const user = await FindUserById(userId)
+
+  team.masterAvatar = user.avatar
+  team.masterId = user._id
+  team.role = user.role
+  team.masterName = user.userName
+  team.projectId = newProjectId
+  team.projectName = oldProject.projectName
+  await AddTeam(team)
+
+  // 获取旧项目的接口信息
+  const interfaceListData = await InterfaceList(projectId)
+  // 批量克隆接口到新项目上
+  await interfaceListData.map(async (item: InterfaceData) => await cloneInterfaceItem(newProjectId, item._id))
+
   return ctx.body = success({}, '克隆成功!')
 }
 

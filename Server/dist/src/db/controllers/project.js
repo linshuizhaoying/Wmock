@@ -9,6 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Project = require('../models/project');
+exports.FindProjectById = (projectId) => __awaiter(this, void 0, void 0, function* () {
+    return yield Project.findOne({ _id: projectId });
+});
 exports.DemoProject = (userId) => __awaiter(this, void 0, void 0, function* () {
     return yield Project.find({ masterId: userId, type: 'demo' });
 });
@@ -46,7 +49,23 @@ exports.AddProject = (project) => __awaiter(this, void 0, void 0, function* () {
     return result;
 });
 exports.UpdateProject = (project) => __awaiter(this, void 0, void 0, function* () {
+    return Project.update({
+        _id: project._id
+    }, {
+        $set: {
+            projectName: project.projectName,
+            projectUrl: project.projectUrl,
+            projectDesc: project.projectDesc,
+            version: project.version,
+            transferUrl: project.transferUrl,
+            status: project.status,
+            type: project.type
+        }
+    });
 });
 exports.RemoveProject = (id) => __awaiter(this, void 0, void 0, function* () {
+    return Project.remove({
+        _id: id
+    });
 });
 //# sourceMappingURL=project.js.map
