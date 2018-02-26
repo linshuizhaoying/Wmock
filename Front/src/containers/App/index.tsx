@@ -5,7 +5,7 @@ import Login from './Login';
 import Reg from './Reg';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import { tokenOut, userToken, userLogout } from '../../actions';
+import { tokenOut, userToken } from '../../actions';
 import './index.less';
 
 class App extends React.Component<AppProps, AppState> {
@@ -40,7 +40,7 @@ class App extends React.Component<AppProps, AppState> {
     if (nextProps.loadingState === 'error') {
       this.setState({ error: true })
       const { dispatch } = this.props;
-      dispatch(userLogout())
+      dispatch(tokenOut())
     }
     if (nextProps.loadingState === 'success') {
       this.setState({

@@ -9,7 +9,7 @@ import { Observable } from 'rxjs/Rx'
 import { AjaxResponse } from 'rxjs/Rx'
 import { AjaxError } from 'rxjs/Rx'
 import { replace } from 'react-router-redux'
-import { USER_LOGOUT } from '../constants/user'
+// import { USER_LOGOUT } from '../constants/user'
 import notification from 'antd/lib/notification';
 
 const defaultHeaders = {
@@ -23,7 +23,8 @@ export const handleAjaxError = (ajaxError: AjaxError) => {
       description: '服务器可能崩溃了~',
       duration: 2
     })
-    return Observable.of(USER_LOGOUT);
+    localStorage.setItem('token', '')
+    window.location.replace(location.href)
   }
   if (ajaxError.status !== 200) {
     localStorage.setItem('token', '')
