@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../db/controllers/index");
+const interface_1 = require("./interface");
 const dataHandle_1 = require("../utils/dataHandle");
 const _ = require('lodash');
 const field = require('../db/models/field');
@@ -114,12 +115,35 @@ exports.addProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
 });
 exports.updateProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const project = ctx.request.body;
-    console.log(project);
-    return ctx.body = dataHandle_1.success({}, '更新成功!');
+    const _id = ctx.checkBody('_id').notEmpty().value;
+    if (ctx.errors) {
+        console.log(ctx.errors);
+        return ctx.body = dataHandle_1.error('用户数据不正常,更新失败!');
+    }
+    const currentProject = yield index_1.FindProjectById(_id);
+    // 如果不是格式正常或者不是正在修改的属性,则保留原先数据
+    currentProject.projectName = project.projectName || currentProject.projectName;
+    currentProject.projectUrl = project.projectUrl || currentProject.projectUrl;
+    currentProject.projectDesc = project.projectDesc || currentProject.projectDesc;
+    currentProject.version = project.version || currentProject.version;
+    currentProject.transferUrl = project.transferUrl || currentProject.transferUrl;
+    currentProject.status = project.status || currentProject.status;
+    currentProject.type = project.type || currentProject.type;
+    currentProject.masterId = project.masterId || currentProject.masterId;
+    console.log(currentProject);
+    const result = yield index_1.UpdateProject(currentProject);
+    return ctx.body = dataHandle_1.success(result, '更新成功!');
 });
 exports.removeProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const project = ctx.request.body;
-    console.log(project);
+    const id = ctx.checkBody('id').notEmpty().value;
+    if (ctx.errors) {
+        return ctx.body = dataHandle_1.error('用户数据不正常,删除失败!');
+    }
+    // 先批量删除对应项目下的接口
+    const interfaceListData = yield index_1.InterfaceList(id);
+    yield interfaceListData.map((item) => __awaiter(this, void 0, void 0, function* () { return yield index_1.RemoveInterface(item._id); }));
+    const result = yield index_1.RemoveProject(id);
     return ctx.body = dataHandle_1.success({}, '删除成功!');
 });
 exports.importProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -127,9 +151,53 @@ exports.importProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     console.log(data);
     return ctx.body = dataHandle_1.success({}, '导入成功!');
 });
+/**
+ * 项目的克隆不再是和接口一样简单的新建一个接口然后把原接口内容复制过去
+ * 因为项目其实包含了不少数组信息,不过克隆项目只需要把里面的接口信息一并克隆即可，
+ * 里面的团队信息是不需要的。
+ * 因此需要调用cloneInterface接口来批量更改接口
+ */
 exports.cloneProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const { data } = ctx.request.body;
-    console.log(data);
+    const { userId } = ctx.tokenContent;
+    const { projectId, type } = ctx.request.body;
+    const vaildProjectId = ctx.checkBody('projectId').notEmpty().value;
+    if (ctx.errors) {
+        return ctx.body = dataHandle_1.error('用户数据不正常,克隆失败!');
+    }
+    const oldProject = yield index_1.FindProjectById(projectId);
+    const newProject = {
+        projectName: oldProject.projectName,
+        projectUrl: oldProject.projectUrl,
+        projectDesc: oldProject.projectDesc,
+        version: oldProject.version,
+        transferUrl: oldProject.transferUrl,
+        status: oldProject.status,
+        type: type,
+        masterId: userId
+    };
+    const newProjectId = yield index_1.AddProject(newProject);
+    // 添加对应团队
+    const team = {
+        masterAvatar: '',
+        masterId: '',
+        role: '',
+        masterName: '',
+        projectId: '',
+        projectName: '',
+        member: []
+    };
+    const user = yield index_1.FindUserById(userId);
+    team.masterAvatar = user.avatar;
+    team.masterId = user._id;
+    team.role = user.role;
+    team.masterName = user.userName;
+    team.projectId = newProjectId;
+    team.projectName = oldProject.projectName;
+    yield index_1.AddTeam(team);
+    // 获取旧项目的接口信息
+    const interfaceListData = yield index_1.InterfaceList(projectId);
+    // 批量克隆接口到新项目上
+    yield interfaceListData.map((item) => __awaiter(this, void 0, void 0, function* () { return yield interface_1.cloneInterfaceItem(newProjectId, item._id); }));
     return ctx.body = dataHandle_1.success({}, '克隆成功!');
 });
 exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {

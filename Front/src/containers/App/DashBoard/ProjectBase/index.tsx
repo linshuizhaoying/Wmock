@@ -181,6 +181,13 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
       this.setState({
         newProject: false,
       });
+      setTimeout(() => {
+        if (this.props.type === 'demo') {
+          this.props.getProjectDemo()
+        } else {
+          this.props.getMyProject()
+        }
+      }, 500)
     }
 
   }
@@ -264,15 +271,21 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
   cloneProjectOk = (e: React.FormEvent<HTMLFormElement>) => {
     const { dispatch } = this.props;
     dispatch(cloneProject({
-      id: this.state.currentCloneProjectId,
-      type: this.state.currentCloneProjectType,
-      userId: this.props.userId
+      projectId: this.state.currentCloneProjectId,
+      type: this.state.currentCloneProjectType
     }))
+    setTimeout(() => {
+      if (this.state.currentCloneProjectType === 'demo') {
+        this.props.getProjectDemo()
+      } else {
+        this.props.getMyProject()
+      }
+    }, 500)
     this.setState({
       cloneProject: false,
-      currentCloneProjectId: '',
-      currentCloneProjectType: 'demo'
+      currentCloneProjectId: ''
     });
+
   }
   cloneInterfaceOk = (e: React.FormEvent<HTMLFormElement>) => {
     const { dispatch } = this.props;

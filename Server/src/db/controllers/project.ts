@@ -1,6 +1,11 @@
 
 const Project = require('../models/project')
 
+export const FindProjectById = async (projectId: string) => {
+  return await Project.findOne({ _id: projectId })
+}
+
+
 export const DemoProject = async (userId: string) => {
   return await Project.find({ masterId: userId, type: 'demo' })
 }
@@ -42,9 +47,23 @@ export const AddProject = async (project: ProjectData) => {
 }
 
 export const UpdateProject = async (project: ProjectData) => {
-
+  return Project.update({
+    _id: project._id
+  }, {
+      $set: {
+        projectName: project.projectName,
+        projectUrl: project.projectUrl,
+        projectDesc: project.projectDesc,
+        version: project.version,
+        transferUrl: project.transferUrl,
+        status: project.status,
+        type: project.type
+      }
+    })
 }
 
 export const RemoveProject = async (id: string) => {
-
+  return Project.remove({
+    _id: id
+  })
 }
