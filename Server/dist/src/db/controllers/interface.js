@@ -12,6 +12,9 @@ const Interface = require('../models/interface');
 exports.FindInterfaceById = (interfaceId) => __awaiter(this, void 0, void 0, function* () {
     return yield Interface.find({ _id: interfaceId });
 });
+exports.FindInterfaceByMock = (projectId, url) => __awaiter(this, void 0, void 0, function* () {
+    return yield Interface.findOne({ projectId: projectId, url: url });
+});
 // 获取项目Id相同的接口
 exports.InterfaceList = (projectId) => __awaiter(this, void 0, void 0, function* () {
     return yield Interface.find({ projectId: projectId });
