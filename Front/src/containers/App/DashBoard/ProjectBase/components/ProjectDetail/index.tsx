@@ -96,24 +96,31 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
       })
     };
   }
-  changeProjectDesc = () => {
-    this.props.update({
-      _id: this.props.data._id,
-      projectDesc: this.props.data.projectDesc
-    })
-  }
-  changeProjectVersion = () => {
-    this.props.update({
-      _id: this.props.data._id,
-      version: this.props.data.version
-    })
+  changeProjectDesc = (origin: string, id: string) => {
+    return (value: string) => {
+      this.props.update({
+        _id: id,
+        projectDesc: value
+      })
+    };
   }
 
-  changeTransferUrl = () => {
-    this.props.update({
-      _id: this.props.data._id,
-      transferUrl: this.props.data.transferUrl
-    })
+  changeProjectVersion = (origin: string, id: string) => {
+    return (value: string) => {
+      this.props.update({
+        _id: id,
+        version: value
+      })
+    };
+  }
+
+  changeTransferUrl = (origin: string, id: string) => {
+    return (value: string) => {
+      this.props.update({
+        _id: id,
+        transferUrl: value
+      })
+    };
   }
 
   copyToClipBoard = (text: string) => {
@@ -180,7 +187,7 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
                 {this.props.data.teamMember.length > 0 ?
                   this.props.data.teamMember.map((user: TeamMember, key: number) => {
                     return (
-    
+
                       <li key={key}>
                         <Popover content={<div><div>用户名: {user.userName}</div><div>职位: {user.role} </div></div>}>
                           <Avatar src={imgBaseUrl + user.avatar} />
@@ -199,11 +206,17 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
             </div>
             <div className="proejctDesc title">
               项目描述
-                <EditableCell value={this.props.data.projectDesc} onChange={this.changeProjectDesc} />
+              <EditableCell
+                value={this.props.data.projectDesc}
+                onChange={this.changeProjectDesc(this.props.data.projectDesc, this.props.data._id)}
+              />
             </div>
             <div className="proejctVersion title">
               项目版本
-                <EditableCell value={this.props.data.version} onChange={this.changeProjectVersion} />
+              <EditableCell
+                value={this.props.data.version}
+                onChange={this.changeProjectVersion(this.props.data.version, this.props.data._id)}
+              />
             </div>
           </TabPane>
           <TabPane tab="接口列表" key="2">
@@ -217,15 +230,15 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
               <div className="backOperate">
                 <EditableCell
                   value={this.props.data.transferUrl}
-                  onChange={this.changeTransferUrl}
+                  onChange={this.changeTransferUrl(this.props.data.transferUrl, this.props.data._id)}
                 />
                 {
                   this.props.data.status === 'mock' ?
                     <Button onClick={() => this.toggleTransfer(this.props.data._id)}>
-                      接口转发<Icon type="retweet" />
+                      切换为接口转发<Icon type="retweet" />
                     </Button>
                     : <Button onClick={() => this.toggleMock(this.props.data._id)}>
-                      Mock代理<Icon type="retweet" />
+                      切换为Mock代理<Icon type="retweet" />
                     </Button>
                 }
 
@@ -247,7 +260,7 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
                 showInterfaceMode={this.props.showInterfaceMode}
                 data={this.props.data.interfaceList}
                 projectId={this.props.data._id}
-                baseUrl={MockUrl + '/' + this.props.data._id + this.props.data.projectUrl}
+                baseUrl={MockUrl + '/' + this.props.data._id}
               />
             </div>
 

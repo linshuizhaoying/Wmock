@@ -73,7 +73,7 @@ export class InterfaceList extends React.Component<InterfaceListProps, {}> {
         render: (url: string, item: InterfaceWithFull) => (
           <div className="interfaceUrl">
             <Popover content={<div>复制接口地址</div>}>
-              <span onClick={() => this.props.copyToClipBoard(this.props.baseUrl + url)}>{url}</span>
+              <span onClick={() => this.props.copyToClipBoard(this.props.baseUrl + '/' + url)}>{url}</span>
             </Popover>
           </div>
         )
@@ -121,7 +121,7 @@ export class InterfaceList extends React.Component<InterfaceListProps, {}> {
     return (
       <div id="interfaceList">
         <MyTable
-          columns={columns} 
+          columns={columns}
           dataSource={this.props.data}
           rowKey={record => record._id}
           pagination={false}
@@ -132,13 +132,13 @@ export class InterfaceList extends React.Component<InterfaceListProps, {}> {
               <h4>Method</h4>
               <span>{record.method}</span>
               <h4>URL</h4>
-              <span>{record.url}</span>
+              <span>{this.props.baseUrl + '/' + record.url}</span>
               <h4>描述</h4>
               <span>{record.desc}</span>
             </div>
           }
         />
-       
+
       </div>
     )
   }

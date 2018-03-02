@@ -86,6 +86,7 @@ exports.addProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const projectName = ctx.checkBody('projectName').notEmpty().len(1, 32).value;
     const projectUrl = ctx.checkBody('projectUrl').notEmpty().len(1, 20).value;
     const projectDesc = ctx.checkBody('projectDesc').notEmpty().len(1, 20).value;
+    const ProjectTransferUrl = ctx.checkBody('transferUrl').notEmpty();
     const type = ctx.checkBody('type').notEmpty().value;
     if (ctx.errors) {
         console.log(ctx.errors);

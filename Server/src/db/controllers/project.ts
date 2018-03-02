@@ -36,12 +36,15 @@ export const UnJoinProjectList = async (id: string) => {
 export const AddProject = async (project: ProjectData) => {
   const newProject = new Project(project)
   let result
-  await newProject.save((error: Error) => {
+  await newProject.save(async (error: Error) => {
     if (error) {
       result = error.toString()
     }
-  }).then((project: any) => {
+  }).then(async (project: ProjectData) => {
     result = project._id
+    const newProject = project
+    newProject.transferUrl = project.transferUrl + '/' + project._id
+    await UpdateProject(newProject)
   })
   return result
 }

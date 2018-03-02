@@ -37,6 +37,7 @@ import { exportFile } from '../../../../util/fileExport';
 import { isEqual } from '../../../../util/helper';
 import { isJson } from '../../../../util/helper';
 import { UploadFile } from 'antd/es/upload/interface';
+import { MockUrl } from '../../../../service/api'
 import './index.less';
 
 const { Option, OptGroup } = Select;
@@ -176,7 +177,8 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
         projectName,
         projectUrl: url,
         projectDesc: desc,
-        type: this.props.type
+        type: this.props.type,
+        transferUrl: MockUrl
       }))
       this.setState({
         newProject: false,
