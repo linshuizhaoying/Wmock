@@ -61,6 +61,7 @@ export const mock = async (ctx: any) => {
       return ctx.body = error('接口无法转发自身!')
     } else {
       try {
+        console.log(foundProject.transferUrl + '/' + foundMock.url)
         const apiData = await axios({
           method: foundMock.method,
           url: foundProject.transferUrl + '/' + foundMock.url,
@@ -68,20 +69,21 @@ export const mock = async (ctx: any) => {
           data: body,
           timeout: 3000
         }).then((res: any) => {
-          console.log(res.data)
           return res.data
         })
-        console.log(foundProject.transferUrl + '/' + foundMock.url)
-        console.log('axios apiData:', apiData)
         result = apiData
       } catch (error) {
-        console.log(error)
-        result = error('转发请求出错,请检查转发服务是否正常!')
+        ctx.body = {
+          'state': {
+            'code': 500,
+            'msg': '转发请求出错,请检查转发服务是否正常!'
+          },
+          'data': undefined
+        }
         return
       }
     }
-
   }
-
   return ctx.body = result
+
 }

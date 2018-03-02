@@ -65,6 +65,7 @@ exports.mock = (ctx) => __awaiter(this, void 0, void 0, function* () {
         }
         else {
             try {
+                console.log(foundProject.transferUrl + '/' + foundMock.url);
                 const apiData = yield axios({
                     method: foundMock.method,
                     url: foundProject.transferUrl + '/' + foundMock.url,
@@ -75,13 +76,17 @@ exports.mock = (ctx) => __awaiter(this, void 0, void 0, function* () {
                     console.log(res.data);
                     return res.data;
                 });
-                console.log(foundProject.transferUrl + '/' + foundMock.url);
                 console.log('axios apiData:', apiData);
                 result = apiData;
             }
             catch (error) {
-                console.log(error);
-                result = error('转发请求出错,请检查转发服务是否正常!');
+                ctx.body = {
+                    'state': {
+                        'code': 500,
+                        'msg': '转发请求出错,请检查转发服务是否正常!'
+                    },
+                    'data': undefined
+                };
                 return;
             }
         }
