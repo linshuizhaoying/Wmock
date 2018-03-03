@@ -39,13 +39,16 @@ exports.UnJoinProjectList = (id) => __awaiter(this, void 0, void 0, function* ()
 exports.AddProject = (project) => __awaiter(this, void 0, void 0, function* () {
     const newProject = new Project(project);
     let result;
-    yield newProject.save((error) => {
+    yield newProject.save((error) => __awaiter(this, void 0, void 0, function* () {
         if (error) {
             result = error.toString();
         }
-    }).then((project) => {
+    })).then((project) => __awaiter(this, void 0, void 0, function* () {
         result = project._id;
-    });
+        const newProject = project;
+        newProject.transferUrl = project.transferUrl + '/' + project._id;
+        yield exports.UpdateProject(newProject);
+    }));
     return result;
 });
 exports.UpdateProject = (project) => __awaiter(this, void 0, void 0, function* () {

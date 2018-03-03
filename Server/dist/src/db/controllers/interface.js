@@ -12,9 +12,24 @@ const Interface = require('../models/interface');
 exports.FindInterfaceById = (interfaceId) => __awaiter(this, void 0, void 0, function* () {
     return yield Interface.find({ _id: interfaceId });
 });
+exports.FindInterfaceByMock = (projectId, url, method) => __awaiter(this, void 0, void 0, function* () {
+    return yield Interface.findOne({ projectId: projectId, url: url, method: method });
+});
 // 获取项目Id相同的接口
 exports.InterfaceList = (projectId) => __awaiter(this, void 0, void 0, function* () {
     return yield Interface.find({ projectId: projectId });
+});
+exports.CheckInterfaceExist = (projectId, url, method) => __awaiter(this, void 0, void 0, function* () {
+    let result;
+    yield Interface.findOne({
+        projectId: projectId,
+        url: url,
+        method: method
+    }).then((data) => {
+        console.log(data);
+        result = data;
+    });
+    return result;
 });
 exports.AddInterface = (interfaceItem) => __awaiter(this, void 0, void 0, function* () {
     const newInterface = new Interface(interfaceItem);

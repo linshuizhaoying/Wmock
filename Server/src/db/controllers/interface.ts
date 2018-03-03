@@ -3,11 +3,26 @@ const Interface = require('../models/interface')
 export const FindInterfaceById = async (interfaceId: string) => {
   return await Interface.find({ _id: interfaceId })
 }
+export const FindInterfaceByMock = async (projectId: string, url: string, method: string) => {
+  return await Interface.findOne({ projectId: projectId, url: url, method: method })
 
+}
 // 获取项目Id相同的接口
 
 export const InterfaceList = async (projectId: string) => {
   return await Interface.find({ projectId: projectId })
+}
+export const CheckInterfaceExist = async (projectId: string, url: string, method: string) => {
+  let result
+  await Interface.findOne({
+    projectId: projectId,
+    url: url,
+    method: method
+  }).then((data: any) => {
+    console.log(data)
+    result = data
+  })
+  return result
 }
 
 export const AddInterface = async (interfaceItem: InterfaceData) => {
