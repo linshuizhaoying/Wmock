@@ -1,4 +1,4 @@
-import { error, success } from '../utils/dataHandle';
+import { error, mockSuccess } from '../utils/dataHandle';
 // import { AllProject } from '../db/controllers/index';
 import {
   FindInterfaceByMock,
@@ -8,6 +8,25 @@ const { VM } = require('vm2')
 const Mock = require('mockjs')
 const axios = require('axios')
 
+export const getRemoteData = async (method: string, url: string, query: string = '', body: string = '') => {
+  let result = ''
+  try {
+    const apiData = await axios({
+      method: method,
+      url: url,
+      params: Object.assign({}, query),
+      data: body,
+      timeout: 3000
+    }).then((res: any) => {
+      return res.data
+    })
+    result = apiData
+  } catch (error) {
+    result = ''
+  }
+  return result
+}
+
 export const mock = async (ctx: any) => {
   const { query, body } = ctx.request
   console.log('query', query)
@@ -15,16 +34,11 @@ export const mock = async (ctx: any) => {
   const method = ctx.request.method.toLowerCase()
   // 获取接口路径内容
   const { projectId, mockURL } = ctx.pathNode
-  const foundMock = await FindInterfaceByMock(projectId, mockURL.replace('/', ''))
+  const foundMock = await FindInterfaceByMock(projectId, mockURL.replace('/', ''), method)
   const foundProject: ProjectData = await FindProjectById(projectId)
-  console.log('ctx.pathNode', ctx.pathNode)
-  console.log('foundMock', foundMock)
-  console.log('method', foundMock.method)
-  console.log('transferUrl', foundProject.transferUrl)
-  console.log('status', foundProject.status)
   // 如果请求的Method不符合设定
-  if (foundMock.method !== method) {
-    return ctx.body = error('请求方法错误,请重试')
+  if (!foundMock) {
+    return ctx.body = error('请求参数错误,请重试')
   }
 
   let result: any = undefined
@@ -54,25 +68,15 @@ export const mock = async (ctx: any) => {
     vm.run('Mock.mock(new Function("return " + mode)())') // 数据验证，检测 setTimeout 等方法, 顺便将内部的函数执行了
     const apiData = vm.run('Mock.mock(template())')
     console.log('apiData:', apiData)
-    result = success(apiData, '返回成功')
+    result = mockSuccess(apiData)
   } else if (foundProject.status === 'transfer') {
     // 如果代理成自己,会造成无限循环，因此一开始就判断然后拒绝代理
     if (foundProject.transferUrl.indexOf(projectId) > -1 && mockURL.replace('/', '') === foundMock.url) {
       return ctx.body = error('接口无法转发自身!')
     } else {
-      try {
-        console.log(foundProject.transferUrl + '/' + foundMock.url)
-        const apiData = await axios({
-          method: foundMock.method,
-          url: foundProject.transferUrl + '/' + foundMock.url,
-          params: Object.assign({}, query),
-          data: body,
-          timeout: 3000
-        }).then((res: any) => {
-          return res.data
-        })
-        result = apiData
-      } catch (error) {
+      result = await getRemoteData(foundMock.method, foundProject.transferUrl + '/' + foundMock.url, query, body)
+      console.log('final result:', result)
+      if (result === '') {
         ctx.body = {
           'state': {
             'code': 500,
@@ -82,6 +86,28 @@ export const mock = async (ctx: any) => {
         }
         return
       }
+      // try {
+      //   console.log(foundProject.transferUrl + '/' + foundMock.url)
+      //   const apiData = await axios({
+      //     method: foundMock.method,
+      //     url: foundProject.transferUrl + '/' + foundMock.url,
+      //     params: Object.assign({}, query),
+      //     data: body,
+      //     timeout: 3000
+      //   }).then((res: any) => {
+      //     return res.data
+      //   })
+      //   result = apiData
+      // } catch (error) {
+      //   ctx.body = {
+      //     'state': {
+      //       'code': 500,
+      //       'msg': '转发请求出错,请检查转发服务是否正常!'
+      //     },
+      //     'data': undefined
+      //   }
+      //   return
+      // }
     }
   }
   return ctx.body = result

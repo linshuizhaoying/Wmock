@@ -29,6 +29,8 @@
     "concurrently": "^3.5.0",
     "eslint": "^4.6.1",
     "http2": "^3.3.7",
+    "js-beautify": "^1.7.5",
+    "jsondiffpatch": "^0.3.5",
     "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
     "koa-cors": "^0.0.16",

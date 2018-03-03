@@ -23,8 +23,15 @@ exports.addInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
     if (ctx.errors) {
         return ctx.body = dataHandle_1.error('用户数据不正常,添加失败!');
     }
-    const result = yield index_1.AddInterface(interfaceItem);
-    return ctx.body = dataHandle_1.success({ interfaceId: result }, '添加成功!');
+    const exist = yield index_1.CheckInterfaceExist(projectId, url, method);
+    console.log(exist);
+    if (exist) {
+        return ctx.body = dataHandle_1.error('接口已经存在!');
+    }
+    else {
+        const result = yield index_1.AddInterface(interfaceItem);
+        return ctx.body = dataHandle_1.success({ interfaceId: result }, '添加成功!');
+    }
 });
 exports.updateInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const interfaceItem = ctx.request.body;

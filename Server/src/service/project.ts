@@ -13,7 +13,9 @@ import {
   RemoveInterface
 } from '../db/controllers/index';
 import { cloneInterfaceItem } from './interface'
+import { getRemoteData } from './mock'
 import { error, success } from '../utils/dataHandle';
+import { isEqual } from '../utils/tools'
 const _ = require('lodash')
 const field = require('../db/models/field')
 
@@ -100,6 +102,7 @@ export const addProject = async (ctx: any) => {
     console.log(ctx.errors)
     return ctx.body = error('用户数据不正常,添加失败!')
   }
+
   project.masterId = userId
   const result = await AddProject(project)
 
@@ -225,27 +228,36 @@ export const cloneProject = async (ctx: any) => {
 }
 
 export const verifyProject = async (ctx: any) => {
-  const { data } = ctx.request.body;
-  console.log(data)
+  const { id } = ctx.request.body;
+  console.log(id)
+  const project = await FindProjectById(id)
+  if (project.status === 'mock') {
+    return ctx.body = error('自动校验只用于接口转发模式!')
+  }
+  // 找到所有接口然后一一去匹配
+  const interfaceListData = await InterfaceList(id)
+  const verifyResult: any[] = []
+  let allMatch = true;
+  await Promise.all(await interfaceListData.map(async (item: InterfaceData) => {
+    const remoteData = await getRemoteData(item.method, project.transferUrl + '/' + item.url)
+    // const diffResult = await FindDifferent(item.mode, remoteData)
+    const formatData = { interfaceName: '', expect: '', actual: '', compare: '' }
+
+    formatData.interfaceName = item.interfaceName
+    formatData.expect =
+      JSON.parse(JSON.parse(JSON.stringify(item.mode)
+        .replace(/\n/g, '')
+      ).replace(/\n/g, ' '))
+    formatData.actual = JSON.parse(JSON.stringify(remoteData))
+    formatData.compare = isEqual(formatData.expect, formatData.actual) === true ? 'match' : 'dismatch'
+    if (formatData.compare !== 'match') {
+      allMatch = false
+    }
+    verifyResult.push(formatData)
+  }))
+  console.log('verifyResult', verifyResult)
   return ctx.body = success({
-    result: 'no',
-    data: [
-      {
-        'interfaceName': 'token',
-        'expect': '{data:2333}',
-        'actual': '{xxx:222}',
-        'compare': 'mismatch'
-      }, {
-        'interfaceName': '注册',
-        'expect': '{data:2333}',
-        'actual': '{data:222}',
-        'compare': 'match'
-      }, {
-        'interfaceName': '登录',
-        'expect': '{ccc:2333}',
-        'actual': '{ccc:123asd123}',
-        'compare': 'match'
-      }
-    ]
+    result: allMatch ? 'yes' : 'no',
+    data: verifyResult
   }, '验证成功')
 }

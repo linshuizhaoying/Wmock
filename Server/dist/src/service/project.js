@@ -10,7 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../db/controllers/index");
 const interface_1 = require("./interface");
+const mock_1 = require("./mock");
 const dataHandle_1 = require("../utils/dataHandle");
+const tools_1 = require("../utils/tools");
 const _ = require('lodash');
 const field = require('../db/models/field');
 const getProjectList = (projectList) => __awaiter(this, void 0, void 0, function* () {
@@ -202,28 +204,35 @@ exports.cloneProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     return ctx.body = dataHandle_1.success({}, '克隆成功!');
 });
 exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const { data } = ctx.request.body;
-    console.log(data);
+    const { id } = ctx.request.body;
+    console.log(id);
+    const project = yield index_1.FindProjectById(id);
+    if (project.status === 'mock') {
+        return ctx.body = dataHandle_1.error('自动校验只用于接口转发模式!');
+    }
+    // 找到所有接口然后一一去匹配
+    const interfaceListData = yield index_1.InterfaceList(id);
+    const verifyResult = [];
+    let allMatch = true;
+    yield Promise.all(yield interfaceListData.map((item) => __awaiter(this, void 0, void 0, function* () {
+        const remoteData = yield mock_1.getRemoteData(item.method, project.transferUrl + '/' + item.url);
+        // const diffResult = await FindDifferent(item.mode, remoteData)
+        const formatData = { interfaceName: '', expect: '', actual: '', compare: '' };
+        formatData.interfaceName = item.interfaceName;
+        formatData.expect =
+            JSON.parse(JSON.parse(JSON.stringify(item.mode)
+                .replace(/\n/g, '')).replace(/\n/g, ' '));
+        formatData.actual = JSON.parse(JSON.stringify(remoteData));
+        formatData.compare = tools_1.isEqual(formatData.expect, formatData.actual) === true ? 'match' : 'dismatch';
+        if (formatData.compare !== 'match') {
+            allMatch = false;
+        }
+        verifyResult.push(formatData);
+    })));
+    console.log('verifyResult', verifyResult);
     return ctx.body = dataHandle_1.success({
-        result: 'no',
-        data: [
-            {
-                'interfaceName': 'token',
-                'expect': '{data:2333}',
-                'actual': '{xxx:222}',
-                'compare': 'mismatch'
-            }, {
-                'interfaceName': '注册',
-                'expect': '{data:2333}',
-                'actual': '{data:222}',
-                'compare': 'match'
-            }, {
-                'interfaceName': '登录',
-                'expect': '{ccc:2333}',
-                'actual': '{ccc:123asd123}',
-                'compare': 'match'
-            }
-        ]
+        result: allMatch ? 'yes' : 'no',
+        data: verifyResult
     }, '验证成功');
 });
 //# sourceMappingURL=project.js.map

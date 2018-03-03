@@ -10,6 +10,11 @@ export const success = ( data: any, msg: string) => {
     }
  }
 }
+
+export const mockSuccess = ( data: any) => {
+  return data
+}
+
 // 返回错误提醒
 export const error = (msg: string) => {
   return{

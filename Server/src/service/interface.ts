@@ -3,14 +3,14 @@ import {
   AddInterface,
   RemoveInterface,
   UpdateInterface,
-  FindInterfaceById
+  FindInterfaceById,
+  CheckInterfaceExist
 } from '../db/controllers/index';
 const _ = require('lodash')
 const field = require('../db/models/field')
 
 export const addInterface = async (ctx: any) => {
   const interfaceItem: InterfaceData = ctx.request.body;
-
   const projectId = ctx.checkBody('projectId').notEmpty().len(1, 32).value
   const interfaceName = ctx.checkBody('interfaceName').notEmpty().len(1, 32).value
   const url = ctx.checkBody('url').notEmpty().len(1, 32).value
@@ -20,9 +20,15 @@ export const addInterface = async (ctx: any) => {
   if (ctx.errors) {
     return ctx.body = error('用户数据不正常,添加失败!')
   }
-  const result = await AddInterface(interfaceItem)
+  const exist = await CheckInterfaceExist(projectId, url, method)
+  console.log(exist)
+  if (exist) {
+    return ctx.body = error('接口已经存在!')
+  } else {
+    const result = await AddInterface(interfaceItem)
+    return ctx.body = success({ interfaceId: result }, '添加成功!')
+  }
 
-  return ctx.body = success({ interfaceId: result }, '添加成功!')
 }
 
 

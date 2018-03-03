@@ -5,7 +5,7 @@ import Card from 'antd/lib/card';
 import Collapse from 'antd/lib/collapse';
 import Icon from 'antd/lib/icon';
 import InterfaceMode from './components/ProjectDetail/components/InterfaceMode';
-import jsBeautify from 'js-beautify/js/lib/beautify';
+// import jsBeautify from 'js-beautify/js/lib/beautify';
 import Message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import NewProject from './components/NewProject';
@@ -18,6 +18,8 @@ import Tooltip from 'antd/lib/tooltip';
 import Tree from 'antd/lib/tree';
 import Upload from 'antd/lib/upload';
 import Validator from '../../../../util/validator';
+// import jsondiffpatch from 'jsondiffpatch'
+var jsondiffpatch = require('jsondiffpatch');
 import {
   addInterface,
   addProject,
@@ -727,7 +729,7 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
           <Modal
             title="自动校验"
             visible={this.state.autoCheckVisible}
-
+            width={800}
             onCancel={this.hideAutoCheckVisible}
             footer={null}
           >
@@ -751,17 +753,27 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
                         this.state.verifyData.map((item: ProjectVerify, index: number) => {
                           let match = item.compare === 'match' ? '匹配' : '不匹配'
                           return (
+                            item.compare !== 'match' ?  
                             <Panel key={index.toString()} header={'接口 ' + item.interfaceName + ' ' + match}>
                               <div>
-                                <span>期望数据</span>
-                                <p> {jsBeautify.js_beautify(item.expect, { indent_size: 2 })}</p>
-                              </div>
-                              <div>
-                                <span>实际数据</span>
-                                <p>  {jsBeautify.js_beautify(item.expect, { indent_size: 2 })} </p>
-                              </div>
-
+                                <span>数据对比</span>
+                         
+                                  <div
+                                    className="content"
+                                    dangerouslySetInnerHTML={
+                                      {
+                                        __html: 
+                                        jsondiffpatch.formatters.html.format(
+                                          jsondiffpatch.diff(item.expect, item.actual), item.expect
+                                        )
+                                      }
+                                    }
+                                  />
+                                  {/* {jsBeautify.js_beautify(jsondiffpatch.diff(item.expect, item.actual))} */}
+                                  {/* {JSON.parse(JSON.stringify(item.actual))} */}
+                                  </div>
                             </Panel>
+                            : null
                           )
                         })
                       }

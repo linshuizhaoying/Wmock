@@ -14,6 +14,25 @@ const index_1 = require("../db/controllers/index");
 const { VM } = require('vm2');
 const Mock = require('mockjs');
 const axios = require('axios');
+exports.getRemoteData = (method, url, query = '', body = '') => __awaiter(this, void 0, void 0, function* () {
+    let result = '';
+    try {
+        const apiData = yield axios({
+            method: method,
+            url: url,
+            params: Object.assign({}, query),
+            data: body,
+            timeout: 3000
+        }).then((res) => {
+            return res.data;
+        });
+        result = apiData;
+    }
+    catch (error) {
+        result = '';
+    }
+    return result;
+});
 exports.mock = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { query, body } = ctx.request;
     console.log('query', query);
@@ -21,16 +40,11 @@ exports.mock = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const method = ctx.request.method.toLowerCase();
     // 获取接口路径内容
     const { projectId, mockURL } = ctx.pathNode;
-    const foundMock = yield index_1.FindInterfaceByMock(projectId, mockURL.replace('/', ''));
+    const foundMock = yield index_1.FindInterfaceByMock(projectId, mockURL.replace('/', ''), method);
     const foundProject = yield index_1.FindProjectById(projectId);
-    console.log('ctx.pathNode', ctx.pathNode);
-    console.log('foundMock', foundMock);
-    console.log('method', foundMock.method);
-    console.log('transferUrl', foundProject.transferUrl);
-    console.log('status', foundProject.status);
     // 如果请求的Method不符合设定
-    if (foundMock.method !== method) {
-        return ctx.body = dataHandle_1.error('请求方法错误,请重试');
+    if (!foundMock) {
+        return ctx.body = dataHandle_1.error('请求参数错误,请重试');
     }
     let result = undefined;
     // 确定项目转发状态,
@@ -56,7 +70,7 @@ exports.mock = (ctx) => __awaiter(this, void 0, void 0, function* () {
         vm.run('Mock.mock(new Function("return " + mode)())'); // 数据验证，检测 setTimeout 等方法, 顺便将内部的函数执行了
         const apiData = vm.run('Mock.mock(template())');
         console.log('apiData:', apiData);
-        result = dataHandle_1.success(apiData, '返回成功');
+        result = dataHandle_1.mockSuccess(apiData);
     }
     else if (foundProject.status === 'transfer') {
         // 如果代理成自己,会造成无限循环，因此一开始就判断然后拒绝代理
@@ -64,22 +78,9 @@ exports.mock = (ctx) => __awaiter(this, void 0, void 0, function* () {
             return ctx.body = dataHandle_1.error('接口无法转发自身!');
         }
         else {
-            try {
-                console.log(foundProject.transferUrl + '/' + foundMock.url);
-                const apiData = yield axios({
-                    method: foundMock.method,
-                    url: foundProject.transferUrl + '/' + foundMock.url,
-                    params: Object.assign({}, query),
-                    data: body,
-                    timeout: 3000
-                }).then((res) => {
-                    console.log(res.data);
-                    return res.data;
-                });
-                console.log('axios apiData:', apiData);
-                result = apiData;
-            }
-            catch (error) {
+            result = yield exports.getRemoteData(foundMock.method, foundProject.transferUrl + '/' + foundMock.url, query, body);
+            console.log('final result:', result);
+            if (result === '') {
                 ctx.body = {
                     'state': {
                         'code': 500,
@@ -89,6 +90,28 @@ exports.mock = (ctx) => __awaiter(this, void 0, void 0, function* () {
                 };
                 return;
             }
+            // try {
+            //   console.log(foundProject.transferUrl + '/' + foundMock.url)
+            //   const apiData = await axios({
+            //     method: foundMock.method,
+            //     url: foundProject.transferUrl + '/' + foundMock.url,
+            //     params: Object.assign({}, query),
+            //     data: body,
+            //     timeout: 3000
+            //   }).then((res: any) => {
+            //     return res.data
+            //   })
+            //   result = apiData
+            // } catch (error) {
+            //   ctx.body = {
+            //     'state': {
+            //       'code': 500,
+            //       'msg': '转发请求出错,请检查转发服务是否正常!'
+            //     },
+            //     'data': undefined
+            //   }
+            //   return
+            // }
         }
     }
     return ctx.body = result;

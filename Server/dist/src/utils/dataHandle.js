@@ -12,6 +12,9 @@ exports.success = (data, msg) => {
         }
     };
 };
+exports.mockSuccess = (data) => {
+    return data;
+};
 // 返回错误提醒
 exports.error = (msg) => {
     return {
