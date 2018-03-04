@@ -1,6 +1,6 @@
-interface MessageData {
-  _id?: string,
-  time: Date,
+interface Message {
+  _id: string,
+  time?: Date,
   operatorId: string,
   operatorName: string,
   action: string, // add update delete invite apply
@@ -10,10 +10,24 @@ interface MessageData {
   desc: string,
   userId: string,
   avatar: string,
-  type: string,  // nomarl || team
-  readed: Boolean
+  type: string,  // normal || team
+  readed?: Boolean
 }
-interface UserData{
+interface MessageData {
+  time?: Date,
+  operatorId?: string,
+  operatorName: string,
+  action?: string, // add update delete invite apply
+  projectId?: string,
+  objectId?: string,
+  objectName?: string,
+  desc?: string,
+  userId?: string,
+  avatar?: string,
+  type?: string,  // normal || team
+  readed?: Boolean
+}
+interface UserData {
   _id: string,
   userName: string,
   role: string,
@@ -59,10 +73,11 @@ interface ProjectData {
   status?: string,
   type?: string,
   masterId?: string
-  teamMember?: Array<UserData> 
+  teamMember?: Array<UserData>
 }
 
 interface TeamData {
+  _id?: string,
   masterAvatar: string,
   masterId: string,
   role: string,
@@ -99,12 +114,12 @@ interface Interface {
 }
 
 
-interface InterfaceData{
+interface InterfaceData {
   _id?: string,
-  projectId:  string,
-  interfaceName:  string,
-  url:  string,
-  method:  string,
-  desc:  string,
-  mode:  string,
+  projectId: string,
+  interfaceName: string,
+  url: string,
+  method: string,
+  desc: string,
+  mode: string,
 }

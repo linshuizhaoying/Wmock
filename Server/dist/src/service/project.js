@@ -81,6 +81,57 @@ exports.unJoinProjectList = (ctx) => __awaiter(this, void 0, void 0, function* (
     // console.log(result)
     return ctx.body = dataHandle_1.success(result, '获取成功');
 });
+const addUserProject = (userId, project) => __awaiter(this, void 0, void 0, function* () {
+    const result = yield index_1.AddProject(project);
+    // 添加对应团队
+    const team = {
+        masterAvatar: '',
+        masterId: '',
+        role: '',
+        masterName: '',
+        projectId: '',
+        projectName: '',
+        member: []
+    };
+    const userData = yield index_1.FindUserById(userId);
+    // 添加对应项目消息
+    const projectMessage = {
+        operatorId: userId,
+        operatorName: userData.userName,
+        action: 'add',
+        projectId: result,
+        objectId: result,
+        objectName: project.projectName,
+        desc: '添加了新项目: ' + project.projectName,
+        userId: userId,
+        avatar: userData.avatar,
+        type: 'normal'
+    };
+    team.masterAvatar = userData.avatar;
+    team.masterId = userData._id;
+    team.role = userData.role;
+    team.masterName = userData.userName;
+    team.projectId = result;
+    team.projectName = project.projectName;
+    const teamId = yield index_1.AddTeam(team);
+    console.log('teamId', teamId);
+    // 添加对应项目消息
+    const teamMessage = {
+        operatorId: userId,
+        operatorName: userData.userName,
+        action: 'add',
+        projectId: teamId,
+        objectId: teamId,
+        objectName: project.projectName,
+        desc: '添加了新团队: ' + project.projectName,
+        userId: userId,
+        avatar: userData.avatar,
+        type: 'normal'
+    };
+    yield index_1.AddMessage(projectMessage);
+    yield index_1.AddMessage(teamMessage);
+    return result;
+});
 exports.addProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // 添加项目
     const { userId } = ctx.tokenContent;
@@ -95,25 +146,7 @@ exports.addProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
         return ctx.body = dataHandle_1.error('用户数据不正常,添加失败!');
     }
     project.masterId = userId;
-    const result = yield index_1.AddProject(project);
-    // 添加对应团队
-    const team = {
-        masterAvatar: '',
-        masterId: '',
-        role: '',
-        masterName: '',
-        projectId: '',
-        projectName: '',
-        member: []
-    };
-    const user = yield index_1.FindUserById(userId);
-    team.masterAvatar = user.avatar;
-    team.masterId = user._id;
-    team.role = user.role;
-    team.masterName = user.userName;
-    team.projectId = result;
-    team.projectName = projectName;
-    yield index_1.AddTeam(team);
+    yield addUserProject(userId, project);
     return ctx.body = dataHandle_1.success({}, '添加项目成功!');
 });
 exports.updateProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -150,8 +183,13 @@ exports.removeProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     return ctx.body = dataHandle_1.success({}, '删除成功!');
 });
 exports.importProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const { data } = ctx.request.body;
-    console.log(data);
+    const data = ctx.request.body;
+    const newProjectId = yield addUserProject(data.masterId, data);
+    // 批量添加接口
+    yield data.interfaceList.map((item) => __awaiter(this, void 0, void 0, function* () {
+        item.projectId = newProjectId; // 将项目Id替换为新增加的项目
+        yield index_1.AddInterface(item);
+    }));
     return ctx.body = dataHandle_1.success({}, '导入成功!');
 });
 /**

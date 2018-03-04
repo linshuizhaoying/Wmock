@@ -9,6 +9,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Project = require('../models/project');
+const team_1 = require("./team");
+exports.FindProjectListByUserId = (userId) => __awaiter(this, void 0, void 0, function* () {
+    const allProject = yield Project.find({});
+    // 返回与用户相关的所有项目
+    const relatedProjectMap = new Map();
+    yield Promise.all(allProject.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
+        // 先添加自己创建的项目
+        if (userId === oldItem.masterId) {
+            relatedProjectMap[oldItem._id] = true;
+        }
+        let found = false;
+        // 对不是自己创建的项目进行判断
+        if (userId !== oldItem.masterId) {
+            // 找到对应的团队
+            const projectTeam = yield team_1.FindTeamByProjectId(oldItem._id);
+            yield projectTeam.member.map((user) => __awaiter(this, void 0, void 0, function* () {
+                // 如果对应的团队里面有该用户，则加入相关的项目列表
+                if (user._id === userId) {
+                    found = true;
+                }
+            }));
+            if (found) {
+                relatedProjectMap[oldItem._id] = true;
+            }
+        }
+    })));
+    return relatedProjectMap;
+});
 exports.FindProjectById = (projectId) => __awaiter(this, void 0, void 0, function* () {
     return yield Project.findOne({ _id: projectId });
 });
@@ -18,26 +46,38 @@ exports.DemoProject = (userId) => __awaiter(this, void 0, void 0, function* () {
 exports.UserProject = (userId) => __awaiter(this, void 0, void 0, function* () {
     return yield Project.find({ masterId: userId, type: 'user' });
 });
-exports.UnJoinProjectList = (id) => __awaiter(this, void 0, void 0, function* () {
-    console.log(id);
-    const data = [
-        {
-            projectId: 'proejct110',
-            projectName: '尚未加入的项目001',
-        },
-        {
-            projectId: 'proejct111',
-            projectName: '尚未加入的项目002',
-        },
-        {
-            projectId: 'proejct112',
-            projectName: '尚未加入的项目003',
+exports.UnJoinProjectList = (userId) => __awaiter(this, void 0, void 0, function* () {
+    console.log(userId);
+    const allProject = yield Project.find({});
+    const unJoinList = [];
+    yield Promise.all(allProject.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
+        let found = false;
+        // 先找到不是自己创建的项目
+        if (userId !== oldItem.masterId) {
+            // 找到对应的团队
+            const projectTeam = yield team_1.FindTeamByProjectId(oldItem._id);
+            yield projectTeam.member.map((user) => __awaiter(this, void 0, void 0, function* () {
+                // 如果对应的团队里面也没有该用户，说明是未加入的团队
+                if (user._id === userId) {
+                    found = true;
+                }
+            }));
+            if (!found) {
+                const result = {
+                    projectId: '',
+                    projectName: ''
+                };
+                result.projectId = oldItem._id;
+                result.projectName = oldItem.projectName;
+                unJoinList.push(result);
+            }
         }
-    ];
-    return yield data;
+    })));
+    console.log('自己未加入的团队', unJoinList);
+    return unJoinList;
 });
-exports.AddProject = (project) => __awaiter(this, void 0, void 0, function* () {
-    const newProject = new Project(project);
+exports.AddProject = (originProject) => __awaiter(this, void 0, void 0, function* () {
+    const newProject = new Project(originProject);
     let result;
     yield newProject.save((error) => __awaiter(this, void 0, void 0, function* () {
         if (error) {
@@ -45,9 +85,12 @@ exports.AddProject = (project) => __awaiter(this, void 0, void 0, function* () {
         }
     })).then((project) => __awaiter(this, void 0, void 0, function* () {
         result = project._id;
-        const newProject = project;
-        newProject.transferUrl = project.transferUrl + '/' + project._id;
-        yield exports.UpdateProject(newProject);
+        // 如果不是导入的
+        if (!originProject.version) {
+            const newProject = project;
+            newProject.transferUrl = project.transferUrl + '/' + project._id;
+            yield exports.UpdateProject(newProject);
+        }
     }));
     return result;
 });

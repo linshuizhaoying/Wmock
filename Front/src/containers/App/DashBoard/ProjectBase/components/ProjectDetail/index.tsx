@@ -176,7 +176,7 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
 
               <Tooltip placement="top" title={'点击复制到粘贴板'}>
                 <Button type="dashed" className="projectUrl" onClick={this.pasteCopy}>
-                  {MockUrl + '/' + this.props.data._id + '/' + this.props.data.projectUrl}
+                  {MockUrl + '/' + this.props.data._id}
                 </Button>
               </Tooltip>
 

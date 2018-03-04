@@ -5,7 +5,6 @@ import Card from 'antd/lib/card';
 import Collapse from 'antd/lib/collapse';
 import Icon from 'antd/lib/icon';
 import InterfaceMode from './components/ProjectDetail/components/InterfaceMode';
-// import jsBeautify from 'js-beautify/js/lib/beautify';
 import Message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import NewProject from './components/NewProject';
@@ -18,8 +17,6 @@ import Tooltip from 'antd/lib/tooltip';
 import Tree from 'antd/lib/tree';
 import Upload from 'antd/lib/upload';
 import Validator from '../../../../util/validator';
-// import jsondiffpatch from 'jsondiffpatch'
-var jsondiffpatch = require('jsondiffpatch');
 import {
   addInterface,
   addProject,
@@ -38,9 +35,12 @@ import { connect } from 'react-redux';
 import { exportFile } from '../../../../util/fileExport';
 import { isEqual } from '../../../../util/helper';
 import { isJson } from '../../../../util/helper';
+import { MockUrl } from '../../../../service/api';
 import { UploadFile } from 'antd/es/upload/interface';
-import { MockUrl } from '../../../../service/api'
 import './index.less';
+// import jsBeautify from 'js-beautify/js/lib/beautify';
+// import jsondiffpatch from 'jsondiffpatch'
+let jsondiffpatch = require('jsondiffpatch');
 
 const { Option, OptGroup } = Select;
 const TreeNode = Tree.TreeNode;
@@ -259,6 +259,7 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
   importProjectOk = (e: React.FormEvent<HTMLFormElement>) => {
     const data = JSON.parse(this.state.uploadJsonData)
     data.type = this.state.uploadSelectType
+    data.masterId = this.props.userId
     const { dispatch } = this.props;
     dispatch(importProject(
       data
@@ -270,6 +271,14 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
       uploadJsonData: '',
       uploadSelectType: 'demo'
     });
+    
+    setTimeout(() => {
+      if (this.props.type === 'demo') {
+        this.props.getProjectDemo()
+      } else {
+        this.props.getMyProject()
+      }
+    }, 500)
   }
 
   cloneProjectOk = (e: React.FormEvent<HTMLFormElement>) => {
@@ -753,27 +762,27 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
                         this.state.verifyData.map((item: ProjectVerify, index: number) => {
                           let match = item.compare === 'match' ? '匹配' : '不匹配'
                           return (
-                            item.compare !== 'match' ?  
-                            <Panel key={index.toString()} header={'接口 ' + item.interfaceName + ' ' + match}>
-                              <div>
-                                <span>数据对比</span>
-                         
+                            item.compare !== 'match' ?
+                              <Panel key={index.toString()} header={'接口 ' + item.interfaceName + ' ' + match}>
+                                <div>
+                                  <span>数据对比</span>
+
                                   <div
                                     className="content"
                                     dangerouslySetInnerHTML={
                                       {
-                                        __html: 
-                                        jsondiffpatch.formatters.html.format(
-                                          jsondiffpatch.diff(item.expect, item.actual), item.expect
-                                        )
+                                        __html:
+                                          jsondiffpatch.formatters.html.format(
+                                            jsondiffpatch.diff(item.expect, item.actual), item.expect
+                                          )
                                       }
                                     }
                                   />
                                   {/* {jsBeautify.js_beautify(jsondiffpatch.diff(item.expect, item.actual))} */}
                                   {/* {JSON.parse(JSON.stringify(item.actual))} */}
-                                  </div>
-                            </Panel>
-                            : null
+                                </div>
+                              </Panel>
+                              : null
                           )
                         })
                       }
