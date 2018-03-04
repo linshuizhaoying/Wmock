@@ -10,7 +10,9 @@ import {
   InterfaceList,
   RemoveProject,
   UpdateProject,
-  RemoveInterface
+  RemoveInterface,
+  AddInterface,
+  AddMessage
 } from '../db/controllers/index';
 import { cloneInterfaceItem } from './interface'
 import { getRemoteData } from './mock'
@@ -89,6 +91,64 @@ export const unJoinProjectList = async (ctx: any) => {
   return ctx.body = success(result, '获取成功')
 }
 
+const addUserProject = async (userId: string, project: Project) => {
+  const result = await AddProject(project)
+  // 添加对应团队
+  const team: TeamData = {
+    masterAvatar: '',
+    masterId: '',
+    role: '',
+    masterName: '',
+    projectId: '',
+    projectName: '',
+    member: []
+  }
+  const userData: UserData = await FindUserById(userId)
+
+  // 添加对应项目消息
+  const projectMessage: MessageData = {
+    operatorId: userId,
+    operatorName: userData.userName,
+    action: 'add',
+    projectId: result,
+    objectId: result,
+    objectName: project.projectName,
+    desc: '添加了新项目: ' + project.projectName,
+    userId: userId,
+    avatar: userData.avatar,
+    type: 'normal'
+  }
+
+
+  team.masterAvatar = userData.avatar
+  team.masterId = userData._id
+  team.role = userData.role
+  team.masterName = userData.userName
+  team.projectId = result
+  team.projectName = project.projectName
+  const teamId = await AddTeam(team)
+  console.log('teamId', teamId)
+  // 添加对应项目消息
+  const teamMessage: MessageData = {
+    operatorId: userId,
+    operatorName: userData.userName,
+    action: 'add',
+    projectId: result,
+    objectId: teamId,
+    objectName: project.projectName,
+    desc: '添加了新团队: ' + project.projectName,
+    userId: userId,
+    avatar: userData.avatar,
+    type: 'normal'
+  }
+  await AddMessage(projectMessage)
+  await AddMessage(teamMessage)
+
+
+
+  return result
+}
+
 export const addProject = async (ctx: any) => {
   // 添加项目
   const { userId } = ctx.tokenContent;
@@ -104,27 +164,7 @@ export const addProject = async (ctx: any) => {
   }
 
   project.masterId = userId
-  const result = await AddProject(project)
-
-  // 添加对应团队
-  const team: TeamData = {
-    masterAvatar: '',
-    masterId: '',
-    role: '',
-    masterName: '',
-    projectId: '',
-    projectName: '',
-    member: []
-  }
-  const user = await FindUserById(userId)
-
-  team.masterAvatar = user.avatar
-  team.masterId = user._id
-  team.role = user.role
-  team.masterName = user.userName
-  team.projectId = result
-  team.projectName = projectName
-  await AddTeam(team)
+  await addUserProject(userId, project)
   return ctx.body = success({}, '添加项目成功!')
 }
 
@@ -169,8 +209,13 @@ export const removeProject = async (ctx: any) => {
 
 
 export const importProject = async (ctx: any) => {
-  const { data } = ctx.request.body;
-  console.log(data)
+  const data = ctx.request.body;
+  const newProjectId = await addUserProject(data.masterId, data)
+  // 批量添加接口
+  await data.interfaceList.map(async (item: InterfaceData) => {
+    item.projectId = newProjectId // 将项目Id替换为新增加的项目
+    await AddInterface(item)
+  })
   return ctx.body = success({}, '导入成功!')
 }
 

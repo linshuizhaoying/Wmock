@@ -26,6 +26,10 @@ export const AddRegUser = async (user: RegUser) => {
     result.msg = '用户名不能重复'
     result.status = 'error'
     return result
+  } else if (hadUser && hadUser.email === email) {
+    result.msg = '该邮箱已存在'
+    result.status = 'error'
+    return result
   } else {
     console.log('添加用户成功')
     await newUser.save().then((data: any) => {
@@ -62,12 +66,12 @@ export const UpdateUser = async (user: UpdateUserData) => {
   return User.update({
     _id: user._id
   }, {
-    $set: {
-      userName: user.userName,
-      passWord: user.passWord,
-      avatar: user.avatar,
-      role: user.role,
-      email: user.email
-    }
-  })
+      $set: {
+        userName: user.userName,
+        passWord: user.passWord,
+        avatar: user.avatar,
+        role: user.role,
+        email: user.email
+      }
+    })
 }

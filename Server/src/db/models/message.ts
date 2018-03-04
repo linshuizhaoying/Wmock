@@ -11,7 +11,7 @@ const MessageSchema = new mongoose.Schema({
   desc: { type: String },
   userId: { type: String },
   avatar: { type: String },
-  type: { type: String },  // nomarl || team
+  type: { type: String },  // normal || team
   readed: { type: Boolean, default: false }
 });
 
