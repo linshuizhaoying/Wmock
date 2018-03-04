@@ -7,6 +7,7 @@ import TimeAgo from 'timeago-react';
 import Timeline from 'antd/lib/timeline';
 import { isEqual } from '../../../../util/helper';
 import { Link } from 'react-router-dom';
+import { imgBaseUrl } from '../../../../service/api/index';
 import './index.less';
 const { Meta } = Card;
 
@@ -90,22 +91,24 @@ export class Overview extends React.Component<OverviewProps, OverviewState> {
           <h4>动态</h4>
           <Timeline pending={<Link to="/wmock/messages" > 查看更多 </Link>}>
             {
-              this.state.messagesListData.length > 0 ? 
-              this.state.messagesListData.map((item: Message, index: number) => {
-                if (index < 6) { return(
-                    <Timeline.Item dot={<Avatar src={item.avatar} />} color="red" key={index} >
-                      <div className="timeline">
-                        <p className="date"> <TimeAgo datetime={item.time} locale="zh_CN" /> </p>
-                        <div>
-                          <div className="user">用户: {item.operatorName}</div>
-                          <div className="content">{item.desc}</div>
+              this.state.messagesListData.length > 0 ?
+                this.state.messagesListData.map((item: Message, index: number) => {
+                  if (index < 6) {
+                    return (
+                      <Timeline.Item dot={<Avatar src={imgBaseUrl + '/' + item.avatar} />} color="red" key={index} >
+                        <div className="timeline">
+                          <p className="date"> <TimeAgo datetime={item.time} locale="zh_CN" /> </p>
+                          <div>
+                            <div className="user">用户: {item.operatorName}</div>
+                            <div className="content">{item.desc}</div>
+                          </div>
                         </div>
-                      </div>
-                    </Timeline.Item>
-                  )} else {
-                  return null
-                }
-              })
+                      </Timeline.Item>
+                    )
+                  } else {
+                    return null
+                  }
+                })
                 : null
             }
 

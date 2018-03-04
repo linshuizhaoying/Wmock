@@ -33,7 +33,7 @@ exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
         result.status = 'error';
         return result;
     }
-    else if (hadUser.email === email) {
+    else if (hadUser && hadUser.email === email) {
         result.msg = '该邮箱已存在';
         result.status = 'error';
         return result;

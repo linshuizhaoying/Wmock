@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Message = require('../models/message');
 const project_1 = require("./project");
 exports.FindMessageByProjectId = (id) => __awaiter(this, void 0, void 0, function* () {
-    return Message.findOne({ projectId: id });
+    return Message.find({ projectId: id });
 });
 exports.FindMessageByUserId = (id) => __awaiter(this, void 0, void 0, function* () {
     return Message.findOne({ masterId: id });
@@ -24,7 +24,10 @@ exports.AllMessages = (userId) => __awaiter(this, void 0, void 0, function* () {
     console.log('projectList', projectMap);
     const result = [];
     for (const projectId in projectMap) {
-        result.push(yield exports.FindMessageByProjectId(projectId));
+        const projectList = yield exports.FindMessageByProjectId(projectId);
+        projectList.map((item) => __awaiter(this, void 0, void 0, function* () {
+            result.push(item);
+        }));
     }
     return result;
     // const data = [

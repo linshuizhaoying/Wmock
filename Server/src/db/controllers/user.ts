@@ -26,7 +26,7 @@ export const AddRegUser = async (user: RegUser) => {
     result.msg = '用户名不能重复'
     result.status = 'error'
     return result
-  } else if (hadUser.email === email) {
+  } else if (hadUser && hadUser.email === email) {
     result.msg = '该邮箱已存在'
     result.status = 'error'
     return result

@@ -133,7 +133,7 @@ const addUserProject = async (userId: string, project: Project) => {
     operatorId: userId,
     operatorName: userData.userName,
     action: 'add',
-    projectId: teamId,
+    projectId: result,
     objectId: teamId,
     objectName: project.projectName,
     desc: '添加了新团队: ' + project.projectName,

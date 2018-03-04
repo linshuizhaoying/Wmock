@@ -120,7 +120,7 @@ const addUserProject = (userId, project) => __awaiter(this, void 0, void 0, func
         operatorId: userId,
         operatorName: userData.userName,
         action: 'add',
-        projectId: teamId,
+        projectId: result,
         objectId: teamId,
         objectName: project.projectName,
         desc: '添加了新团队: ' + project.projectName,

@@ -1,7 +1,7 @@
 const Message = require('../models/message')
 import { FindProjectListByUserId } from './project'
 export const FindMessageByProjectId = async (id: string) => {
-  return Message.findOne({ projectId: id })
+  return Message.find({ projectId: id })
 }
 export const FindMessageByUserId = async (id: string) => {
   return Message.findOne({ masterId: id })
@@ -13,9 +13,13 @@ export const FindMessageById = async (id: string) => {
 export const AllMessages = async (userId: string) => {
   const projectMap = await FindProjectListByUserId(userId)
   console.log('projectList', projectMap)
-  const result = []
+  const result: any = []
   for (const projectId in projectMap) {
-    result.push(await FindMessageByProjectId(projectId))
+    const projectList = await FindMessageByProjectId(projectId)
+    projectList.map(async (item: ProjectData) => {
+      result.push(item)
+    })
+
   }
   return result
   // const data = [
