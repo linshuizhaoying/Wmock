@@ -88,6 +88,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
   overView = () => {
     const { history } = this.props;
     history.push('/wmock/OverView');
+    this.getMessagesList()
   }
   logout = (e: ClickParam) => {
     if (e.key === 'logout') {
@@ -128,6 +129,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
   getTeamList = () => {
     const { dispatch } = this.props;
     dispatch(fetchTeam())
+    this.getMessagesList()
   }
 
   getModel = () => {

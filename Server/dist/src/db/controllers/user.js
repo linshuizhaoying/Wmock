@@ -28,33 +28,35 @@ exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
     hadUser = yield User.findOne({ 'userName': userName }, (err, data) => {
         return data;
     });
+    console.log('hadUser:', hadUser);
     if (hadUser && hadUser.userName === userName) {
         result.msg = '用户名不能重复';
         result.status = 'error';
         return result;
     }
-    else if (hadUser && hadUser.email === email) {
+    const hadEmail = yield User.findOne({ 'email': email }, (err, data) => {
+        return data;
+    });
+    if (hadEmail && hadEmail.email === email) {
         result.msg = '该邮箱已存在';
         result.status = 'error';
         return result;
     }
-    else {
-        console.log('添加用户成功');
-        yield newUser.save().then((data) => {
-            console.log('保存后的信息为:');
-            console.log(data);
-            result.msg = '用户注册成功!';
-            result.status = 'success';
-            result.userId = data._id;
-            result.userName = data.userName;
-            result.avatar = data.avatar;
-            result.email = data.email;
-            result.regDate = data.regDate;
-            result.role = data.role;
-            console.log(result);
-        });
-        return result;
-    }
+    console.log('添加用户成功');
+    yield newUser.save().then((data) => {
+        console.log('保存后的信息为:');
+        console.log(data);
+        result.msg = '用户注册成功!';
+        result.status = 'success';
+        result.userId = data._id;
+        result.userName = data.userName;
+        result.avatar = data.avatar;
+        result.email = data.email;
+        result.regDate = data.regDate;
+        result.role = data.role;
+        console.log(result);
+    });
+    return result;
 });
 exports.LoginUser = (user) => __awaiter(this, void 0, void 0, function* () {
     const { userName, passWord } = user;
@@ -64,7 +66,10 @@ exports.LoginUser = (user) => __awaiter(this, void 0, void 0, function* () {
 });
 exports.FindUserById = (id) => __awaiter(this, void 0, void 0, function* () {
     console.log('正在查找Id:');
-    return User.findOne({ _id: id });
+    return yield User.findOne({ _id: id });
+});
+exports.FindUserByEmail = (email) => __awaiter(this, void 0, void 0, function* () {
+    return yield User.findOne({ email: email });
 });
 exports.UpdateUser = (user) => __awaiter(this, void 0, void 0, function* () {
     return User.update({

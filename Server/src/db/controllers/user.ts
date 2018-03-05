@@ -22,31 +22,36 @@ export const AddRegUser = async (user: RegUser) => {
   hadUser = await User.findOne({ 'userName': userName }, (err: any, data: any) => {
     return data
   })
+  console.log('hadUser:', hadUser)
   if (hadUser && hadUser.userName === userName) {
     result.msg = '用户名不能重复'
     result.status = 'error'
     return result
-  } else if (hadUser && hadUser.email === email) {
+  }
+  const hadEmail = await User.findOne({ 'email': email }, (err: any, data: any) => {
+    return data
+  })
+  if (hadEmail && hadEmail.email === email) {
     result.msg = '该邮箱已存在'
     result.status = 'error'
     return result
-  } else {
-    console.log('添加用户成功')
-    await newUser.save().then((data: any) => {
-      console.log('保存后的信息为:')
-      console.log(data)
-      result.msg = '用户注册成功!'
-      result.status = 'success'
-      result.userId = data._id
-      result.userName = data.userName
-      result.avatar = data.avatar
-      result.email = data.email
-      result.regDate = data.regDate
-      result.role = data.role
-      console.log(result)
-    })
-    return result
   }
+  console.log('添加用户成功')
+  await newUser.save().then((data: any) => {
+    console.log('保存后的信息为:')
+    console.log(data)
+    result.msg = '用户注册成功!'
+    result.status = 'success'
+    result.userId = data._id
+    result.userName = data.userName
+    result.avatar = data.avatar
+    result.email = data.email
+    result.regDate = data.regDate
+    result.role = data.role
+    console.log(result)
+  })
+  return result
+
 }
 
 export const LoginUser = async (user: LoginUser) => {
@@ -59,7 +64,10 @@ export const LoginUser = async (user: LoginUser) => {
 
 export const FindUserById = async (id: string) => {
   console.log('正在查找Id:')
-  return User.findOne({ _id: id })
+  return await User.findOne({ _id: id })
+}
+export const FindUserByEmail = async (email: string) => {
+  return await User.findOne({ email: email })
 }
 
 export const UpdateUser = async (user: UpdateUserData) => {

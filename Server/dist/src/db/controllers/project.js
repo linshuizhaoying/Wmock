@@ -19,20 +19,16 @@ exports.FindProjectListByUserId = (userId) => __awaiter(this, void 0, void 0, fu
         if (userId === oldItem.masterId) {
             relatedProjectMap[oldItem._id] = true;
         }
-        let found = false;
         // 对不是自己创建的项目进行判断
         if (userId !== oldItem.masterId) {
             // 找到对应的团队
             const projectTeam = yield team_1.FindTeamByProjectId(oldItem._id);
             yield projectTeam.member.map((user) => __awaiter(this, void 0, void 0, function* () {
                 // 如果对应的团队里面有该用户，则加入相关的项目列表
-                if (user._id === userId) {
-                    found = true;
+                if (user._id == userId) {
+                    relatedProjectMap[projectTeam.projectId] = true;
                 }
             }));
-            if (found) {
-                relatedProjectMap[oldItem._id] = true;
-            }
         }
     })));
     return relatedProjectMap;
@@ -41,10 +37,28 @@ exports.FindProjectById = (projectId) => __awaiter(this, void 0, void 0, functio
     return yield Project.findOne({ _id: projectId });
 });
 exports.DemoProject = (userId) => __awaiter(this, void 0, void 0, function* () {
-    return yield Project.find({ masterId: userId, type: 'demo' });
+    const projectMap = yield exports.FindProjectListByUserId(userId);
+    const projectList = [];
+    for (const projectId in projectMap) {
+        const temp = yield exports.FindProjectById(projectId);
+        if (temp.type === 'demo') {
+            projectList.push(temp);
+        }
+    }
+    return projectList;
+    // return await Project.find({ masterId: userId, type: 'demo' })
 });
 exports.UserProject = (userId) => __awaiter(this, void 0, void 0, function* () {
-    return yield Project.find({ masterId: userId, type: 'user' });
+    // return await Project.find({ masterId: userId, type: 'user' })
+    const projectMap = yield exports.FindProjectListByUserId(userId);
+    const projectList = [];
+    for (const projectId in projectMap) {
+        const temp = yield exports.FindProjectById(projectId);
+        if (temp.type === 'user') {
+            projectList.push(temp);
+        }
+    }
+    return projectList;
 });
 exports.UnJoinProjectList = (userId) => __awaiter(this, void 0, void 0, function* () {
     console.log(userId);
@@ -95,7 +109,7 @@ exports.AddProject = (originProject) => __awaiter(this, void 0, void 0, function
     return result;
 });
 exports.UpdateProject = (project) => __awaiter(this, void 0, void 0, function* () {
-    return Project.update({
+    return yield Project.update({
         _id: project._id
     }, {
         $set: {

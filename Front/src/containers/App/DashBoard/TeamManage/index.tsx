@@ -28,7 +28,7 @@ import { isEqual } from '../../../../util/helper';
 import './index.less';
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
-class MyTable extends Table<Team> {}
+class MyTable extends Table<Team> { }
 
 let inviteMemberEmailInput: Input | null;
 
@@ -64,6 +64,9 @@ export class TeamManage extends React.Component<AppProps, AdvanceAny> {
       userId,
       projectId
     }))
+    setTimeout(() => {
+      this.props.refresh()
+    }, 500)
   }
 
   showJoinProject = () => {
@@ -88,11 +91,15 @@ export class TeamManage extends React.Component<AppProps, AdvanceAny> {
         operatorName: this.props.userName,
         projectId: this.state.selectJoinProject.split('_')[0],
         time: new Date(),
+        action: 'apply',
         objectId: this.props.userId,
         objectName: this.props.userName,
         desc: this.props.userName + ' 申请加入 ' + '项目团队 ' + this.state.selectJoinProject.split('_')[1],
         type: 'team'
       }))
+      setTimeout(() => {
+        this.props.refresh()
+      }, 500)
     } else {
       Message.error('请选择一个未加入的项目!');
     }
@@ -118,6 +125,9 @@ export class TeamManage extends React.Component<AppProps, AdvanceAny> {
       this.setState({
         inviteGroupMember: false,
       });
+      setTimeout(() => {
+        this.props.refresh()
+      }, 500)
     } else {
       notification.error({
         message: '出错啦!',
@@ -170,8 +180,9 @@ export class TeamManage extends React.Component<AppProps, AdvanceAny> {
           projectId: currentItem.projectId,
           messageId: currentItem._id
         }))
-        // 重新刷新信息
-        // this.props.refresh();
+        setTimeout(() => {
+          this.props.refresh()
+        }, 500)
       }
     })
   }
@@ -185,8 +196,9 @@ export class TeamManage extends React.Component<AppProps, AdvanceAny> {
           projectId: currentItem.projectId,
           messageId: currentItem._id
         }))
-        // 重新刷新信息
-        // this.props.refresh();
+        setTimeout(() => {
+          this.props.refresh()
+        }, 500)
       }
     })
   }
@@ -266,25 +278,46 @@ export class TeamManage extends React.Component<AppProps, AdvanceAny> {
                               </div>
                             </li>
                             {item.member.length >= 0 ?
-                              item.member.map((user: TeamMember) => {
+                              item.member.map((user: TeamMember, key: number) => {
                                 return (
-                                  <li key={user.userId}>
+                                  <li key={key}>
                                     <div className="member">
                                       <div className="avatar">
                                         <Avatar src={imgBaseUrl + user.avatar} />
-                                        <div className="operate">
-                                          <Popconfirm
-                                            title={'确定移除 ' + user.userName + ' 吗?'}
-                                            onConfirm={() => { this.removeUser(user.userId, item.projectId) }}
-                                            okText="确定移除"
-                                            cancelText="取消"
-                                          >
-                                            <div className="removeUser">
-                                              <Icon type="close" />
-                                            </div>
-                                          </Popconfirm>
+                                        {
+                                          item.masterId === this.props.userId ?
+                                            <div className="operate" key={key}>
+                                              <Popconfirm
+                                                title={'确定移除 ' + user.userName + ' 吗?'}
+                                                onConfirm={() => { this.removeUser(user._id, item.projectId) }}
+                                                okText="确定移除"
+                                                cancelText="取消"
+                                              >
+                                                <div className="removeUser">
+                                                  <Icon type="close" />
+                                                </div>
+                                              </Popconfirm>
 
-                                        </div>
+                                            </div>
+                                            : null
+                                        }
+                                        {
+                                          user._id === this.props.userId ?
+                                            <div className="operate" key={key}>
+                                              <Popconfirm
+                                                title={'确定退出该团队吗(同时退出项目)?'}
+                                                onConfirm={() => { this.removeUser(user._id, item.projectId) }}
+                                                okText="确定退出"
+                                                cancelText="取消"
+                                              >
+                                                <div className="removeUser">
+                                                  <Icon type="logout" />
+                                                </div>
+                                              </Popconfirm>
+
+                                            </div>
+                                            : null
+                                        }
                                       </div>
                                       <div className="desc">
                                         <div>{user.userName}</div>

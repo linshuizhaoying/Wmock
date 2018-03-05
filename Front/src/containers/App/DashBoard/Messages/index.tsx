@@ -15,6 +15,8 @@ const columns = [{
       {action === 'add' ? '增加' : ''}
       {action === 'delete' ? '删除' : ''}
       {action === 'update' ? '更新' : ''}
+      {action === 'reject' ? '拒绝' : ''}
+      {action === 'accept' ? '允许' : ''}
     </div>
   ),
 }, {
