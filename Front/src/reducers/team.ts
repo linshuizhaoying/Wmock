@@ -16,7 +16,7 @@ const removeUser = (list: Array<Team>, projectId: string, userId: string) => {
     if (item.projectId === projectId) {
       const temp: Array<TeamMember> = []
       item.member.map((user: TeamMember) => {
-        if (user.userId !== userId) {
+        if (user._id !== userId) {
           temp.push(user)
         }
       })

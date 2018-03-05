@@ -11,20 +11,16 @@ export const FindProjectListByUserId = async (userId: string) => {
     if (userId === oldItem.masterId) {
       relatedProjectMap[oldItem._id] = true
     }
-    let found = false
     // 对不是自己创建的项目进行判断
     if (userId !== oldItem.masterId) {
       // 找到对应的团队
       const projectTeam: TeamData = await FindTeamByProjectId(oldItem._id)
       await projectTeam.member.map(async (user: UserData) => {
         // 如果对应的团队里面有该用户，则加入相关的项目列表
-        if (user._id === userId) {
-          found = true
+        if (user._id == userId) {
+          relatedProjectMap[projectTeam.projectId] = true
         }
       })
-      if (found) {
-        relatedProjectMap[oldItem._id] = true
-      }
     }
   }))
   return relatedProjectMap
@@ -36,11 +32,31 @@ export const FindProjectById = async (projectId: string) => {
 
 
 export const DemoProject = async (userId: string) => {
-  return await Project.find({ masterId: userId, type: 'demo' })
+  const projectMap = await FindProjectListByUserId(userId)
+  const projectList = []
+  for (const projectId in projectMap) {
+    const temp = await FindProjectById(projectId)
+    if (temp.type === 'demo') {
+      projectList.push(temp)
+    }
+  }
+
+  return projectList
+  // return await Project.find({ masterId: userId, type: 'demo' })
 }
 
 export const UserProject = async (userId: string) => {
-  return await Project.find({ masterId: userId, type: 'user' })
+ // return await Project.find({ masterId: userId, type: 'user' })
+  const projectMap = await FindProjectListByUserId(userId)
+  const projectList = []
+  for (const projectId in projectMap) {
+    const temp = await FindProjectById(projectId)
+    if (temp.type === 'user') {
+      projectList.push(temp)
+    }
+  }
+
+  return projectList
 }
 
 export const UnJoinProjectList = async (userId: string) => {
@@ -97,7 +113,7 @@ export const AddProject = async (originProject: ProjectData) => {
 }
 
 export const UpdateProject = async (project: ProjectData) => {
-  return Project.update({
+  return await Project.update({
     _id: project._id
   }, {
       $set: {

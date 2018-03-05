@@ -18,10 +18,4 @@ exports.messagesList = (ctx) => __awaiter(this, void 0, void 0, function* () {
 exports.addMessage = (message) => __awaiter(this, void 0, void 0, function* () {
     yield index_1.AddMessage(message);
 });
-exports.updateMessage = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const { userId } = ctx.tokenContent;
-    const data = ctx.request.body;
-    const result = yield index_1.UpdateMessage(data);
-    return ctx.body = dataHandle_1.success(result, '更新成功');
-});
 //# sourceMappingURL=messages.js.map
