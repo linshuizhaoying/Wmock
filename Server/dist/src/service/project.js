@@ -168,6 +168,22 @@ exports.updateProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     currentProject.masterId = project.masterId || currentProject.masterId;
     console.log(currentProject);
     const result = yield index_1.UpdateProject(currentProject);
+    // 添加对应项目更新消息
+    const { userId } = ctx.tokenContent;
+    const userData = yield index_1.FindUserById(userId);
+    const updateProjectMessage = {
+        operatorId: userId,
+        operatorName: userData.userName,
+        action: 'update',
+        projectId: _id,
+        objectId: _id,
+        objectName: currentProject.projectName,
+        desc: '用户 ' + userData.userName + ' 更新了项目 ' + currentProject.projectName,
+        userId: userId,
+        avatar: userData.avatar,
+        type: 'normal'
+    };
+    yield index_1.AddMessage(updateProjectMessage);
     return ctx.body = dataHandle_1.success(result, '更新成功!');
 });
 exports.removeProject = (ctx) => __awaiter(this, void 0, void 0, function* () {

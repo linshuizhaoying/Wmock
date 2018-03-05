@@ -271,7 +271,7 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
       uploadJsonData: '',
       uploadSelectType: 'demo'
     });
-    
+
     setTimeout(() => {
       if (this.props.type === 'demo') {
         this.props.getProjectDemo()
@@ -507,16 +507,22 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
           {project.projectName}
         </div>
         <div className="projectOperate">
-          <Popconfirm
-            title="确定删除该项目么?"
-            onConfirm={() => { this.deleteProject(project._id) }}
-            okText="确定删除"
-            cancelText="取消"
-          >
-            <Tooltip placement="right" title={'删除项目'}>
-              <Icon type="delete" className="operate-icon" />
-            </Tooltip>
-          </Popconfirm>
+          {
+            this.props.userId === project.masterId ?
+              <Popconfirm
+                title="确定删除该项目么(项目删除后所有关于该项目的信息都会清空)?"
+                onConfirm={() => { this.deleteProject(project._id) }}
+                okText="确定删除"
+                cancelText="取消"
+              >
+                <Tooltip placement="right" title={'删除项目'}>
+                  <Icon type="delete" className="operate-icon" />
+                </Tooltip>
+              </Popconfirm>
+              : null
+          }
+
+
           <Popconfirm
             title="确定克隆该项目么?"
             onConfirm={() => { this.cloneCurrentProject(project._id) }}

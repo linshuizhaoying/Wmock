@@ -105,7 +105,7 @@ export const rejectJoinGroup = async (ctx: any) => {
     projectId: projectId,
     objectId: rejectUserId,
     objectName: user.userName,
-    desc: '用户' + user.userName + ' 被拒绝加入项目 ' + project.projectName,
+    desc: '用户 ' + user.userName + ' 被拒绝加入项目 ' + project.projectName,
     userId: userId,
     avatar: master.avatar,
     type: 'normal'
@@ -156,7 +156,7 @@ export const allowedJoinGroup = async (ctx: any) => {
     projectId: projectId,
     objectId: acceptUserId,
     objectName: user.userName,
-    desc: '用户' + user.userName + ' 被允许加入项目 ' + project.projectName,
+    desc: '用户 ' + user.userName + ' 被允许加入项目 ' + project.projectName,
     userId: userId,
     avatar: master.avatar,
     type: 'normal'
