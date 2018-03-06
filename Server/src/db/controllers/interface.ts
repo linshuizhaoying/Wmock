@@ -1,7 +1,11 @@
 const Interface = require('../models/interface')
 
-export const FindInterfaceById = async (interfaceId: string) => {
+export const FindInterfaceListById = async (interfaceId: string) => {
   return await Interface.find({ _id: interfaceId })
+}
+
+export const FindInterfaceById = async (interfaceId: string) => {
+  return await Interface.findOne({ _id: interfaceId })
 }
 export const FindInterfaceByMock = async (projectId: string, url: string, method: string) => {
   return await Interface.findOne({ projectId: projectId, url: url, method: method })

@@ -1,5 +1,7 @@
+import { FindProjectListByUserId } from './project';
 const Message = require('../models/message')
-import { FindProjectListByUserId } from './project'
+const _ = require('lodash')
+
 export const FindMessageByProjectId = async (id: string) => {
   return Message.find({ projectId: id })
 }
@@ -9,19 +11,28 @@ export const FindMessageByUserId = async (id: string) => {
 export const FindMessageById = async (id: string) => {
   return Message.findOne({ _id: id })
 }
+export const FindMessageByObjectId = async (objectId: string) => {
+  return Message.find({ objectId: objectId , type: 'normal' })
+}
 
 export const AllMessages = async (userId: string) => {
   const projectMap = await FindProjectListByUserId(userId)
   console.log('projectList', projectMap)
   const result: any = []
+  // 找到项目相关的信息
   for (const projectId in projectMap) {
     const projectList = await FindMessageByProjectId(projectId)
     projectList.map(async (item: ProjectData) => {
       result.push(item)
     })
-
   }
-  return result
+  // 找到操作对象相关的信息
+  const objectMessages = await FindMessageByObjectId(userId)
+  objectMessages.map((message: MessageData) => {
+    result.push(message)
+  })
+
+  return await _.uniqBy(result, '_id');
 }
 
 export const AddMessage = async (message: MessageData) => {

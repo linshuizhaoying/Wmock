@@ -102,7 +102,7 @@ const addUserProject = (userId, project) => __awaiter(this, void 0, void 0, func
         projectId: result,
         objectId: result,
         objectName: project.projectName,
-        desc: '添加了新项目: ' + project.projectName,
+        desc: '添加了新项目 ' + project.projectName,
         userId: userId,
         avatar: userData.avatar,
         type: 'normal'
@@ -123,7 +123,7 @@ const addUserProject = (userId, project) => __awaiter(this, void 0, void 0, func
         projectId: result,
         objectId: teamId,
         objectName: project.projectName,
-        desc: '添加了新团队: ' + project.projectName,
+        desc: '添加了新团队 ' + project.projectName,
         userId: userId,
         avatar: userData.avatar,
         type: 'normal'
@@ -168,10 +168,25 @@ exports.updateProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     currentProject.masterId = project.masterId || currentProject.masterId;
     console.log(currentProject);
     const result = yield index_1.UpdateProject(currentProject);
+    // 添加对应项目更新消息
+    const { userId } = ctx.tokenContent;
+    const userData = yield index_1.FindUserById(userId);
+    const updateProjectMessage = {
+        operatorId: userId,
+        operatorName: userData.userName,
+        action: 'update',
+        projectId: _id,
+        objectId: _id,
+        objectName: currentProject.projectName,
+        desc: '用户 ' + userData.userName + ' 更新了项目 ' + currentProject.projectName,
+        userId: userId,
+        avatar: userData.avatar,
+        type: 'normal'
+    };
+    yield index_1.AddMessage(updateProjectMessage);
     return ctx.body = dataHandle_1.success(result, '更新成功!');
 });
 exports.removeProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const project = ctx.request.body;
     const id = ctx.checkBody('id').notEmpty().value;
     if (ctx.errors) {
         return ctx.body = dataHandle_1.error('用户数据不正常,删除失败!');
@@ -179,6 +194,23 @@ exports.removeProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // 先批量删除对应项目下的接口
     const interfaceListData = yield index_1.InterfaceList(id);
     yield interfaceListData.map((item) => __awaiter(this, void 0, void 0, function* () { return yield index_1.RemoveInterface(item._id); }));
+    // const project: ProjectData = await FindProjectById(id)
+    // // 添加对应项目删除消息
+    // const { userId } = ctx.tokenContent;
+    // const userData: UserData = await FindUserById(userId)
+    // const removeProjectMessage: MessageData = {
+    //   operatorId: userId,
+    //   operatorName: userData.userName,
+    //   action: 'remove',
+    //   projectId: id,
+    //   objectId: id,
+    //   objectName: project.projectName,
+    //   desc: '用户 ' + userData.userName + ' 删除了项目 ' + project.projectName,
+    //   userId: userId,
+    //   avatar: userData.avatar,
+    //   type: 'normal'
+    // }
+    // await AddMessage(removeProjectMessage)
     const result = yield index_1.RemoveProject(id);
     return ctx.body = dataHandle_1.success({}, '删除成功!');
 });

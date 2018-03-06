@@ -8,8 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Message = require('../models/message');
 const project_1 = require("./project");
+const Message = require('../models/message');
+const _ = require('lodash');
 exports.FindMessageByProjectId = (id) => __awaiter(this, void 0, void 0, function* () {
     return Message.find({ projectId: id });
 });
@@ -19,17 +20,26 @@ exports.FindMessageByUserId = (id) => __awaiter(this, void 0, void 0, function* 
 exports.FindMessageById = (id) => __awaiter(this, void 0, void 0, function* () {
     return Message.findOne({ _id: id });
 });
+exports.FindMessageByObjectId = (objectId) => __awaiter(this, void 0, void 0, function* () {
+    return Message.find({ objectId: objectId, type: 'normal' });
+});
 exports.AllMessages = (userId) => __awaiter(this, void 0, void 0, function* () {
     const projectMap = yield project_1.FindProjectListByUserId(userId);
     console.log('projectList', projectMap);
     const result = [];
+    // 找到项目相关的信息
     for (const projectId in projectMap) {
         const projectList = yield exports.FindMessageByProjectId(projectId);
         projectList.map((item) => __awaiter(this, void 0, void 0, function* () {
             result.push(item);
         }));
     }
-    return result;
+    // 找到操作对象相关的信息
+    const objectMessages = yield exports.FindMessageByObjectId(userId);
+    objectMessages.map((message) => {
+        result.push(message);
+    });
+    return yield _.uniqBy(result, '_id');
 });
 exports.AddMessage = (message) => __awaiter(this, void 0, void 0, function* () {
     console.log('message', message);

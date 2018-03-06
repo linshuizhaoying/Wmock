@@ -78,7 +78,7 @@ exports.rejectJoinGroup = (ctx) => __awaiter(this, void 0, void 0, function* () 
         projectId: projectId,
         objectId: rejectUserId,
         objectName: user.userName,
-        desc: '用户' + user.userName + ' 被拒绝加入项目 ' + project.projectName,
+        desc: '用户 ' + user.userName + ' 被拒绝加入项目 ' + project.projectName,
         userId: userId,
         avatar: master.avatar,
         type: 'normal'
@@ -91,14 +91,33 @@ exports.rejectJoinGroup = (ctx) => __awaiter(this, void 0, void 0, function* () 
     return ctx.body = dataHandle_1.success({}, '拒绝成功!');
 });
 exports.removeGroupMember = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const userId = ctx.checkBody('userId').notEmpty().value;
+    const removeUserId = ctx.checkBody('userId').notEmpty().value;
     const projectId = ctx.checkBody('projectId').notEmpty().value;
     if (ctx.errors) {
         console.log(ctx.errors);
         return ctx.body = dataHandle_1.error('用户数据不正常,操作失败!');
     }
-    yield index_1.RemoveGroupMember(projectId, userId);
-    return ctx.body = dataHandle_1.success({}, '移除成功!');
+    yield index_1.RemoveGroupMember(projectId, removeUserId);
+    // 添加对应接口更新消息
+    const project = yield index_1.FindProjectById(projectId);
+    const { userId } = ctx.tokenContent;
+    const removeUserData = yield index_1.FindUserById(removeUserId);
+    const userData = yield index_1.FindUserById(userId);
+    const state = removeUserId == userId ? '退出' : '移出';
+    const updateInterfaceMessage = {
+        operatorId: userId,
+        operatorName: userData.userName,
+        action: 'remove',
+        projectId: projectId,
+        objectId: removeUserId,
+        objectName: removeUserData.userName,
+        desc: '用户 ' + removeUserData.userName + ' ' + state + ' 项目 ' + project.projectName,
+        userId: userId,
+        avatar: userData.avatar,
+        type: 'normal'
+    };
+    yield index_1.AddMessage(updateInterfaceMessage);
+    return ctx.body = dataHandle_1.success({}, state + '成功!');
 });
 exports.allowedJoinGroup = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
@@ -122,7 +141,7 @@ exports.allowedJoinGroup = (ctx) => __awaiter(this, void 0, void 0, function* ()
         projectId: projectId,
         objectId: acceptUserId,
         objectName: user.userName,
-        desc: '用户' + user.userName + ' 被允许加入项目 ' + project.projectName,
+        desc: '用户 ' + user.userName + ' 被允许加入项目 ' + project.projectName,
         userId: userId,
         avatar: master.avatar,
         type: 'normal'

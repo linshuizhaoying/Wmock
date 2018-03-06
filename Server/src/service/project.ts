@@ -113,7 +113,7 @@ const addUserProject = async (userId: string, project: Project) => {
     projectId: result,
     objectId: result,
     objectName: project.projectName,
-    desc: '添加了新项目: ' + project.projectName,
+    desc: '添加了新项目 ' + project.projectName,
     userId: userId,
     avatar: userData.avatar,
     type: 'normal'
@@ -136,7 +136,7 @@ const addUserProject = async (userId: string, project: Project) => {
     projectId: result,
     objectId: teamId,
     objectName: project.projectName,
-    desc: '添加了新团队: ' + project.projectName,
+    desc: '添加了新团队 ' + project.projectName,
     userId: userId,
     avatar: userData.avatar,
     type: 'normal'
@@ -189,11 +189,29 @@ export const updateProject = async (ctx: any) => {
   currentProject.masterId = project.masterId || currentProject.masterId
   console.log(currentProject)
   const result = await UpdateProject(currentProject)
+
+  // 添加对应项目更新消息
+  const { userId } = ctx.tokenContent;
+  const userData: UserData = await FindUserById(userId)
+  const updateProjectMessage: MessageData = {
+    operatorId: userId,
+    operatorName: userData.userName,
+    action: 'update',
+    projectId: _id,
+    objectId: _id,
+    objectName: currentProject.projectName,
+    desc: '用户 ' + userData.userName + ' 更新了项目 ' + currentProject.projectName,
+    userId: userId,
+    avatar: userData.avatar,
+    type: 'normal'
+  }
+  await AddMessage(updateProjectMessage)
+
+
   return ctx.body = success(result, '更新成功!')
 }
 
 export const removeProject = async (ctx: any) => {
-  const project: Project = ctx.request.body;
   const id = ctx.checkBody('id').notEmpty().value
   if (ctx.errors) {
     return ctx.body = error('用户数据不正常,删除失败!')
@@ -201,6 +219,24 @@ export const removeProject = async (ctx: any) => {
   // 先批量删除对应项目下的接口
   const interfaceListData = await InterfaceList(id)
   await interfaceListData.map(async (item: InterfaceData) => await RemoveInterface(item._id))
+
+  // const project: ProjectData = await FindProjectById(id)
+  // // 添加对应项目删除消息
+  // const { userId } = ctx.tokenContent;
+  // const userData: UserData = await FindUserById(userId)
+  // const removeProjectMessage: MessageData = {
+  //   operatorId: userId,
+  //   operatorName: userData.userName,
+  //   action: 'remove',
+  //   projectId: id,
+  //   objectId: id,
+  //   objectName: project.projectName,
+  //   desc: '用户 ' + userData.userName + ' 删除了项目 ' + project.projectName,
+  //   userId: userId,
+  //   avatar: userData.avatar,
+  //   type: 'normal'
+  // }
+  // await AddMessage(removeProjectMessage)
 
   const result = await RemoveProject(id)
 
