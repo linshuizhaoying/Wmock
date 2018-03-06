@@ -270,6 +270,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                         baseModelList={this.props.baseModelList}
                         customModelList={this.props.customModelList}
                         userId={this.props.userId}
+                        userName={this.props.userName}
                       />}
                   />
                   <Route

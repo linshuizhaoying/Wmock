@@ -123,3 +123,12 @@ interface InterfaceData {
   desc: string,
   mode: string,
 }
+
+interface ModelData{
+  _id?: string,
+  modelDataName: string,
+  modelDesc: string,
+  modelMode: string,
+  userId: string,
+  userName: string,
+}

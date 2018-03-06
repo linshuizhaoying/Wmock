@@ -113,7 +113,7 @@ const addUserProject = async (userId: string, project: Project) => {
     projectId: result,
     objectId: result,
     objectName: project.projectName,
-    desc: '添加了新项目 ' + project.projectName,
+    desc:  '用户 ' + userData.userName + '添加了新项目 ' + project.projectName,
     userId: userId,
     avatar: userData.avatar,
     type: 'normal'
@@ -143,8 +143,6 @@ const addUserProject = async (userId: string, project: Project) => {
   }
   await AddMessage(projectMessage)
   await AddMessage(teamMessage)
-
-
 
   return result
 }

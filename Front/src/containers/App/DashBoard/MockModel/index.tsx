@@ -58,11 +58,17 @@ export class MockModel extends React.Component<AppProps, MockModelState> {
   add = (data: Model) => {
     const { dispatch } = this.props;
     dispatch(addModel(data))
+    setTimeout(() => {
+      this.props.refresh()
+    }, 500)
   }
 
   update = (data: Model) => {
     const { dispatch } = this.props;
     dispatch(updateModel(data))
+    setTimeout(() => {
+      this.props.refresh()
+    }, 500)
   }
   showModelMode = () => {
     this.setState({
@@ -84,6 +90,9 @@ export class MockModel extends React.Component<AppProps, MockModelState> {
   remove = (id: string) => {
     const { dispatch } = this.props;
     dispatch(removeModel({ id }))
+    setTimeout(() => {
+      this.props.refresh()
+    }, 500)
   }
 
   showModelDocument = () => {
@@ -141,7 +150,7 @@ export class MockModel extends React.Component<AppProps, MockModelState> {
                   </div>]}
                 >
                   <ul className="modelContent">
-                    <li> <div className="pre">名称:</div><div className="modelName">{item.modelName}</div></li>
+                    <li> <div className="pre">名称:</div><div className="modelDataName">{item.modelDataName}</div></li>
                     <li> <div className="pre">描述:</div><div className="modelDesc">{item.modelDesc}</div></li>
                   </ul>
                 </Card>
@@ -160,6 +169,8 @@ export class MockModel extends React.Component<AppProps, MockModelState> {
           hideModelMode={this.hideModelMode}
           visible={this.state.modelModeVisible}
           data={this.state.currentModelData}
+          userId={this.props.userId}
+          userName={this.props.userName}
         />
         <Modal
           visible={this.state.modelDocumentVisble}
@@ -172,7 +183,7 @@ export class MockModel extends React.Component<AppProps, MockModelState> {
           <h3>
             常见的Mock都提供基本数据类型,而项目中想要更快速的开发需要更复杂的高级类型组合。Mock模型功能让用户自由组合配置数据，将其封装成一个模块在项目接口构建时快速调用。
           </h3>
-          <Divider>示例语法</Divider>
+          <Divider><a target="_blank" href="http://mockjs.com/examples.html">示例语法</a></Divider>
           <table className="table table-bordered">
             <thead>
               <tr>

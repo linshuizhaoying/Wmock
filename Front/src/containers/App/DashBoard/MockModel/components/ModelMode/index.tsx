@@ -21,7 +21,7 @@ export class ModelMode extends React.Component<ModelModeProps, ModelModeState> {
       status: 'add',
       visible: false,
       editorContent: '',
-      modelName: '',
+      modelDataName: '',
       modelDesc: '',
       modelMode: '',
       id: '',
@@ -34,7 +34,7 @@ export class ModelMode extends React.Component<ModelModeProps, ModelModeState> {
     if (nextProps.data) {
       this.setState({
         id: nextProps.data._id,
-        modelName: nextProps.data.modelName,
+        modelDataName: nextProps.data.modelDataName,
         modelDesc: nextProps.data.modelDesc,
         modelMode: nextProps.data.modelMode,
         editorContent: nextProps.data.modelMode,
@@ -46,7 +46,7 @@ export class ModelMode extends React.Component<ModelModeProps, ModelModeState> {
     } else {
       this.setState({
         id: '',
-        modelName: '',
+        modelDataName: '',
         modelDesc: '',
         modelMode: '',
         editorContent: `{
@@ -84,7 +84,7 @@ export class ModelMode extends React.Component<ModelModeProps, ModelModeState> {
 
   changeName = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      modelName: e.target.value
+      modelDataName: e.target.value
     })
   }
   changeDesc = (e: ChangeEvent<HTMLInputElement>) => {
@@ -101,11 +101,11 @@ export class ModelMode extends React.Component<ModelModeProps, ModelModeState> {
   update = () => {
     let newInterface = {
       '_id': this.state.id,
-      'modelName': this.state.modelName,
+      'modelDataName': this.state.modelDataName,
       'modelDesc': this.state.modelDesc,
       'modelMode': this.state.editorContent,
     }
-    if (this.state.modelName === '' || this.state.modelDesc === '' || this.state.editorContent === '') {
+    if (this.state.modelDataName === '' || this.state.modelDesc === '' || this.state.editorContent === '') {
       Message.error(`有内容为空，请填写!!`);
     } else {
       this.props.update(newInterface)
@@ -114,21 +114,23 @@ export class ModelMode extends React.Component<ModelModeProps, ModelModeState> {
   }
 
   add = () => {
-    let newInterface = {
-      'modelName': this.state.modelName,
+    let newModel = {
+      'modelDataName': this.state.modelDataName,
       'modelDesc': this.state.modelDesc,
       'modelMode': this.state.editorContent,
+      'userId': this.props.userId,
+      'userName': this.props.userName,
     }
-    if (this.state.modelName === '' || this.state.modelDesc === '' || this.state.editorContent === '') {
+    if (this.state.modelDataName === '' || this.state.modelDesc === '' || this.state.editorContent === '') {
       Message.error(`有内容为空，请填写!!`);
     } else {
-      this.props.add(newInterface)
+      this.props.add(newModel)
       this.props.hideModelMode()
     }
 
   }
   selectModel = (value: string) => {
-    if (copy(this.formatCode(value))) {
+    if (copy(value)) {
       Message.success('复制模型成功,可直接用于模型编辑!');
     } else {
       Message.error('复制失败!');
@@ -179,7 +181,7 @@ export class ModelMode extends React.Component<ModelModeProps, ModelModeState> {
               setOptions={{
                 enableBasicAutocompletion: false,
                 enableLiveAutocompletion: false,
-                enableSnippets: false,
+                enableSnippets: true,
                 showLineNumbers: true,
                 tabSize: 2,
               }}
@@ -195,7 +197,7 @@ export class ModelMode extends React.Component<ModelModeProps, ModelModeState> {
               <OptGroup label="基础模型">
                 {this.props.baseModelList.map((item: Model) => {
                   return (
-                    <Option key={item.modelMode}>{item.modelName}</Option>
+                    <Option key={item.modelMode}>{item.modelDataName}</Option>
                   )
 
                 })}
@@ -203,7 +205,7 @@ export class ModelMode extends React.Component<ModelModeProps, ModelModeState> {
               <OptGroup label="自定义模型">
                 {this.props.customModelList.map((item: Model) => {
                   return (
-                    <Option key={item.modelMode}>{item.modelName}</Option>
+                    <Option key={item.modelMode}>{item.modelDataName}</Option>
                   )
 
                 })}
@@ -219,7 +221,7 @@ export class ModelMode extends React.Component<ModelModeProps, ModelModeState> {
             <div className="form">
               <div className="item">
                 <h3>模型名称</h3>
-                <Input addonAfter="" value={this.state.modelName} onChange={this.changeName} />
+                <Input addonAfter="" value={this.state.modelDataName} onChange={this.changeName} />
               </div>
               <div className="item">
                 <h3>描述</h3>

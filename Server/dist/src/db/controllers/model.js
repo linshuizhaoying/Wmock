@@ -8,40 +8,88 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const Model = require('../models/model');
 // 基础模型列表
 exports.BaseModelList = () => __awaiter(this, void 0, void 0, function* () {
     console.log('base');
     const data = [{
-            modelName: '字符串',
-            modelMode: '"string|1-10": "$"'
+            modelDataName: '字符串',
+            modelMode: '{"string|1-10": "$"}'
         },
         {
-            modelName: '数字',
-            modelMode: '"number|1-100": 100'
+            modelDataName: '数字',
+            modelMode: '{"number|1-100": 100}'
+        },
+        {
+            modelDataName: '布尔',
+            modelMode: '{"boolean|1-2": true}'
+        },
+        {
+            modelDataName: '对象',
+            modelMode: '{"object|2": {"310000": "上海市","320000": "江苏省", "330000": "浙江省", "340000": "安徽省"}}'
+        },
+        {
+            modelDataName: '数组',
+            modelMode: '{"array|1-10": [{"name|+1": ["Hello","Mock.js", "!" ]} ]}'
+        },
+        {
+            modelDataName: '函数',
+            modelMode: '{"foo": "Syntax Demo","name": function() {return this.foo } }'
+        },
+        {
+            modelDataName: '正则',
+            modelMode: '{"regexp": /\d{5,10}/}'
         },
     ];
     return yield data;
 });
 // 自定义模型列表
-exports.CustomModelList = (id) => __awaiter(this, void 0, void 0, function* () {
-    console.log(id);
-    const data = [{
-            _id: 'model001',
-            modelName: 'Wmock - User模型',
-            modelDesc: 'Wmock项目的User模型',
-            modelMode: '{ "function": function() {return 233}}',
-            userId: 'user001',
-            userName: '2333'
-        },
-        {
-            _id: 'model002',
-            modelName: 'Wmock - Mock模型',
-            modelDesc: 'Wmock项目的Mock模型',
-            modelMode: '{ "function": function() {return 666}}',
-            userId: 'user002',
-            userName: '666'
+exports.CustomModelList = (userId) => __awaiter(this, void 0, void 0, function* () {
+    return yield Model.find({ userId: userId });
+    // const data = [{
+    //   _id: 'model001',
+    //   modelDataName: 'Wmock - User模型',
+    //   modelDesc: 'Wmock项目的User模型',
+    //   modelMode: '{ "function": function() {return 233}}',
+    //   userId: 'user001',
+    //   userName: '2333'
+    // },
+    // {
+    //   _id: 'model002',
+    //   modelDataName: 'Wmock - Mock模型',
+    //   modelDesc: 'Wmock项目的Mock模型',
+    //   modelMode: '{ "function": function() {return 666}}',
+    //   userId: 'user002',
+    //   userName: '666'
+    // }
+    // ]
+});
+exports.AddModel = (originModel) => __awaiter(this, void 0, void 0, function* () {
+    const newModel = new Model(originModel);
+    let result;
+    yield newModel.save((error) => __awaiter(this, void 0, void 0, function* () {
+        if (error) {
+            result = error.toString();
         }
-    ];
-    return yield data;
+    })).then((model) => __awaiter(this, void 0, void 0, function* () {
+        result = model._id;
+    }));
+    return result;
+});
+exports.UpdateModel = (model) => __awaiter(this, void 0, void 0, function* () {
+    return yield Model.update({
+        _id: model._id
+    }, {
+        $set: {
+            modelDataName: model.modelDataName,
+            modelDesc: model.modelDesc,
+            modelMode: model.modelMode,
+        }
+    });
+});
+exports.RemoveModel = (id) => __awaiter(this, void 0, void 0, function* () {
+    return Model.remove({
+        _id: id
+    });
 });
 //# sourceMappingURL=model.js.map
