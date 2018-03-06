@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
     role: { type: String, default: 1 },
     avatar: { type: String, default: 'default.png' },
     email: { type: String, default: '' },
-    regDate: { type: Date, default: Date.now() }
+    regDate: { type: Date, default: Date.now }
 });
 module.exports = mongoose.model('User', UserSchema);
 //# sourceMappingURL=user.js.map

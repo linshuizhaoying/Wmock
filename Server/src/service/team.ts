@@ -121,15 +121,38 @@ export const rejectJoinGroup = async (ctx: any) => {
 }
 
 export const removeGroupMember = async (ctx: any) => {
-  const userId = ctx.checkBody('userId').notEmpty().value
+  const removeUserId = ctx.checkBody('userId').notEmpty().value
   const projectId = ctx.checkBody('projectId').notEmpty().value
   if (ctx.errors) {
     console.log(ctx.errors)
     return ctx.body = error('用户数据不正常,操作失败!')
   }
-  await RemoveGroupMember(projectId, userId)
+  await RemoveGroupMember(projectId, removeUserId)
 
-  return ctx.body = success({}, '移除成功!')
+
+
+  // 添加对应接口更新消息
+  const project: ProjectData = await FindProjectById(projectId)
+  const { userId } = ctx.tokenContent;
+  const removeUserData: UserData = await FindUserById(removeUserId)
+  const userData: UserData = await FindUserById(userId)
+  const state = removeUserId == userId ? '退出' : '移出'
+  const updateInterfaceMessage: MessageData = {
+    operatorId: userId,
+    operatorName: userData.userName,
+    action: 'remove',
+    projectId: projectId,
+    objectId: removeUserId,
+    objectName: removeUserData.userName,
+    desc: '用户 ' + removeUserData.userName + ' ' + state + ' 项目 ' + project.projectName,
+    userId: userId,
+    avatar: userData.avatar,
+    type: 'normal'
+  }
+  await AddMessage(updateInterfaceMessage)
+
+
+  return ctx.body = success({}, state + '成功!')
 }
 
 

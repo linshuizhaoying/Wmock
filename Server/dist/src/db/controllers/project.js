@@ -33,6 +33,9 @@ exports.FindProjectListByUserId = (userId) => __awaiter(this, void 0, void 0, fu
     })));
     return relatedProjectMap;
 });
+exports.FindProjectListById = (projectId) => __awaiter(this, void 0, void 0, function* () {
+    return yield Project.find({ _id: projectId });
+});
 exports.FindProjectById = (projectId) => __awaiter(this, void 0, void 0, function* () {
     return yield Project.findOne({ _id: projectId });
 });
@@ -72,7 +75,7 @@ exports.UnJoinProjectList = (userId) => __awaiter(this, void 0, void 0, function
             const projectTeam = yield team_1.FindTeamByProjectId(oldItem._id);
             yield projectTeam.member.map((user) => __awaiter(this, void 0, void 0, function* () {
                 // 如果对应的团队里面也没有该用户，说明是未加入的团队
-                if (user._id === userId) {
+                if (user._id == userId) {
                     found = true;
                 }
             }));

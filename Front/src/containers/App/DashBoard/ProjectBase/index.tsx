@@ -522,7 +522,6 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
               : null
           }
 
-
           <Popconfirm
             title="确定克隆该项目么?"
             onConfirm={() => { this.cloneCurrentProject(project._id) }}

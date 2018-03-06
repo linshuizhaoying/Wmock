@@ -13,17 +13,19 @@ const columns = [{
   render: (action: string) => (
     <div>
       {action === 'add' ? '增加' : ''}
-      {action === 'delete' ? '删除' : ''}
+      {action === 'remove' ? '删除' : ''}
       {action === 'update' ? '更新' : ''}
       {action === 'reject' ? '拒绝' : ''}
       {action === 'accept' ? '允许' : ''}
     </div>
   ),
-}, {
-  title: '操作对象',
-  dataIndex: 'objectName',
-  key: 'objectName',
-}, {
+},
+// }, {
+//   title: '操作对象',
+//   dataIndex: 'objectName',
+//   key: 'objectName',
+// }, 
+{
   title: '描述',
   dataIndex: 'desc',
   key: 'desc',

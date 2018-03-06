@@ -26,6 +26,10 @@ export const FindProjectListByUserId = async (userId: string) => {
   return relatedProjectMap
 }
 
+export const FindProjectListById = async (projectId: string) => {
+  return await Project.find({ _id: projectId })
+}
+
 export const FindProjectById = async (projectId: string) => {
   return await Project.findOne({ _id: projectId })
 }
@@ -72,7 +76,7 @@ export const UnJoinProjectList = async (userId: string) => {
       const projectTeam: TeamData = await FindTeamByProjectId(oldItem._id)
       await projectTeam.member.map(async (user: UserData) => {
         // 如果对应的团队里面也没有该用户，说明是未加入的团队
-        if (user._id === userId) {
+        if (user._id == userId) {
           found = true
         }
       })

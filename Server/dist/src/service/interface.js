@@ -30,6 +30,23 @@ exports.addInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
     }
     else {
         const result = yield index_1.AddInterface(interfaceItem);
+        // 添加对应接口增加消息
+        const project = yield index_1.FindProjectById(projectId);
+        const { userId } = ctx.tokenContent;
+        const userData = yield index_1.FindUserById(userId);
+        const addInterfaceMessage = {
+            operatorId: userId,
+            operatorName: userData.userName,
+            action: 'add',
+            projectId: projectId,
+            objectId: result,
+            objectName: interfaceName,
+            desc: '用户 ' + userData.userName + ' 增加了接口 ' + interfaceName,
+            userId: userId,
+            avatar: userData.avatar,
+            type: 'normal'
+        };
+        yield index_1.AddMessage(addInterfaceMessage);
         return ctx.body = dataHandle_1.success({ interfaceId: result }, '添加成功!');
     }
 });
@@ -46,6 +63,23 @@ exports.updateInterface = (ctx) => __awaiter(this, void 0, void 0, function* () 
         return ctx.body = dataHandle_1.error('用户数据不正常,更新失败!');
     }
     const result = yield index_1.UpdateInterface(interfaceItem);
+    // 添加对应接口更新消息
+    const project = yield index_1.FindProjectById(projectId);
+    const { userId } = ctx.tokenContent;
+    const userData = yield index_1.FindUserById(userId);
+    const updateInterfaceMessage = {
+        operatorId: userId,
+        operatorName: userData.userName,
+        action: 'update',
+        projectId: projectId,
+        objectId: _id,
+        objectName: interfaceName,
+        desc: '用户 ' + userData.userName + ' 更新了接口 ' + interfaceName,
+        userId: userId,
+        avatar: userData.avatar,
+        type: 'normal'
+    };
+    yield index_1.AddMessage(updateInterfaceMessage);
     return ctx.body = dataHandle_1.success({}, '更新成功!');
 });
 exports.removeInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -54,6 +88,23 @@ exports.removeInterface = (ctx) => __awaiter(this, void 0, void 0, function* () 
     if (ctx.errors) {
         return ctx.body = dataHandle_1.error('用户数据不正常,删除失败!');
     }
+    // 添加对应接口删除消息
+    const interfaceData = yield index_1.FindInterfaceById(interfaceId);
+    const { userId } = ctx.tokenContent;
+    const userData = yield index_1.FindUserById(userId);
+    const removeInterfaceMessage = {
+        operatorId: userId,
+        operatorName: userData.userName,
+        action: 'remove',
+        projectId: interfaceData.projectId,
+        objectId: interfaceId,
+        objectName: interfaceData.interfaceName,
+        desc: '用户 ' + userData.userName + ' 删除了接口 ' + interfaceData.interfaceName,
+        userId: userId,
+        avatar: userData.avatar,
+        type: 'normal'
+    };
+    yield index_1.AddMessage(removeInterfaceMessage);
     const result = yield index_1.RemoveInterface(interfaceId);
     return ctx.body = dataHandle_1.success({}, '删除成功!');
 });
@@ -72,7 +123,7 @@ exports.cloneInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
     return ctx.body = dataHandle_1.success({}, '克隆成功!');
 });
 exports.cloneInterfaceItem = (projectId, interfaceId) => __awaiter(this, void 0, void 0, function* () {
-    const oldInterface = yield index_1.FindInterfaceById(interfaceId);
+    const oldInterface = yield index_1.FindInterfaceListById(interfaceId);
     // 洗下接口数据
     const cleanInterface = oldInterface.map((item) => _.pick(item, field.pureInterfaceField));
     cleanInterface[0].projectId = projectId;

@@ -9,8 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Interface = require('../models/interface');
-exports.FindInterfaceById = (interfaceId) => __awaiter(this, void 0, void 0, function* () {
+exports.FindInterfaceListById = (interfaceId) => __awaiter(this, void 0, void 0, function* () {
     return yield Interface.find({ _id: interfaceId });
+});
+exports.FindInterfaceById = (interfaceId) => __awaiter(this, void 0, void 0, function* () {
+    return yield Interface.findOne({ _id: interfaceId });
 });
 exports.FindInterfaceByMock = (projectId, url, method) => __awaiter(this, void 0, void 0, function* () {
     return yield Interface.findOne({ projectId: projectId, url: url, method: method });
