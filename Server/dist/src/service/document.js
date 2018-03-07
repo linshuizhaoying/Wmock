@@ -32,9 +32,7 @@ exports.documentList = (ctx) => __awaiter(this, void 0, void 0, function* () {
                 });
             })));
         }
-        console.log('result', result);
     })));
-    console.log('final', result);
     return ctx.body = dataHandle_1.success(result, '获取成功');
 });
 exports.addDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {

@@ -181,29 +181,34 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
               </Tooltip>
 
             </div>
-            <div className="proejctGroup title">
-              团队成员
+            {
+              this.props.data.type === 'user' ?
+                <div className="proejctGroup title">
+                  团队成员
                  <ul className="userList">
-                {this.props.data.teamMember.length > 0 ?
-                  this.props.data.teamMember.map((user: TeamMember, key: number) => {
-                    return (
+                    {this.props.data.teamMember.length > 0 ?
+                      this.props.data.teamMember.map((user: TeamMember, key: number) => {
+                        return (
 
-                      <li key={key}>
-                        <Popover content={<div><div>用户名: {user.userName}</div><div>职位: {user.role} </div></div>}>
-                          <Avatar src={imgBaseUrl + user.avatar} />
-                        </Popover>
-                      </li>
-                    )
-                  }) : null}
-                <Tooltip placement="top" title={'管理项目团队'}>
-                  <Link to="/wmock/teamManage">
-                    <li className="addProjectUser">
-                      <Icon type="team" />
-                    </li>
-                  </Link>
-                </Tooltip>
-              </ul>
-            </div>
+                          <li key={key}>
+                            <Popover content={<div><div>用户名: {user.userName}</div><div>职位: {user.role} </div></div>}>
+                              <Avatar src={imgBaseUrl + user.avatar} />
+                            </Popover>
+                          </li>
+                        )
+                      }) : null}
+                    <Tooltip placement="top" title={'管理项目团队'}>
+                      <Link to="/wmock/teamManage">
+                        <li className="addProjectUser">
+                          <Icon type="team" />
+                        </li>
+                      </Link>
+                    </Tooltip>
+                  </ul>
+                </div>
+                : null
+            }
+
             <div className="proejctDesc title">
               项目描述
               <EditableCell
