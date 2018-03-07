@@ -124,11 +124,22 @@ interface InterfaceData {
   mode: string,
 }
 
-interface ModelData{
+interface ModelData {
   _id?: string,
   modelDataName: string,
   modelDesc: string,
   modelMode: string,
   userId: string,
   userName: string,
+}
+
+interface DocumentData {
+  _id?: string,
+  content: string,
+  desc: string,
+  name: string,
+  ownerId: string,
+  ownerName: string,
+  assign: Array<string>,
+  type: string, // project other  spec
 }

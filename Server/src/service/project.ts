@@ -1,9 +1,11 @@
 import {
   AddProject,
+  AllProjectList,
   AddTeam,
   DemoProject,
   FindProjectById,
   FindTeamByProjectId,
+  FindProjectDataListByUserId,
   FindUserById,
   UnJoinProjectList,
   UserProject,
@@ -66,6 +68,16 @@ const getProjectList = async (projectList: Array<ProjectData>) => {
   })
   return result
 }
+
+export const allProjectList = async (ctx: any) => {
+  const { userId } = ctx.tokenContent;
+  const data = await FindProjectDataListByUserId(userId)
+  const projectList = data.map((item: ProjectData) => _.pick(item, field.projectList))
+
+  // const projectList = data.map((item: ProjectData) => _.pick(item, field.projectList))
+
+  return ctx.body = success(projectList, '获取成功')
+}
 export const userProjectList = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
   let result: Array<ProjectData> = []
@@ -113,7 +125,7 @@ const addUserProject = async (userId: string, project: Project) => {
     projectId: result,
     objectId: result,
     objectName: project.projectName,
-    desc:  '用户 ' + userData.userName + '添加了新项目 ' + project.projectName,
+    desc: '用户 ' + userData.userName + '添加了新项目 ' + project.projectName,
     userId: userId,
     avatar: userData.avatar,
     type: 'normal'
@@ -217,24 +229,6 @@ export const removeProject = async (ctx: any) => {
   // 先批量删除对应项目下的接口
   const interfaceListData = await InterfaceList(id)
   await interfaceListData.map(async (item: InterfaceData) => await RemoveInterface(item._id))
-
-  // const project: ProjectData = await FindProjectById(id)
-  // // 添加对应项目删除消息
-  // const { userId } = ctx.tokenContent;
-  // const userData: UserData = await FindUserById(userId)
-  // const removeProjectMessage: MessageData = {
-  //   operatorId: userId,
-  //   operatorName: userData.userName,
-  //   action: 'remove',
-  //   projectId: id,
-  //   objectId: id,
-  //   objectName: project.projectName,
-  //   desc: '用户 ' + userData.userName + ' 删除了项目 ' + project.projectName,
-  //   userId: userId,
-  //   avatar: userData.avatar,
-  //   type: 'normal'
-  // }
-  // await AddMessage(removeProjectMessage)
 
   const result = await RemoveProject(id)
 

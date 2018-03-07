@@ -187,23 +187,49 @@ export class DocumentMode extends React.Component<DocumentModePorps, DocumentMod
                 <Option value="other">其他</Option>
               </Select>
             </div>
-            <div className="item">
-              <h3>分配项目</h3>
-              <Select
-                mode="multiple"
-                style={{ width: '100%' }}
-                placeholder="将文档分配给项目"
-                value={this.state.assign}
-                onChange={this.handleChange}
-              >
-                {this.props.projectList.map((item: Project) => {
-                  return (
-                    <Option key={item._id}>{item.projectName}</Option>
-                  )
+            {
+              this.state.status === 'add' ?
+                <div className="item">
+                  <h3>分配项目</h3>
+                  <Select
+                    mode="multiple"
+                    style={{ width: '100%' }}
+                    placeholder="将文档分配给项目"
+                    value={this.state.assign}
+                    onChange={this.handleChange}
+                  >
+                    {this.props.projectList.map((item: Project) => {
+                      return (
+                        <Option key={item._id}>{item.projectName}</Option>
+                      )
 
-                })}
-              </Select>
-            </div>
+                    })}
+                  </Select>
+                </div> :
+                null
+            }
+
+            {
+              this.state.status === 'update' && this.props.userId === this.state.ownerId ?
+                <div className="item">
+                  <h3>分配项目</h3>
+                  <Select
+                    mode="multiple"
+                    style={{ width: '100%' }}
+                    placeholder="将文档分配给项目"
+                    value={this.state.assign}
+                    onChange={this.handleChange}
+                  >
+                    {this.props.projectList.map((item: Project) => {
+                      return (
+                        <Option key={item._id}>{item.projectName}</Option>
+                      )
+
+                    })}
+                  </Select>
+                </div> :
+                null
+            }
 
             <div className="item">
               <h3>文档描述</h3>

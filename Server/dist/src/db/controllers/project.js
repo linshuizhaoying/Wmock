@@ -33,11 +33,37 @@ exports.FindProjectListByUserId = (userId) => __awaiter(this, void 0, void 0, fu
     })));
     return relatedProjectMap;
 });
+exports.FindProjectDataListByUserId = (userId) => __awaiter(this, void 0, void 0, function* () {
+    const allProject = yield Project.find({});
+    // 返回与用户相关的所有项目
+    const relatedProjectList = [];
+    yield Promise.all(allProject.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
+        // 先添加自己创建的项目
+        if (userId === oldItem.masterId) {
+            relatedProjectList.push(oldItem);
+        }
+        // 对不是自己创建的项目进行判断
+        if (userId !== oldItem.masterId) {
+            // 找到对应的团队
+            const projectTeam = yield team_1.FindTeamByProjectId(oldItem._id);
+            yield projectTeam.member.map((user) => __awaiter(this, void 0, void 0, function* () {
+                // 如果对应的团队里面有该用户，则加入相关的项目列表
+                if (user._id == userId) {
+                    relatedProjectList.push(oldItem);
+                }
+            }));
+        }
+    })));
+    return relatedProjectList;
+});
 exports.FindProjectListById = (projectId) => __awaiter(this, void 0, void 0, function* () {
     return yield Project.find({ _id: projectId });
 });
 exports.FindProjectById = (projectId) => __awaiter(this, void 0, void 0, function* () {
     return yield Project.findOne({ _id: projectId });
+});
+exports.AllProjectList = () => __awaiter(this, void 0, void 0, function* () {
+    return yield Project.find();
 });
 exports.DemoProject = (userId) => __awaiter(this, void 0, void 0, function* () {
     const projectMap = yield exports.FindProjectListByUserId(userId);

@@ -16,6 +16,7 @@ class ProjectDemo extends React.Component<ProjectProps, {}> {
           messagesList={this.props.messagesList}
           userId={this.props.userId}
           type={'demo'}
+          documentRefresh={this.props.documentRefresh}
         />
       </div>
     );

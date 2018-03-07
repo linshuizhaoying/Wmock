@@ -293,6 +293,7 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
               userId={this.props.userId}
               documentList={this.props.documentList}
               projectList={this.props.projectList}
+              refresh={this.props.documentRefresh}
             />
           </TabPane>
         </Tabs>

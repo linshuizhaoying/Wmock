@@ -19,6 +19,7 @@ export const Router = (app: any) => {
 
     userProjectList,
     demoProjectList,
+    allProjectList,
 
     documentList,
     removeDocument,
@@ -65,6 +66,8 @@ export const Router = (app: any) => {
     .post('/api/updateUser', tokenPermission, Service.updateUser)
     .get('/api/messagesList', tokenPermission, Service.messagesList)
 
+    // 获取所有项目列表
+    .get('/api/allProjectList', tokenPermission, Service.allProjectList)
     // 获取示例项目列表
     .get('/api/demoList', tokenPermission, Service.demoProjectList)
     // 获取用户项目列表

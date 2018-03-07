@@ -16,6 +16,7 @@ import UserInfo from './UserInfo';
 // import { ChangeEvent } from 'react';
 import { connect } from 'react-redux';
 import {
+  allProjectList,
   fetchBaseModel,
   fetchCustomModel,
   fetchDemo,
@@ -64,6 +65,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
     this.getBaseModelList();
     this.getCustomModelList()
     this.getDocumentList()
+    this.getAllProject()
   }
 
   componentWillReceiveProps(nextProps: AppProps) {
@@ -101,6 +103,11 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
       this.showUserInfoVisible()
     }
   }
+
+  getAllProject = () => {
+    const { dispatch } = this.props;
+    dispatch(allProjectList())
+  }
   getMessagesList = () => {
     const { dispatch } = this.props;
     dispatch(fetchMessages())
@@ -121,7 +128,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
     dispatch(fetchDemo())
   }
   getDocumentList = () => {
-    this.getProjectList()
+    this.getAllProject()
     const { dispatch } = this.props;
     dispatch(fetchDocument())
   }
@@ -232,7 +239,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                 </SubMenu>
 
                 <Menu.Item key="7">
-                  <Link to="/wmock/projectSpec" onClick={() => { this.getDocumentList() }}>
+                  <Link to="/wmock/projectSpec" onClick={() => { this.getDocumentList(); }}>
                     <Icon type="folder-open" />
                     <span>
                       文档与规范
@@ -285,6 +292,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                         projectList={this.props.projectList}
                         messagesList={this.props.messagesList}
                         userId={this.props.userId}
+                        documentRefresh={() => this.getDocumentList()}
                       />}
                   />
                   <Route
@@ -306,6 +314,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                         otherList={this.props.projectList}
                         messagesList={this.props.messagesList}
                         userId={this.props.userId}
+                        documentRefresh={() => this.getDocumentList()}
                       />}
                   />
                   <Route
@@ -313,7 +322,8 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                     render={() =>
                       <ProjectSpec
                         refresh={() => this.getDocumentList()}
-                        projectList={this.props.projectList}
+                        unJoinprojectList={this.props.unJoinprojectList}
+                        projectList={this.props.allProjectList}
                         documentList={this.props.documentList}
                         userId={this.props.userId}
                       />}
@@ -367,6 +377,7 @@ const mapStateToProps = (state: DashBoardState) => ({
   unJoinprojectList: state.project.unJoinList,
   baseModelList: state.model.base,
   customModelList: state.model.custom,
+  allProjectList: state.project.allProjectList
 })
 
 export default connect(mapStateToProps)(DashBoard);
