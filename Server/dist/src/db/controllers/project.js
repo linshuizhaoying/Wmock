@@ -15,20 +15,22 @@ exports.FindProjectListByUserId = (userId) => __awaiter(this, void 0, void 0, fu
     // 返回与用户相关的所有项目
     const relatedProjectMap = new Map();
     yield Promise.all(allProject.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
-        // 先添加自己创建的项目
-        if (userId === oldItem.masterId) {
-            relatedProjectMap[oldItem._id] = true;
-        }
-        // 对不是自己创建的项目进行判断
-        if (userId !== oldItem.masterId) {
-            // 找到对应的团队
-            const projectTeam = yield team_1.FindTeamByProjectId(oldItem._id);
-            yield projectTeam.member.map((user) => __awaiter(this, void 0, void 0, function* () {
-                // 如果对应的团队里面有该用户，则加入相关的项目列表
-                if (user._id == userId) {
-                    relatedProjectMap[projectTeam.projectId] = true;
-                }
-            }));
+        if (oldItem.type !== 'demo') {
+            // 先添加自己创建的项目
+            if (userId === oldItem.masterId) {
+                relatedProjectMap[oldItem._id] = true;
+            }
+            // 对不是自己创建的项目进行判断
+            if (userId !== oldItem.masterId) {
+                // 找到对应的团队
+                const projectTeam = yield team_1.FindTeamByProjectId(oldItem._id);
+                yield projectTeam.member.map((user) => __awaiter(this, void 0, void 0, function* () {
+                    // 如果对应的团队里面有该用户，则加入相关的项目列表
+                    if (user._id == userId) {
+                        relatedProjectMap[projectTeam.projectId] = true;
+                    }
+                }));
+            }
         }
     })));
     return relatedProjectMap;
@@ -38,20 +40,22 @@ exports.FindProjectDataListByUserId = (userId) => __awaiter(this, void 0, void 0
     // 返回与用户相关的所有项目
     const relatedProjectList = [];
     yield Promise.all(allProject.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
-        // 先添加自己创建的项目
-        if (userId === oldItem.masterId) {
-            relatedProjectList.push(oldItem);
-        }
-        // 对不是自己创建的项目进行判断
-        if (userId !== oldItem.masterId) {
-            // 找到对应的团队
-            const projectTeam = yield team_1.FindTeamByProjectId(oldItem._id);
-            yield projectTeam.member.map((user) => __awaiter(this, void 0, void 0, function* () {
-                // 如果对应的团队里面有该用户，则加入相关的项目列表
-                if (user._id == userId) {
-                    relatedProjectList.push(oldItem);
-                }
-            }));
+        if (oldItem.type !== 'demo') {
+            // 先添加自己创建的项目
+            if (userId === oldItem.masterId) {
+                relatedProjectList.push(oldItem);
+            }
+            // 对不是自己创建的项目进行判断
+            if (userId !== oldItem.masterId) {
+                // 找到对应的团队
+                const projectTeam = yield team_1.FindTeamByProjectId(oldItem._id);
+                yield projectTeam.member.map((user) => __awaiter(this, void 0, void 0, function* () {
+                    // 如果对应的团队里面有该用户，则加入相关的项目列表
+                    if (user._id == userId) {
+                        relatedProjectList.push(oldItem);
+                    }
+                }));
+            }
         }
     })));
     return relatedProjectList;
@@ -66,16 +70,16 @@ exports.AllProjectList = () => __awaiter(this, void 0, void 0, function* () {
     return yield Project.find();
 });
 exports.DemoProject = (userId) => __awaiter(this, void 0, void 0, function* () {
-    const projectMap = yield exports.FindProjectListByUserId(userId);
-    const projectList = [];
-    for (const projectId in projectMap) {
-        const temp = yield exports.FindProjectById(projectId);
-        if (temp.type === 'demo') {
-            projectList.push(temp);
-        }
-    }
-    return projectList;
-    // return await Project.find({ masterId: userId, type: 'demo' })
+    // const projectMap = await FindProjectListByUserId(userId)
+    // const projectList = []
+    // for (const projectId in projectMap) {
+    //   const temp = await FindProjectById(projectId)
+    //   if (temp.type === 'demo') {
+    //     projectList.push(temp)
+    //   }
+    // }
+    // return projectList
+    return yield Project.find({ masterId: userId, type: 'demo' });
 });
 exports.UserProject = (userId) => __awaiter(this, void 0, void 0, function* () {
     // return await Project.find({ masterId: userId, type: 'user' })
@@ -94,25 +98,27 @@ exports.UnJoinProjectList = (userId) => __awaiter(this, void 0, void 0, function
     const allProject = yield Project.find({});
     const unJoinList = [];
     yield Promise.all(allProject.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
-        let found = false;
-        // 先找到不是自己创建的项目
-        if (userId !== oldItem.masterId) {
-            // 找到对应的团队
-            const projectTeam = yield team_1.FindTeamByProjectId(oldItem._id);
-            yield projectTeam.member.map((user) => __awaiter(this, void 0, void 0, function* () {
-                // 如果对应的团队里面也没有该用户，说明是未加入的团队
-                if (user._id == userId) {
-                    found = true;
+        if (oldItem.type !== 'demo') {
+            let found = false;
+            // 先找到不是自己创建的项目
+            if (userId !== oldItem.masterId) {
+                // 找到对应的团队
+                const projectTeam = yield team_1.FindTeamByProjectId(oldItem._id);
+                yield projectTeam.member.map((user) => __awaiter(this, void 0, void 0, function* () {
+                    // 如果对应的团队里面也没有该用户，说明是未加入的团队
+                    if (user._id == userId) {
+                        found = true;
+                    }
+                }));
+                if (!found) {
+                    const result = {
+                        projectId: '',
+                        projectName: ''
+                    };
+                    result.projectId = oldItem._id;
+                    result.projectName = oldItem.projectName;
+                    unJoinList.push(result);
                 }
-            }));
-            if (!found) {
-                const result = {
-                    projectId: '',
-                    projectName: ''
-                };
-                result.projectId = oldItem._id;
-                result.projectName = oldItem.projectName;
-                unJoinList.push(result);
             }
         }
     })));

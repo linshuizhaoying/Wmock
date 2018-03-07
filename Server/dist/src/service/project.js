@@ -26,21 +26,27 @@ const getProjectList = (projectList) => __awaiter(this, void 0, void 0, function
         const interfaceOldData = yield index_1.InterfaceList(item._id);
         // 洗下接口数据
         const interfaceList = interfaceOldData.map((item) => _.pick(item, field.interfaceField));
-        const temp = {
+        const master = {
             _id: '',
             userName: '',
             role: '',
             avatar: ''
         };
-        temp._id = team.masterId;
-        temp.avatar = team.masterAvatar;
-        temp.role = team.role;
-        temp.userName = team.masterName;
+        master._id = team.masterId;
+        master.avatar = team.masterAvatar;
+        master.role = team.role;
+        master.userName = team.masterName;
         const teamMember = [];
         // 团队列表加入创始者
-        teamMember.push(temp);
+        yield teamMember.push(master);
         // 团队列表加入成员
         yield team.member.map((member) => {
+            const temp = {
+                _id: '',
+                userName: '',
+                role: '',
+                avatar: ''
+            };
             temp._id = member._id;
             temp.avatar = member.avatar;
             temp.role = member.role;
@@ -76,11 +82,11 @@ exports.userProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () 
 });
 exports.demoProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
-    let result = [];
+    // let result: Array<ProjectData> = []
     // 获取项目信息
     const projectList = yield index_1.DemoProject(userId);
-    result = yield getProjectList(projectList);
-    return ctx.body = dataHandle_1.success(result, '获取成功');
+    // result = await getProjectList(projectList)
+    return ctx.body = dataHandle_1.success(projectList, '获取成功');
 });
 exports.unJoinProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
@@ -90,6 +96,10 @@ exports.unJoinProjectList = (ctx) => __awaiter(this, void 0, void 0, function* (
 });
 const addUserProject = (userId, project) => __awaiter(this, void 0, void 0, function* () {
     const result = yield index_1.AddProject(project);
+    // 如果只是创建示例项目,不创建团队
+    if (project.type === 'demo') {
+        return;
+    }
     // 添加对应团队
     const team = {
         masterAvatar: '',

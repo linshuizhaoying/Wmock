@@ -34,21 +34,27 @@ const getProjectList = async (projectList: Array<ProjectData>) => {
     const interfaceOldData = await InterfaceList(item._id)
     // 洗下接口数据
     const interfaceList = interfaceOldData.map((item: InterfaceData) => _.pick(item, field.interfaceField))
-    const temp = {
+    const master = {
       _id: '',
       userName: '',
       role: '',
       avatar: ''
     }
-    temp._id = team.masterId
-    temp.avatar = team.masterAvatar
-    temp.role = team.role
-    temp.userName = team.masterName
+    master._id = team.masterId
+    master.avatar = team.masterAvatar
+    master.role = team.role
+    master.userName = team.masterName
     const teamMember: Array<UserData> = []
     // 团队列表加入创始者
-    teamMember.push(temp)
+    await teamMember.push(master)
     // 团队列表加入成员
     await team.member.map((member: UserData) => {
+      const temp = {
+        _id: '',
+        userName: '',
+        role: '',
+        avatar: ''
+      }
       temp._id = member._id
       temp.avatar = member.avatar
       temp.role = member.role
@@ -89,11 +95,11 @@ export const userProjectList = async (ctx: any) => {
 
 export const demoProjectList = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
-  let result: Array<ProjectData> = []
+  // let result: Array<ProjectData> = []
   // 获取项目信息
   const projectList = await DemoProject(userId)
-  result = await getProjectList(projectList)
-  return ctx.body = success(result, '获取成功')
+  // result = await getProjectList(projectList)
+  return ctx.body = success(projectList, '获取成功')
 }
 
 export const unJoinProjectList = async (ctx: any) => {
@@ -105,6 +111,10 @@ export const unJoinProjectList = async (ctx: any) => {
 
 const addUserProject = async (userId: string, project: Project) => {
   const result = await AddProject(project)
+  // 如果只是创建示例项目,不创建团队
+  if (project.type === 'demo') {
+    return
+  }
   // 添加对应团队
   const team: TeamData = {
     masterAvatar: '',

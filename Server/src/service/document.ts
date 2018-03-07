@@ -1,13 +1,14 @@
 import {
   AddDocument,
-  AllDocument,
-  RemoveDocument,
-  UpdateDocument,
-  FindUserById,
   AddMessage,
-  FindTeamByProjectId
+  AllDocument,
+  FindTeamByProjectId,
+  FindUserById,
+  RemoveDocument,
+  UpdateDocument
 } from '../db/controllers/index';
 import { error, success } from '../utils/dataHandle';
+const _ = require('lodash')
 
 interface Document {
   _id?: String,
@@ -24,13 +25,25 @@ export const documentList = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
   const data = await AllDocument()
   const result: Array<DocumentData> = []
+  const userJoinProject: Array<string> = []
   // 筛选出与用户有关的文档显示出来
+
   await Promise.all(data.map(async (item: DocumentData) => {
     // 如果文档是用户建立的,自然放进去
     if (item.ownerId == userId) {
       result.push(item)
-    } else {
-      // 不然对分配的项目进行查找,看看团队里有没有用户
+      // 如果这个文档有分配给其它项目
+      if (item.assign.length > 0) {
+        item.assign.map((projectId: string) => {
+          // 把分配的Id加进去
+          userJoinProject.push(projectId)
+        })
+      }
+    }
+  }))
+  await Promise.all(data.map(async (item: DocumentData) => {
+    // 不然对分配的项目进行查找,看看团队里有没有用户
+    if (item.ownerId != userId) {
       await Promise.all(item.assign.map(async (projectId: string) => {
         const teamData: TeamData = await FindTeamByProjectId(projectId)
         teamData.member.map((user: UserData) => {
@@ -39,10 +52,15 @@ export const documentList = async (ctx: any) => {
             result.push(item)
           }
         })
+        // 如果其它分配项目中包含用户的项目Id,说明项目中有人建立了新的文档分配给它
+        if (userJoinProject.indexOf(projectId) > -1) {
+          result.push(item)
+        }
       }))
+
     }
   }))
-  return ctx.body = success(result, '获取成功')
+  return ctx.body = success(await _.uniqBy(result, '_id'), '获取成功')
 }
 
 

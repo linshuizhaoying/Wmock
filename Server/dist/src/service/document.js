@@ -10,18 +10,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../db/controllers/index");
 const dataHandle_1 = require("../utils/dataHandle");
+const _ = require('lodash');
 exports.documentList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
     const data = yield index_1.AllDocument();
     const result = [];
+    const userJoinProject = [];
     // 筛选出与用户有关的文档显示出来
     yield Promise.all(data.map((item) => __awaiter(this, void 0, void 0, function* () {
         // 如果文档是用户建立的,自然放进去
         if (item.ownerId == userId) {
             result.push(item);
+            // 如果这个文档有分配给其它项目
+            if (item.assign.length > 0) {
+                item.assign.map((projectId) => {
+                    // 把分配的Id加进去
+                    userJoinProject.push(projectId);
+                });
+            }
         }
-        else {
-            // 不然对分配的项目进行查找,看看团队里有没有用户
+    })));
+    yield Promise.all(data.map((item) => __awaiter(this, void 0, void 0, function* () {
+        // 不然对分配的项目进行查找,看看团队里有没有用户
+        if (item.ownerId != userId) {
             yield Promise.all(item.assign.map((projectId) => __awaiter(this, void 0, void 0, function* () {
                 const teamData = yield index_1.FindTeamByProjectId(projectId);
                 teamData.member.map((user) => {
@@ -30,12 +41,14 @@ exports.documentList = (ctx) => __awaiter(this, void 0, void 0, function* () {
                         result.push(item);
                     }
                 });
+                // 如果其它分配项目中包含用户的项目Id,说明项目中有人建立了新的文档分配给它
+                if (userJoinProject.indexOf(projectId) > -1) {
+                    result.push(item);
+                }
             })));
         }
-        console.log('result', result);
     })));
-    console.log('final', result);
-    return ctx.body = dataHandle_1.success(result, '获取成功');
+    return ctx.body = dataHandle_1.success(yield _.uniqBy(result, '_id'), '获取成功');
 });
 exports.addDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
