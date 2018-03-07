@@ -8,28 +8,40 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const Document = require('../models/document');
 exports.AllDocument = () => __awaiter(this, void 0, void 0, function* () {
-    const data = [{
-            _id: 'document001',
-            name: '前端编码规范',
-            type: 'spec',
-            ownerId: 'user001',
-            ownerName: '001',
-            assign: ['project001'],
-            content: '<p>2333<h1>666</h1></p>',
-            desc: '2018年全新前端编码规范'
-        },
-        {
-            _id: 'document002',
-            name: '后端编码规范',
-            type: 'project',
-            ownerId: 'user002',
-            ownerName: '噢噢001',
-            assign: ['project001', 'project002'],
-            content: '<p>后端规范<h2>666</h2></p>',
-            desc: '2018年后端编码规范'
+    return yield Document.find();
+});
+exports.AddDocument = (originDocument) => __awaiter(this, void 0, void 0, function* () {
+    const newDocument = new Document(originDocument);
+    let result;
+    yield newDocument.save((error) => __awaiter(this, void 0, void 0, function* () {
+        if (error) {
+            result = error.toString();
         }
-    ];
-    return yield data;
+    })).then((document) => __awaiter(this, void 0, void 0, function* () {
+        result = document._id;
+    }));
+    return result;
+});
+exports.UpdateDocument = (document) => __awaiter(this, void 0, void 0, function* () {
+    return yield Document.update({
+        _id: document._id
+    }, {
+        $set: {
+            content: document.content,
+            desc: document.desc,
+            name: document.name,
+            ownerId: document.ownerId,
+            ownerName: document.ownerName,
+            assign: document.assign,
+            type: document.type,
+        }
+    });
+});
+exports.RemoveDocument = (id) => __awaiter(this, void 0, void 0, function* () {
+    return Document.remove({
+        _id: id
+    });
 });
 //# sourceMappingURL=document.js.map

@@ -2,6 +2,8 @@ import * as fetch from '../service/fetch';
 import {
   ADD_INTERFACE,
   ADD_PROJECT,
+  ALL_PROJECT,
+  RECEIVE_ALLPROJECT,
   CLONE_INTERFACE,
   CLONE_PROJECT,
   ERROR_PROJECT,
@@ -26,6 +28,7 @@ import {
 } from '../constants/project';
 import {
   addInterFace,
+  allProjectList,
   addProject,
   cloneInterface,
   cloneProject,
@@ -52,6 +55,7 @@ export const loadingStart = () => ({ type: LOADING_START });
 export const loadingError = () => ({ type: LOADING_ERROR });
 export const loadingSuccess = () => ({ type: LOADING_SUCCESS });
 export const projectReceive = (data: Project) => ({ type: RECEIVE_PROJECT, data: data });
+export const allProjectListReceive = (data: Project) => ({ type: RECEIVE_ALLPROJECT, data: data });
 export const demoReceive = (data: Project) => ({ type: RECEIVE_DEMO, data: data });
 export const unJoinprojectReceive = (data: Project) => ({ type: RECEIVE_UNJOINPROJECT, data: data });
 export const updateLocalProject = (data: Project) => ({ type: UPDATE_LOCALPROJECT, data: data })
@@ -70,6 +74,25 @@ export const fetchProject = (action$: EpicAction) =>
           if (response.state.code === 1) {
             let temp = response.data;
             return projectReceive(temp);
+          } else {
+            return errorMsg(response.state.msg);
+          }
+        })
+        // 只有服务器崩溃才捕捉错误
+        .catch((e: Error): Observable<Action> => {
+          return Observable.of(({ type: ERROR_PROJECT })).startWith(loadingError())
+        }).startWith(loadingSuccess()).delay(200).startWith(loadingStart())
+
+    });
+
+export const fetchAllProjectList = (action$: EpicAction) =>
+  action$.ofType(ALL_PROJECT)
+    .mergeMap((action: Action) => {
+      return fetch.get(allProjectList)
+        .map((response: Response) => {
+          if (response.state.code === 1) {
+            let temp = response.data.data;
+            return allProjectListReceive(temp);
           } else {
             return errorMsg(response.state.msg);
           }
@@ -320,6 +343,7 @@ export const EaddInterface = (action$: EpicAction) =>
     });
 
 export default combineEpics(
+  fetchAllProjectList,
   fetchProject,
   fetchUnJoinProject,
   fetchDemo,

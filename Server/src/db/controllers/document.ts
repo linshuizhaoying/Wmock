@@ -1,27 +1,41 @@
 
-export const AllDocument = async() => {
-    const data = [{
-      _id: 'document001',
-      name: '前端编码规范',
-      type: 'spec', // spec project other
-      ownerId: 'user001',
-      ownerName: '001',
-      assign: ['project001'],
-      content: '<p>2333<h1>666</h1></p>',
-      desc: '2018年全新前端编码规范'
-    },
-    {
-      _id: 'document002',
-      name: '后端编码规范',
-      type: 'project', // spec project other
-      ownerId: 'user002',
-      ownerName: '噢噢001',
-      assign: ['project001', 'project002'],
-      content: '<p>后端规范<h2>666</h2></p>',
-      desc: '2018年后端编码规范'
+const Document = require('../models/document')
+
+export const AllDocument = async () => {
+  return await Document.find()
+}
+
+export const AddDocument = async (originDocument: DocumentData) => {
+  const newDocument = new Document(originDocument)
+  let result
+  await newDocument.save(async (error: Error) => {
+    if (error) {
+      result = error.toString()
     }
-  ]
-    return await data
+  }).then(async (document: DocumentData) => {
+    result = document._id
+  })
+  return result
+}
 
+export const UpdateDocument = async (document: DocumentData) => {
+  return await Document.update({
+    _id: document._id
+  }, {
+      $set: {
+        content: document.content,
+        desc: document.desc,
+        name: document.name,
+        ownerId: document.ownerId,
+        ownerName: document.ownerName,
+        assign: document.assign,
+        type: document.type,
+      }
+    })
+}
 
+export const RemoveDocument = async (id: string) => {
+  return Document.remove({
+    _id: id
+  })
 }

@@ -59,6 +59,13 @@ const getProjectList = (projectList) => __awaiter(this, void 0, void 0, function
     });
     return result;
 });
+exports.allProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const { userId } = ctx.tokenContent;
+    const data = yield index_1.FindProjectDataListByUserId(userId);
+    const projectList = data.map((item) => _.pick(item, field.projectList));
+    // const projectList = data.map((item: ProjectData) => _.pick(item, field.projectList))
+    return ctx.body = dataHandle_1.success(projectList, '获取成功');
+});
 exports.userProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
     let result = [];
@@ -102,7 +109,7 @@ const addUserProject = (userId, project) => __awaiter(this, void 0, void 0, func
         projectId: result,
         objectId: result,
         objectName: project.projectName,
-        desc: '添加了新项目 ' + project.projectName,
+        desc: '用户 ' + userData.userName + '添加了新项目 ' + project.projectName,
         userId: userId,
         avatar: userData.avatar,
         type: 'normal'
@@ -194,23 +201,6 @@ exports.removeProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // 先批量删除对应项目下的接口
     const interfaceListData = yield index_1.InterfaceList(id);
     yield interfaceListData.map((item) => __awaiter(this, void 0, void 0, function* () { return yield index_1.RemoveInterface(item._id); }));
-    // const project: ProjectData = await FindProjectById(id)
-    // // 添加对应项目删除消息
-    // const { userId } = ctx.tokenContent;
-    // const userData: UserData = await FindUserById(userId)
-    // const removeProjectMessage: MessageData = {
-    //   operatorId: userId,
-    //   operatorName: userData.userName,
-    //   action: 'remove',
-    //   projectId: id,
-    //   objectId: id,
-    //   objectName: project.projectName,
-    //   desc: '用户 ' + userData.userName + ' 删除了项目 ' + project.projectName,
-    //   userId: userId,
-    //   avatar: userData.avatar,
-    //   type: 'normal'
-    // }
-    // await AddMessage(removeProjectMessage)
     const result = yield index_1.RemoveProject(id);
     return ctx.body = dataHandle_1.success({}, '删除成功!');
 });

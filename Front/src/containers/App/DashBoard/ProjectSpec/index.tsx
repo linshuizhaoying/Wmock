@@ -62,16 +62,25 @@ export class ProjectSpec extends React.Component<AppProps, ProjectSpecState> {
   removeDocument = (id: string) => {
     const { dispatch } = this.props;
     dispatch(removeDocument({ id }))
+    setTimeout(() => {
+      this.props.refresh()
+    }, 500)
   }
 
   updateDocument = (data: Document) => {
     const { dispatch } = this.props;
     dispatch(updateDocument(data))
+    setTimeout(() => {
+      this.props.refresh()
+    }, 500)
   }
 
   addDocument = (data: Document) => {
     const { dispatch } = this.props;
     dispatch(addDocument(data))
+    setTimeout(() => {
+      this.props.refresh()
+    }, 500)
   }
   renderDocumentTitle = (item: Document) => {
     return (
@@ -174,6 +183,7 @@ export class ProjectSpec extends React.Component<AppProps, ProjectSpecState> {
         <DocumentMode
           refresh={this.props.refresh}
           addDocument={this.addDocument}
+          userId={this.props.userId}
           updateDocument={this.updateDocument}
           projectList={this.props.projectList}
           hideDocumentMode={this.hideDocumentMode}

@@ -16,6 +16,7 @@ export class MyProject extends React.Component<ProjectProps, {}> {
           messagesList={this.props.messagesList}
           userId={this.props.userId}
           type={'user'}
+          documentRefresh={this.props.documentRefresh}
         />
       </div>
     )

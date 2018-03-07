@@ -15,13 +15,14 @@ const path = require('path');
 const middleware = require('../middleware/index');
 const router = new Irouter();
 exports.Router = (app) => {
-    const { reg, login, tokenLogin, userInfo, updateUser, messagesList, userProjectList, demoProjectList, documentList, removeDocument, addDocument, updateDocument, uploadFile, teamList, sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember, mock, unJoinProjectList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject, addInterface, removeInterface, updateInterface, cloneInterface, baseModelList, customModelList, addModel, updateModel, removeModel, } = Service;
+    const { reg, login, tokenLogin, userInfo, updateUser, messagesList, userProjectList, demoProjectList, allProjectList, documentList, removeDocument, addDocument, updateDocument, uploadFile, teamList, sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember, mock, unJoinProjectList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject, addInterface, removeInterface, updateInterface, cloneInterface, baseModelList, customModelList, addModel, updateModel, removeModel, } = Service;
     router.post('/api/reg', Service.reg)
         .post('/api/login', Service.login)
         .get('/api/userInfo', token_1.default, Service.userInfo)
         .get('/api/token', token_1.default, Service.tokenLogin)
         .post('/api/updateUser', token_1.default, Service.updateUser)
         .get('/api/messagesList', token_1.default, Service.messagesList)
+        .get('/api/allProjectList', token_1.default, Service.allProjectList)
         .get('/api/demoList', token_1.default, Service.demoProjectList)
         .get('/api/projectList', token_1.default, Service.userProjectList)
         .get('/api/unJoinProjectList', token_1.default, Service.unJoinProjectList)

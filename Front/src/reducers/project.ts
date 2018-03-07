@@ -4,6 +4,7 @@ import {
   RECEIVE_PROJECT,
   RECEIVE_UNJOINPROJECT,
   RECEIVE_VERIFYPROJECT,
+  RECEIVE_ALLPROJECT,
   REMOVE_LOCALINTERFACE,
   REMOVE_LOCALPROJECT,
   UPDATE_LOCALINTERFACE,
@@ -13,7 +14,8 @@ const initialState = {
   data: [],
   unJoinList: [],
   demo: [],
-  verify: ''
+  verify: '',
+  allProjectList: []
 }
 const updateProject = (list: Array<Project>, projectData: Project) => {
   const temp: Array<Project> = []
@@ -121,6 +123,11 @@ const project = (state = initialState, action: Action) => {
         ...state,
         data: updateInterface(state.data, action.data),
         demo: updateInterface(state.demo, action.data),
+      }
+    case RECEIVE_ALLPROJECT:
+      return {
+        ...state,
+        allProjectList: action.data
       }
     default:
       return state

@@ -25,6 +25,7 @@ export const messagesList = baseUrl + '/api/messagesList';
 export const addMessage = baseUrl + '/api/addMessage';
 
 // 项目列表
+export const allProjectList = baseUrl + '/api/allProjectList';
 
 export const projectList = baseUrl + '/api/projectList';
 

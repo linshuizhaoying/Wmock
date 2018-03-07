@@ -657,6 +657,7 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
                       showInterfaceMode={this.showInterfaceMode}
                       selectCurrentInterface={this.selectCurrentInterface}
                       update={this.update}
+                      documentRefresh={this.props.documentRefresh}
                     /> :
                     <div>
                       <h2>

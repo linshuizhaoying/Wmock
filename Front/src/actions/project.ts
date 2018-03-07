@@ -1,6 +1,7 @@
 import {
   ADD_INTERFACE,
   ADD_PROJECT,
+  ALL_PROJECT,
   CLONE_INTERFACE,
   CLONE_PROJECT,
   FETCH_DEMO,
@@ -12,10 +13,14 @@ import {
   UPDATE_INTERFACE,
   UPDATE_PROJECT,
   VERIFY_PROJECT,
-  } from '../constants/project';
+} from '../constants/project';
 
 const fetchProjectData = () => ({
   type: FETCH_PROJECT
+})
+
+const allProjectListData = () => ({
+  type: ALL_PROJECT
 })
 
 const importProjectData = (project: Project) => ({
@@ -79,6 +84,11 @@ const removeInterfaceData = (id: Id) => ({
 export function fetchProject() {
   return (dispatch: Function) => {
     dispatch(fetchProjectData())
+  }
+}
+export function allProjectList() {
+  return (dispatch: Function) => {
+    dispatch(allProjectListData())
   }
 }
 

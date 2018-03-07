@@ -99,7 +99,6 @@ export class Overview extends React.Component<OverviewProps, OverviewState> {
                         <div className="timeline">
                           <p className="date"> <TimeAgo datetime={item.time} locale="zh_CN" /> </p>
                           <div>
-                            <div className="user">用户: {item.operatorName}</div>
                             <div className="content">{item.desc}</div>
                           </div>
                         </div>

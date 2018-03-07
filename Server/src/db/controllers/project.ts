@@ -25,6 +25,29 @@ export const FindProjectListByUserId = async (userId: string) => {
   }))
   return relatedProjectMap
 }
+export const FindProjectDataListByUserId = async (userId: string) => {
+  const allProject = await Project.find({})
+  // 返回与用户相关的所有项目
+  const relatedProjectList: any = []
+  await Promise.all(allProject.map(async (oldItem: ProjectData) => {
+    // 先添加自己创建的项目
+    if (userId === oldItem.masterId) {
+      relatedProjectList.push(oldItem)
+    }
+    // 对不是自己创建的项目进行判断
+    if (userId !== oldItem.masterId) {
+      // 找到对应的团队
+      const projectTeam: TeamData = await FindTeamByProjectId(oldItem._id)
+      await projectTeam.member.map(async (user: UserData) => {
+        // 如果对应的团队里面有该用户，则加入相关的项目列表
+        if (user._id == userId) {
+          relatedProjectList.push(oldItem)
+        }
+      })
+    }
+  }))
+  return relatedProjectList
+}
 
 export const FindProjectListById = async (projectId: string) => {
   return await Project.find({ _id: projectId })
@@ -33,7 +56,9 @@ export const FindProjectListById = async (projectId: string) => {
 export const FindProjectById = async (projectId: string) => {
   return await Project.findOne({ _id: projectId })
 }
-
+export const AllProjectList = async () => {
+  return await Project.find()
+}
 
 export const DemoProject = async (userId: string) => {
   const projectMap = await FindProjectListByUserId(userId)
