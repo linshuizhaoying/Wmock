@@ -14,7 +14,7 @@ const controllers_1 = require("../db/controllers");
 const config_1 = require("../config");
 const dataHandle_1 = require("../utils/dataHandle");
 const project_1 = require("./project");
-const UserDemoProject = require('../utils/mockExample');
+const mockEaxmple = require('../utils/mockExample');
 /**
  *  用户注册
  *  请求参数
@@ -56,9 +56,19 @@ exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
                 exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
             }, config_1.config.app.keys);
             // 初始化用户数据
-            const initUserProjectData = JSON.parse(UserDemoProject.UserDemoProject);
+            const initUserProjectData = JSON.parse(mockEaxmple.UserDemoProject);
             initUserProjectData.masterId = userId;
             yield project_1.importProjectData(initUserProjectData);
+            // 初始化用户前端文档
+            const initUserFrontDocumentData = JSON.parse(mockEaxmple.FrontDocumentTemplate);
+            initUserFrontDocumentData.ownerId = userId;
+            initUserFrontDocumentData.ownerName = userName;
+            yield controllers_1.AddDocument(initUserFrontDocumentData);
+            // 初始化用户后端文档
+            const initUserBackDocumentData = JSON.parse(mockEaxmple.BackDocumentTemplate);
+            initUserBackDocumentData.ownerId = userId;
+            initUserBackDocumentData.ownerName = userName;
+            yield controllers_1.AddDocument(initUserBackDocumentData);
             return ctx.body = dataHandle_1.success({ userName, userId, token, msg, avatar, regDate, email, role }, '注册成功');
         }
     }

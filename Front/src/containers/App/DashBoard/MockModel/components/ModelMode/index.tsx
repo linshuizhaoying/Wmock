@@ -183,6 +183,7 @@ export class ModelMode extends React.Component<ModelModeProps, ModelModeState> {
                 enableLiveAutocompletion: false,
                 enableSnippets: true,
                 showLineNumbers: true,
+                useWorker: false,
                 tabSize: 2,
               }}
             />
