@@ -97,7 +97,7 @@ export class InterfaceMode extends React.Component<InterfaceModeProps, Interface
     })
   }
   preview = () => {
-    window.open(MockUrl + this.props.projectId + this.state.url + '#!method=' + this.state.method)
+    window.open(MockUrl + '/' + this.props.projectId + '/' + this.state.url + '#!method=' + this.state.method)
   }
   update = () => {
     let newInterface = {

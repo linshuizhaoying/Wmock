@@ -275,18 +275,24 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
               <Timeline pending={<div>已经是全部信息了~</div>}>
                 {
                   this.props.messages.map((item: Message, index: number) => {
-                    return <Timeline.Item dot={<Avatar src={item.avatar} />} color="red" key={index} >
-                      <div className="timeline">
-                        <p className="date">
-                          <TimeAgo datetime={item.time} locale="zh_CN" />
-                        </p>
-                        <div>
-                          <div className="user">用户: {item.operatorName}</div>
-                          <div className="content">{item.desc}</div>
-                        </div>
+                    return (
+                      <Timeline.Item
+                        dot={<Avatar src={imgBaseUrl + '/' + item.avatar} />}
+                        color="red"
+                        key={index}
+                      >
+                        <div className="timeline">
+                          <p className="date">
+                            <TimeAgo datetime={item.time} locale="zh_CN" />
+                          </p>
+                          <div>
+                            <div className="user">用户: {item.operatorName}</div>
+                            <div className="content">{item.desc}</div>
+                          </div>
 
-                      </div>
-                    </Timeline.Item>
+                        </div>
+                      </Timeline.Item>
+                    )
                   })
                 }
 

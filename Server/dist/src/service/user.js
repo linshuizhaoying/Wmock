@@ -13,6 +13,8 @@ const validator_1 = require("../utils/validator");
 const controllers_1 = require("../db/controllers");
 const config_1 = require("../config");
 const dataHandle_1 = require("../utils/dataHandle");
+const project_1 = require("./project");
+const UserDemoProject = require('../utils/mockExample');
 /**
  *  用户注册
  *  请求参数
@@ -53,6 +55,10 @@ exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
                 userName: userName,
                 exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
             }, config_1.config.app.keys);
+            // 初始化用户数据
+            const initUserProjectData = JSON.parse(UserDemoProject.UserDemoProject);
+            initUserProjectData.masterId = userId;
+            yield project_1.importProjectData(initUserProjectData);
             return ctx.body = dataHandle_1.success({ userName, userId, token, msg, avatar, regDate, email, role }, '注册成功');
         }
     }

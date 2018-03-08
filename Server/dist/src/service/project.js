@@ -15,46 +15,48 @@ const dataHandle_1 = require("../utils/dataHandle");
 const tools_1 = require("../utils/tools");
 const _ = require('lodash');
 const field = require('../db/models/field');
-const getProjectList = (projectList) => __awaiter(this, void 0, void 0, function* () {
+const getProjectList = (projectList, userType = 'user') => __awaiter(this, void 0, void 0, function* () {
     const result = [];
     yield Promise.all(projectList.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
         // 洗下项目数据
         const item = _.pick(oldItem, field.projectField);
-        // 获取团队信息
-        const team = yield index_1.FindTeamByProjectId(item._id);
         // 获取对应接口信息
         const interfaceOldData = yield index_1.InterfaceList(item._id);
         // 洗下接口数据
         const interfaceList = interfaceOldData.map((item) => _.pick(item, field.interfaceField));
-        const master = {
-            _id: '',
-            userName: '',
-            role: '',
-            avatar: ''
-        };
-        master._id = team.masterId;
-        master.avatar = team.masterAvatar;
-        master.role = team.role;
-        master.userName = team.masterName;
-        const teamMember = [];
-        // 团队列表加入创始者
-        yield teamMember.push(master);
-        // 团队列表加入成员
-        yield team.member.map((member) => {
-            const temp = {
+        const fullProject = item;
+        if (userType !== 'demo') {
+            // 获取团队信息
+            const team = yield index_1.FindTeamByProjectId(item._id);
+            const master = {
                 _id: '',
                 userName: '',
                 role: '',
                 avatar: ''
             };
-            temp._id = member._id;
-            temp.avatar = member.avatar;
-            temp.role = member.role;
-            temp.userName = member.userName;
-            teamMember.push(temp);
-        });
-        const fullProject = item;
-        fullProject['teamMember'] = yield teamMember;
+            master._id = team.masterId;
+            master.avatar = team.masterAvatar;
+            master.role = team.role;
+            master.userName = team.masterName;
+            const teamMember = [];
+            // 团队列表加入创始者
+            yield teamMember.push(master);
+            // 团队列表加入成员
+            yield team.member.map((member) => {
+                const temp = {
+                    _id: '',
+                    userName: '',
+                    role: '',
+                    avatar: ''
+                };
+                temp._id = member._id;
+                temp.avatar = member.avatar;
+                temp.role = member.role;
+                temp.userName = member.userName;
+                teamMember.push(temp);
+            });
+            fullProject['teamMember'] = yield teamMember;
+        }
         fullProject['interfaceList'] = yield interfaceList;
         result.push(fullProject);
         return fullProject;
@@ -82,11 +84,11 @@ exports.userProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () 
 });
 exports.demoProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
-    // let result: Array<ProjectData> = []
+    let result = [];
     // 获取项目信息
     const projectList = yield index_1.DemoProject(userId);
-    // result = await getProjectList(projectList)
-    return ctx.body = dataHandle_1.success(projectList, '获取成功');
+    result = yield getProjectList(projectList, 'demo');
+    return ctx.body = dataHandle_1.success(result, '获取成功');
 });
 exports.unJoinProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
@@ -98,7 +100,7 @@ const addUserProject = (userId, project) => __awaiter(this, void 0, void 0, func
     const result = yield index_1.AddProject(project);
     // 如果只是创建示例项目,不创建团队
     if (project.type === 'demo') {
-        return;
+        return result;
     }
     // 添加对应团队
     const team = {
@@ -155,7 +157,7 @@ exports.addProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const project = ctx.request.body;
     const projectName = ctx.checkBody('projectName').notEmpty().len(1, 32).value;
     const projectUrl = ctx.checkBody('projectUrl').notEmpty().len(1, 20).value;
-    const projectDesc = ctx.checkBody('projectDesc').notEmpty().len(1, 20).value;
+    const projectDesc = ctx.checkBody('projectDesc').notEmpty().len(1, 40).value;
     const ProjectTransferUrl = ctx.checkBody('transferUrl').notEmpty();
     const type = ctx.checkBody('type').notEmpty().value;
     if (ctx.errors) {
@@ -214,14 +216,20 @@ exports.removeProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const result = yield index_1.RemoveProject(id);
     return ctx.body = dataHandle_1.success({}, '删除成功!');
 });
-exports.importProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const data = ctx.request.body;
-    const newProjectId = yield addUserProject(data.masterId, data);
+exports.importProjectData = (project) => __awaiter(this, void 0, void 0, function* () {
+    const newProjectId = yield addUserProject(project.masterId, project);
     // 批量添加接口
-    yield data.interfaceList.map((item) => __awaiter(this, void 0, void 0, function* () {
+    yield project.interfaceList.map((item) => __awaiter(this, void 0, void 0, function* () {
         item.projectId = newProjectId; // 将项目Id替换为新增加的项目
         yield index_1.AddInterface(item);
     }));
+    return;
+});
+exports.importProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const { userId } = ctx.tokenContent;
+    const data = ctx.request.body;
+    data.masterId = userId;
+    yield exports.importProjectData(data);
     return ctx.body = dataHandle_1.success({}, '导入成功!');
 });
 /**
