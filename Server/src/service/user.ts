@@ -1,37 +1,15 @@
-import * as jwt from 'jsonwebtoken'
-import Validator from '../utils/validator'
-import { AddRegUser, LoginUser, FindUserById, UpdateUser } from '../db/controllers'
-import { config } from '../config'
-import { error, success } from '../utils/dataHandle'
-
-interface UserData {
-  userId?: string,
-  userName?: string,
-  avatar?: string,
-  email?: string,
-  regDate?: Date,
-  token?: any,
-  role?: string,
-  msg?: string
-}
-
-interface ErrorData {
-  code: number,
-  msg: string
-
-}
-
-interface Result {
-  status: string,
-  userId: string,
-  userName: string,
-  msg: string,
-  avatar: string,
-  email: string,
-  role: string,
-  regDate: Date
-}
-
+import * as jwt from 'jsonwebtoken';
+import Validator from '../utils/validator';
+import {
+  AddRegUser,
+  FindUserById,
+  LoginUser,
+  UpdateUser
+} from '../db/controllers';
+import { config } from '../config';
+import { error, success } from '../utils/dataHandle';
+import { importProjectData } from './project'
+const UserDemoProject = require('../utils/mockExample')
 /**
  *  用户注册
  *  请求参数
@@ -51,6 +29,7 @@ interface Result {
  *    }
  * }
  */
+
 export const reg = async (ctx: any) => {
   console.log(ctx.request.body)
   const { userName, passWord, email, role } = ctx.request.body;
@@ -71,6 +50,10 @@ export const reg = async (ctx: any) => {
         userName: userName,
         exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
       }, config.app.keys)
+      // 初始化用户数据
+      const initUserProjectData: ProjectData = JSON.parse(UserDemoProject.UserDemoProject)
+      initUserProjectData.masterId = userId
+      await importProjectData(initUserProjectData)
       return ctx.body = success({ userName, userId, token, msg, avatar, regDate, email, role }, '注册成功')
     }
   } else {
@@ -191,7 +174,7 @@ export const updateUser = async (ctx: any) => {
     return ctx.body = error('用户数据不正常,更新失败!')
   }
 
-  const user  = await FindUserById(userId)
+  const user = await FindUserById(userId)
   if (data.oldPass && data.oldPass !== user.passWord) {
     return ctx.body = error('用户原密码不正确!')
   }

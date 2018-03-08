@@ -23,47 +23,50 @@ import { isEqual } from '../utils/tools'
 const _ = require('lodash')
 const field = require('../db/models/field')
 
-const getProjectList = async (projectList: Array<ProjectData>) => {
+const getProjectList = async (projectList: Array<ProjectData>, userType: string = 'user') => {
   const result: Array<ProjectData> = []
   await Promise.all(projectList.map(async (oldItem: ProjectData) => {
     // 洗下项目数据
     const item = _.pick(oldItem, field.projectField)
-    // 获取团队信息
-    const team = await FindTeamByProjectId(item._id)
     // 获取对应接口信息
     const interfaceOldData = await InterfaceList(item._id)
     // 洗下接口数据
     const interfaceList = interfaceOldData.map((item: InterfaceData) => _.pick(item, field.interfaceField))
-    const master = {
-      _id: '',
-      userName: '',
-      role: '',
-      avatar: ''
-    }
-    master._id = team.masterId
-    master.avatar = team.masterAvatar
-    master.role = team.role
-    master.userName = team.masterName
-    const teamMember: Array<UserData> = []
-    // 团队列表加入创始者
-    await teamMember.push(master)
-    // 团队列表加入成员
-    await team.member.map((member: UserData) => {
-      const temp = {
+
+    const fullProject = item
+
+    if (userType !== 'demo') {
+      // 获取团队信息
+      const team = await FindTeamByProjectId(item._id)
+      const master = {
         _id: '',
         userName: '',
         role: '',
         avatar: ''
       }
-      temp._id = member._id
-      temp.avatar = member.avatar
-      temp.role = member.role
-      temp.userName = member.userName
-      teamMember.push(temp)
-    })
-
-    const fullProject = item
-    fullProject['teamMember'] = await teamMember
+      master._id = team.masterId
+      master.avatar = team.masterAvatar
+      master.role = team.role
+      master.userName = team.masterName
+      const teamMember: Array<UserData> = []
+      // 团队列表加入创始者
+      await teamMember.push(master)
+      // 团队列表加入成员
+      await team.member.map((member: UserData) => {
+        const temp = {
+          _id: '',
+          userName: '',
+          role: '',
+          avatar: ''
+        }
+        temp._id = member._id
+        temp.avatar = member.avatar
+        temp.role = member.role
+        temp.userName = member.userName
+        teamMember.push(temp)
+      })
+      fullProject['teamMember'] = await teamMember
+    }
     fullProject['interfaceList'] = await interfaceList
     result.push(fullProject)
     return fullProject
@@ -95,11 +98,11 @@ export const userProjectList = async (ctx: any) => {
 
 export const demoProjectList = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
-  // let result: Array<ProjectData> = []
+  let result: Array<ProjectData> = []
   // 获取项目信息
   const projectList = await DemoProject(userId)
-  // result = await getProjectList(projectList)
-  return ctx.body = success(projectList, '获取成功')
+  result = await getProjectList(projectList, 'demo')
+  return ctx.body = success(result, '获取成功')
 }
 
 export const unJoinProjectList = async (ctx: any) => {
@@ -113,7 +116,7 @@ const addUserProject = async (userId: string, project: Project) => {
   const result = await AddProject(project)
   // 如果只是创建示例项目,不创建团队
   if (project.type === 'demo') {
-    return
+    return result
   }
   // 添加对应团队
   const team: TeamData = {
@@ -175,7 +178,7 @@ export const addProject = async (ctx: any) => {
   const project: Project = ctx.request.body;
   const projectName = ctx.checkBody('projectName').notEmpty().len(1, 32).value
   const projectUrl = ctx.checkBody('projectUrl').notEmpty().len(1, 20).value
-  const projectDesc = ctx.checkBody('projectDesc').notEmpty().len(1, 20).value
+  const projectDesc = ctx.checkBody('projectDesc').notEmpty().len(1, 40).value
   const ProjectTransferUrl = ctx.checkBody('transferUrl').notEmpty()
   const type = ctx.checkBody('type').notEmpty().value
   if (ctx.errors) {
@@ -245,15 +248,22 @@ export const removeProject = async (ctx: any) => {
   return ctx.body = success({}, '删除成功!')
 }
 
-
-export const importProject = async (ctx: any) => {
-  const data = ctx.request.body;
-  const newProjectId = await addUserProject(data.masterId, data)
+export const importProjectData = async (project: any) => {
+  const newProjectId = await addUserProject(project.masterId, project)
   // 批量添加接口
-  await data.interfaceList.map(async (item: InterfaceData) => {
+  await project.interfaceList.map(async (item: InterfaceData) => {
+
     item.projectId = newProjectId // 将项目Id替换为新增加的项目
     await AddInterface(item)
   })
+  return
+}
+
+export const importProject = async (ctx: any) => {
+  const { userId } = ctx.tokenContent;
+  const data = ctx.request.body;
+  data.masterId = userId
+  await importProjectData(data)
   return ctx.body = success({}, '导入成功!')
 }
 
@@ -263,6 +273,7 @@ export const importProject = async (ctx: any) => {
  * 里面的团队信息是不需要的。
  * 因此需要调用cloneInterface接口来批量更改接口
  */
+
 export const cloneProject = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
   const { projectId, type } = ctx.request.body;
