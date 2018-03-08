@@ -8,6 +8,26 @@ const { VM } = require('vm2')
 const Mock = require('mockjs')
 const axios = require('axios')
 
+export const getModeMock = async (mock: string) => {
+  Mock.Handler.function = function (options: any) {
+    options._req = {}
+    options.Mock = Mock
+    return options.template.call(options.context.currentContext, options)
+  }
+
+  const temp = JSON.stringify(mock)
+  const vm = new VM({
+    timeout: 1000,
+    sandbox: {
+      Mock: Mock,
+      mode: mock,
+      template: new Function(`return ${mock}`)
+    }
+  })
+  vm.run('Mock.mock(new Function("return " + mode)())') // 数据验证，检测 setTimeout 等方法, 顺便将内部的函数执行了
+  const result = vm.run('Mock.mock(template())')
+  return result
+}
 export const getRemoteData = async (method: string, url: string, query: string = '', body: string = '') => {
   let result = ''
   try {
@@ -29,8 +49,6 @@ export const getRemoteData = async (method: string, url: string, query: string =
 
 export const mock = async (ctx: any) => {
   const { query, body } = ctx.request
-  console.log('query', query)
-  console.log('body', body)
   const method = ctx.request.method.toLowerCase()
   // 获取接口路径内容
   const { projectId, mockURL } = ctx.pathNode

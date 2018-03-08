@@ -162,9 +162,11 @@ export class InterfaceMode extends React.Component<InterfaceModeProps, Interface
             value={this.state.editorContent}
             setOptions={{
               enableBasicAutocompletion: false,
-              enableLiveAutocompletion: false,
-              enableSnippets: false,
+              enableLiveAutocompletion: true,
+              useWorker:false,
+              enableSnippets: true,
               showLineNumbers: true,
+              displayIndentGuides: false,
               tabSize: 2,
             }}
           />

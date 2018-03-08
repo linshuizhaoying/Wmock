@@ -1,25 +1,26 @@
 import {
+  AddInterface,
+  AddMessage,
   AddProject,
-  AllProjectList,
   AddTeam,
+  AllProjectList,
   DemoProject,
   FindProjectById,
-  FindTeamByProjectId,
   FindProjectDataListByUserId,
+  FindTeamByProjectId,
   FindUserById,
-  UnJoinProjectList,
-  UserProject,
   InterfaceList,
-  RemoveProject,
-  UpdateProject,
   RemoveInterface,
-  AddInterface,
-  AddMessage
+  RemoveProject,
+  UnJoinProjectList,
+  UpdateProject,
+  UserProject
 } from '../db/controllers/index';
-import { cloneInterfaceItem } from './interface'
-import { getRemoteData } from './mock'
+import { cloneInterfaceItem } from './interface';
 import { error, success } from '../utils/dataHandle';
-import { isEqual } from '../utils/tools'
+import { getRemoteData } from './mock';
+import { isEqual } from '../utils/tools';
+import { getModeMock } from './mock'
 const _ = require('lodash')
 const field = require('../db/models/field')
 
@@ -338,11 +339,20 @@ export const verifyProject = async (ctx: any) => {
     const formatData = { interfaceName: '', expect: '', actual: '', compare: '' }
 
     formatData.interfaceName = item.interfaceName
-    formatData.expect =
-      JSON.parse(JSON.parse(JSON.stringify(item.mode)
-        .replace(/\n/g, '')
-      ).replace(/\n/g, ' '))
-    formatData.actual = JSON.parse(JSON.stringify(remoteData))
+
+    try {
+
+      formatData.expect = await getModeMock(item.mode)
+      // formatData.expect =
+      //   JSON.parse(JSON.parse(JSON.stringify(item.mode)
+      //     .replace(/\n/g, '')
+      //   ).replace(/\n/g, ' '))
+      formatData.actual = JSON.parse(JSON.stringify(remoteData))
+    } catch {
+      console.log('error:' + item.mode)
+      formatData.expect = '无法模拟该请求,可能包含无法模拟的参数,请自行校对'
+      // console.log(await getModeMock(item.mode))
+    }
     formatData.compare = isEqual(formatData.expect, formatData.actual) === true ? 'match' : 'dismatch'
     if (formatData.compare !== 'match') {
       allMatch = false

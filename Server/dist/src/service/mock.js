@@ -14,6 +14,25 @@ const index_1 = require("../db/controllers/index");
 const { VM } = require('vm2');
 const Mock = require('mockjs');
 const axios = require('axios');
+exports.getModeMock = (mock) => __awaiter(this, void 0, void 0, function* () {
+    Mock.Handler.function = function (options) {
+        options._req = {};
+        options.Mock = Mock;
+        return options.template.call(options.context.currentContext, options);
+    };
+    const temp = JSON.stringify(mock);
+    const vm = new VM({
+        timeout: 1000,
+        sandbox: {
+            Mock: Mock,
+            mode: mock,
+            template: new Function(`return ${mock}`)
+        }
+    });
+    vm.run('Mock.mock(new Function("return " + mode)())'); // 数据验证，检测 setTimeout 等方法, 顺便将内部的函数执行了
+    const result = vm.run('Mock.mock(template())');
+    return result;
+});
 exports.getRemoteData = (method, url, query = '', body = '') => __awaiter(this, void 0, void 0, function* () {
     let result = '';
     try {
@@ -35,8 +54,6 @@ exports.getRemoteData = (method, url, query = '', body = '') => __awaiter(this, 
 });
 exports.mock = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { query, body } = ctx.request;
-    console.log('query', query);
-    console.log('body', body);
     const method = ctx.request.method.toLowerCase();
     // 获取接口路径内容
     const { projectId, mockURL } = ctx.pathNode;

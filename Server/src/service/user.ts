@@ -4,12 +4,13 @@ import {
   AddRegUser,
   FindUserById,
   LoginUser,
-  UpdateUser
+  UpdateUser,
+  AddDocument
 } from '../db/controllers';
 import { config } from '../config';
 import { error, success } from '../utils/dataHandle';
 import { importProjectData } from './project'
-const UserDemoProject = require('../utils/mockExample')
+const mockEaxmple = require('../utils/mockExample')
 /**
  *  用户注册
  *  请求参数
@@ -51,9 +52,20 @@ export const reg = async (ctx: any) => {
         exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 // 1 天
       }, config.app.keys)
       // 初始化用户数据
-      const initUserProjectData: ProjectData = JSON.parse(UserDemoProject.UserDemoProject)
+      const initUserProjectData: ProjectData = JSON.parse(mockEaxmple.UserDemoProject)
       initUserProjectData.masterId = userId
       await importProjectData(initUserProjectData)
+      // 初始化用户前端文档
+      const initUserFrontDocumentData: DocumentData = JSON.parse(mockEaxmple.FrontDocumentTemplate)
+      initUserFrontDocumentData.ownerId = userId
+      initUserFrontDocumentData.ownerName = userName
+      await AddDocument(initUserFrontDocumentData)
+      // 初始化用户后端文档
+      const initUserBackDocumentData: DocumentData = JSON.parse(mockEaxmple.BackDocumentTemplate)
+      initUserBackDocumentData.ownerId = userId
+      initUserBackDocumentData.ownerName = userName
+      await AddDocument(initUserBackDocumentData)
+
       return ctx.body = success({ userName, userId, token, msg, avatar, regDate, email, role }, '注册成功')
     }
   } else {

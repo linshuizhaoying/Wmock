@@ -129,9 +129,12 @@ export const cloneInterface = async (ctx: any) => {
   }
   const oldInterface = await FindInterfaceById(interfaceId)
   // 洗下接口数据
-  const cleanInterface = oldInterface.map((item: InterfaceData) => _.pick(item, field.pureInterfaceField))
-  cleanInterface[0].projectId = projectId
-  const result = await AddInterface(cleanInterface[0])
+  // const cleanInterface = oldInterface.map((item: InterfaceData) => _.pick(item, field.pureInterfaceField))
+  console.log(oldInterface)
+  const cleanInterface = _.pick(oldInterface, field.pureInterfaceField)
+  cleanInterface.projectId = projectId
+  console.log(cleanInterface)
+  const result = await AddInterface(cleanInterface)
   return ctx.body = success({}, '克隆成功!')
 }
 
