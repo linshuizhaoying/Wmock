@@ -10,9 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../db/controllers/index");
 const interface_1 = require("./interface");
-const mock_1 = require("./mock");
 const dataHandle_1 = require("../utils/dataHandle");
+const mock_1 = require("./mock");
 const tools_1 = require("../utils/tools");
+const mock_2 = require("./mock");
 const _ = require('lodash');
 const field = require('../db/models/field');
 const getProjectList = (projectList, userType = 'user') => __awaiter(this, void 0, void 0, function* () {
@@ -297,10 +298,19 @@ exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
         // const diffResult = await FindDifferent(item.mode, remoteData)
         const formatData = { interfaceName: '', expect: '', actual: '', compare: '' };
         formatData.interfaceName = item.interfaceName;
-        formatData.expect =
-            JSON.parse(JSON.parse(JSON.stringify(item.mode)
-                .replace(/\n/g, '')).replace(/\n/g, ' '));
-        formatData.actual = JSON.parse(JSON.stringify(remoteData));
+        try {
+            formatData.expect = yield mock_2.getModeMock(item.mode);
+            // formatData.expect =
+            //   JSON.parse(JSON.parse(JSON.stringify(item.mode)
+            //     .replace(/\n/g, '')
+            //   ).replace(/\n/g, ' '))
+            formatData.actual = JSON.parse(JSON.stringify(remoteData));
+        }
+        catch (_a) {
+            console.log('error:' + item.mode);
+            formatData.expect = '无法模拟该请求,可能包含无法模拟的参数,请自行校对';
+            // console.log(await getModeMock(item.mode))
+        }
         formatData.compare = tools_1.isEqual(formatData.expect, formatData.actual) === true ? 'match' : 'dismatch';
         if (formatData.compare !== 'match') {
             allMatch = false;

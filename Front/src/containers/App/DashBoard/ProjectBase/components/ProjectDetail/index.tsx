@@ -152,7 +152,7 @@ export class ProjectDetail extends React.Component<ProjectDetailProps, ProjectDe
   }
 
   pasteCopy = () => {
-    this.copyToClipBoard(MockUrl + '/' + this.props.data._id + this.props.data.projectUrl)
+    this.copyToClipBoard(MockUrl + '/' + this.props.data._id)
   }
   render() {
     return (

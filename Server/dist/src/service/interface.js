@@ -117,9 +117,12 @@ exports.cloneInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
     }
     const oldInterface = yield index_1.FindInterfaceById(interfaceId);
     // 洗下接口数据
-    const cleanInterface = oldInterface.map((item) => _.pick(item, field.pureInterfaceField));
-    cleanInterface[0].projectId = projectId;
-    const result = yield index_1.AddInterface(cleanInterface[0]);
+    // const cleanInterface = oldInterface.map((item: InterfaceData) => _.pick(item, field.pureInterfaceField))
+    console.log(oldInterface);
+    const cleanInterface = _.pick(oldInterface, field.pureInterfaceField);
+    cleanInterface.projectId = projectId;
+    console.log(cleanInterface);
+    const result = yield index_1.AddInterface(cleanInterface);
     return ctx.body = dataHandle_1.success({}, '克隆成功!');
 });
 exports.cloneInterfaceItem = (projectId, interfaceId) => __awaiter(this, void 0, void 0, function* () {
