@@ -1,16 +1,12 @@
-import { combineEpics } from 'redux-observable';
-import userEpic from './user'
-import messagesEpic from './messages'
-import projectEpic from './project'
-import documentEpic from './document'
-import teamEpic from './team'
-import modelEpic from './model'
-import * as io from 'socket.io-client'
-import { baseUrl } from '../service/api'
-const socket = io(baseUrl);
-socket.on('message', (data: DataAny) => {
-  console.log('来自服务器的信息:', data)
-})
+import documentEpic from "./document";
+import messagesEpic from "./messages";
+import modelEpic from "./model";
+import projectEpic from "./project";
+import teamEpic from "./team";
+import userEpic from "./user";
+
+import { combineEpics } from "redux-observable";
+
 export default combineEpics(
   userEpic,
   messagesEpic,

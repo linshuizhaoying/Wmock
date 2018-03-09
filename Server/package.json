@@ -5,7 +5,8 @@
   "scripts": {
     "start": "yarn run build && yarn run watch",
     "build": "yarn run build-ts && yarn run tslint",
-    "serve": "NODE_ENV=production babel-node dist/src/app.js --exec babel-node --presets es2015 ",
+    "serve":
+      "NODE_ENV=production babel-node dist/src/app.js --exec babel-node --presets es2015 ",
     "watch": "concurrently -k -p  \"yarn run watch-ts\" \"yarn run serve\" ",
     "test": "jest --forceExit",
     "build-ts": "tsc",
@@ -48,13 +49,11 @@
     "pad-string": "^0.2.1",
     "path-to-regexp": "^2.1.0",
     "restc": "^0.2.2",
-    "socket.io": "^2.0.4",
+    "socket.io": "^2.0.3",
     "translation.js": "^0.6.4",
     "tslint": "^5.7.0",
     "typescript": "^2.5.2",
     "vm2": "^3.5.2"
   },
-  "presets": [
-    "es2015"
-  ]
+  "presets": ["es2015"]
 }

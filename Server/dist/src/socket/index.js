@@ -10,21 +10,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = require("jsonwebtoken");
 const config_1 = require("../config");
-const io = require('socket.io');
-const http = require('http');
+const controllers_1 = require("../db/controllers");
+let io = require("socket.io");
+const http = require("http");
 const onlineSocket = new Map(); // 维护一个在线的Socket表,和用户ID一对一对应。里面保存socket对象。用于筛选消息接受者
 module.exports = function () {
     const createServer = (app) => {
         const server = http.Server(app.callback());
-        const ioServer = io(server);
-        messageHandler(ioServer);
+        io = io(server);
+        messageHandler(io);
         return server;
     };
     const messageHandler = (io) => {
-        io.on('connection', (socket) => {
+        io.on("connection", (socket) => {
             // 监听客户端传来的登录信息，更新在线人数。
-            socket.on('userLogin', (data) => __awaiter(this, void 0, void 0, function* () {
-                console.log('socket信息接收:用户登录socket', data);
+            socket.on("userLogin", (data) => __awaiter(this, void 0, void 0, function* () {
+                console.log("socket信息接收:用户登录socket", data);
                 // 先判断用户token是否正常(过期或者校验不对则抛弃, 登录接口也做了校验，因此这个socket消息大部分是安全的)
                 let tokenContent;
                 try {
@@ -32,16 +33,16 @@ module.exports = function () {
                     const userId = tokenContent.userId;
                     // 添加到在线列表
                     onlineSocket.set(userId, socket);
-                    console.log('onlineSocket.get(userId):', onlineSocket.get(userId));
+                    // console.log("onlineSocket.get(userId):", onlineSocket.get(userId));
                 }
                 catch (err) {
                     // 如果以后有日志可以写进去
-                    console.log('无效的token');
+                    console.log("无效的token");
                 }
             }));
             // 监听客户端传来的退出登录，然后更新在线人数
-            socket.on('userLogout', (data) => __awaiter(this, void 0, void 0, function* () {
-                console.log('socket信息接收:用户退出', data);
+            socket.on("userLogout", (data) => __awaiter(this, void 0, void 0, function* () {
+                console.log("socket信息接收:用户退出", data);
                 // 先判断用户token是否正常(过期或者校验不对则抛弃, 登录接口也做了校验，因此这个socket消息大部分是安全的)
                 let tokenContent;
                 try {
@@ -49,17 +50,17 @@ module.exports = function () {
                     const userId = tokenContent.userId;
                     // 从在线列表移除
                     onlineSocket.delete(userId);
-                    console.log('onlineSocket.get(userId):', onlineSocket.get(userId));
+                    // console.log("onlineSocket.get(userId):", onlineSocket.get(userId));
                 }
                 catch (err) {
                     // 如果以后有日志可以写进去
                     console.log(err);
-                    console.log('无效的token');
+                    console.log("无效的token");
                 }
             }));
             // 监听 客户端 的断线重连,此时可以查看用户是否在soket在线表中
-            socket.on('token', (data) => __awaiter(this, void 0, void 0, function* () {
-                console.log('socket信息接收: 用户重新连接', data);
+            socket.on("token", (data) => __awaiter(this, void 0, void 0, function* () {
+                console.log("socket信息接收: 用户重新连接", data);
                 // 先判断用户token是否正常(过期或者校验不对则抛弃, 登录接口也做了校验，因此这个socket消息大部分是安全的)
                 let tokenContent;
                 try {
@@ -67,17 +68,39 @@ module.exports = function () {
                     const userId = tokenContent.userId;
                     // 添加到在线列表
                     onlineSocket.set(userId, socket);
-                    console.log('onlineSocket.get(userId):', onlineSocket.get(userId));
+                    // console.log("onlineSocket.get(userId):", onlineSocket.get(userId));
                 }
                 catch (err) {
                     // 如果以后有日志可以写进去
-                    console.log('无效的token');
+                    console.log("无效的token");
                 }
             }));
+            // 团队成员加入 {userId, projectId}
+            socket.on("userJoinTeam", (data) => __awaiter(this, void 0, void 0, function* () {
+                const { userId, projectId } = data;
+                console.log("data", data);
+                const teamList = yield controllers_1.FindTeamByProjectId(projectId);
+                const userInfo = yield controllers_1.FindUserById(userId);
+                // 提取所有的用户Id,并过滤新成员
+                const teamMember = [];
+                teamMember.push(teamList.masterId);
+                teamList.member.map((user) => {
+                    teamMember.push(user._id);
+                });
+                console.log("teamMember", teamMember);
+                teamMember.splice(teamMember.indexOf(userId), 1);
+                console.log("userInfo", userInfo);
+                // 向团队成员发送即时信息
+                yield socket.broadcast.emit("newMessage", {
+                    content: "用户 " + userInfo.userName + " 加入项目",
+                    type: "team",
+                    member: teamMember
+                });
+            }));
             // 监听断线以及关闭
-            socket.on('disconnect', (data) => __awaiter(this, void 0, void 0, function* () {
+            socket.on("disconnect", (data) => __awaiter(this, void 0, void 0, function* () {
                 // console.log('浏览器关闭一个',socket)
-                console.log('socket信息接收:用户掉线', data);
+                // console.log("socket信息接收:用户掉线", data);
             }));
         });
     };

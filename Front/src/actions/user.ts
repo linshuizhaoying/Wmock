@@ -1,4 +1,4 @@
-import notification from 'antd/lib/notification';
+import notification from "antd/lib/notification";
 import {
   UPDATE_USER,
   USER_INFO,
@@ -6,83 +6,83 @@ import {
   USER_LOGOUT,
   USER_REG,
   USER_TOKEN
-} from '../constants/user';
-import { baseUrl } from '../service/api'
-import * as io from 'socket.io-client'
+} from "../constants/user";
+import { baseUrl } from "../service/api";
+import * as io from "socket.io-client";
 const socket = io(baseUrl);
 
 const login = (data: LoginUser) => ({
   type: USER_LOGIN,
   data: data
-})
+});
 
 const reg = (data: RegUser) => ({
   type: USER_REG,
   data: data
-})
+});
 
 const token = () => ({
   type: USER_TOKEN
-})
+});
 
 const info = () => ({
   type: USER_INFO
-})
+});
 
 const updateUserData = (user: User) => ({
   type: UPDATE_USER,
   data: user
-})
+});
 
 const logout = () => ({
   type: USER_LOGOUT
-})
+});
 
 export function userLogin(user: LoginUser) {
   return (dispatch: Function) => {
-    dispatch(login(user))
-  }
+    dispatch(login(user));
+  };
 }
 
 export function userToken() {
   return (dispatch: Function) => {
-    dispatch(token())
-  }
+    dispatch(token());
+  };
 }
 
 export function userInfo() {
   return (dispatch: Function) => {
-    dispatch(info())
-  }
+    dispatch(info());
+  };
 }
 
 export function userReg(user: RegUser) {
   return (dispatch: Function) => {
-    dispatch(reg(user))
-  }
+    dispatch(reg(user));
+  };
 }
 
 export function updateUser(user: User) {
   return (dispatch: Function) => {
-    dispatch(updateUserData(user))
-  }
+    dispatch(updateUserData(user));
+  };
 }
 
 export function tokenOut() {
   return (dispatch: Function) => {
-    dispatch(logout())
-  }
+    dispatch(logout());
+  };
 }
 
 export function userLogout() {
-  socket.emit('userLogout', { token: localStorage.getItem('token') });
+  socket.emit("userLogout", { token: localStorage.getItem("token") });
   return (dispatch: Function) => {
-    dispatch(logout())
+    dispatch(logout());
 
     notification.success({
-      message: ' 退出成功!',
-      description: '退出成功',
+      message: " 退出成功!",
+      description: "退出成功",
       duration: 2
-    })
-  }
+    });
+  };
 }
