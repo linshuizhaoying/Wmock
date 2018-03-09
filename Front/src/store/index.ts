@@ -5,14 +5,16 @@ import { createEpicMiddleware } from 'redux-observable'
 import epics from '../epics'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
+// import createSocketMiddleware from '../socket'
+// const socketMiddleware = createSocketMiddleware();
 const epicMiddleware = createEpicMiddleware(epics)
-export function configureStore (preloadState: {} = {}) {
+export function configureStore(preloadState: {} = {}) {
   const store = createStore(
     reducers,
     preloadState,
     composeWithDevTools(
-      applyMiddleware(thunk, logger, epicMiddleware,)
-     // (window as any).devToolsExtension && (window as any).devToolsExtension()
+      applyMiddleware(thunk, logger, epicMiddleware)
+      // (window as any).devToolsExtension && (window as any).devToolsExtension()
     )
   )
 

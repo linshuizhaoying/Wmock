@@ -28,6 +28,9 @@ import {
   successMsg
 } from '../actions';
 import { Response } from './typing'
+import * as io from 'socket.io-client'
+import { baseUrl } from '../service/api'
+const socket = io(baseUrl);
 
 export const loadingStart = () => ({ type: LOADING_START });
 export const loadingError = () => ({ type: LOADING_ERROR });
@@ -51,6 +54,9 @@ export const userReg = (action$: EpicAction) =>
         .map((response: Response) => {
           if (response.state.code === 1) {
             successMsg(response.state.msg)
+            socket.emit('userLogin', { token: response.data.data.token });
+            // console.log('发送注册信息给服务器')
+
             return RegSuccess(response.data.data);
           } else {
             errorMsg(response.state.msg);
@@ -71,6 +77,9 @@ export const userLogin = (action$: EpicAction) =>
         .map((response: Response) => {
           if (response.state.code === 1) {
             successMsg(response.state.msg)
+            socket.emit('userLogin', { token: response.data.data.token });
+            // console.log('发送登录信息给服务器')
+
             return LoginSuccess(response.data.data);
           } else {
             errorMsg(response.state.msg);
@@ -91,6 +100,7 @@ export const userToken = (action$: EpicAction) =>
         // 登录验证情况
         .map((response: Response) => {
           if (response.state.code === 1) {
+            socket.emit('token', { token: localStorage.getItem('token') });
             return LoginSuccess(response.data.data);
           } else {
             errorMsg(response.state.msg);

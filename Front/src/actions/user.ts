@@ -6,7 +6,10 @@ import {
   USER_LOGOUT,
   USER_REG,
   USER_TOKEN
-  } from '../constants/user';
+} from '../constants/user';
+import { baseUrl } from '../service/api'
+import * as io from 'socket.io-client'
+const socket = io(baseUrl);
 
 const login = (data: LoginUser) => ({
   type: USER_LOGIN,
@@ -72,9 +75,10 @@ export function tokenOut() {
 }
 
 export function userLogout() {
+  socket.emit('userLogout', { token: localStorage.getItem('token') });
   return (dispatch: Function) => {
     dispatch(logout())
-    
+
     notification.success({
       message: ' 退出成功!',
       description: '退出成功',

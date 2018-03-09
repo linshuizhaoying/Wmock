@@ -143,3 +143,9 @@ interface DocumentData {
   assign: Array<string>,
   type: string, // project other  spec
 }
+
+interface TokenData {
+  userId: string,
+  userName: string,
+  exp: string
+}
