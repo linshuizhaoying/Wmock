@@ -13,6 +13,9 @@ const path = require('path');
 const koaStatic = require('koa-static')
 const validate = require('koa-validate')
 const app = new Koa()
+const socketInit = require('./socket')
+const socket = socketInit()
+
 // 如果是开发者模式
 if (process.env.NODE_ENV === 'production') {
   // logger for dev 日志记录
@@ -33,7 +36,7 @@ mongoose.connect(config.mongo.url, { useMongoClient: true }).catch((err: any) =>
 app.use(bodyParser())
 const staticPath = './'
 app.use(koaStatic(
-  path.join( __dirname,  staticPath)
+  path.join(__dirname, staticPath)
 ))
 
 
@@ -42,9 +45,12 @@ app.use(restc.koa2());
 Router(app)
 validate(app)
 const port = config.app.port
+// 利用中间件去开启socket服务
+const server = socket.createServer(app)
+
 console.log('server start:')
 console.log('服务正在监听端口:' + port)
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(('  App is running at http://localhost:%d in %s mode'), port, process.env.NODE_ENV);
   console.log('  Press CTRL-C to stop\n');
 });

@@ -48,6 +48,7 @@
     "pad-string": "^0.2.1",
     "path-to-regexp": "^2.1.0",
     "restc": "^0.2.2",
+    "socket.io": "^2.0.4",
     "translation.js": "^0.6.4",
     "tslint": "^5.7.0",
     "typescript": "^2.5.2",
