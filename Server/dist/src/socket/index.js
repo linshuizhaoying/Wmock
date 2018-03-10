@@ -78,24 +78,175 @@ module.exports = function () {
             // 团队成员加入 {userId, projectId}
             socket.on("userJoinTeam", (data) => __awaiter(this, void 0, void 0, function* () {
                 const { userId, projectId } = data;
-                console.log("data", data);
                 const teamList = yield controllers_1.FindTeamByProjectId(projectId);
                 const userInfo = yield controllers_1.FindUserById(userId);
-                // 提取所有的用户Id,并过滤新成员
+                // 提取所有的用户Id
                 const teamMember = [];
                 teamMember.push(teamList.masterId);
                 teamList.member.map((user) => {
-                    teamMember.push(user._id);
+                    teamMember.push(user._id.toString());
                 });
-                console.log("teamMember", teamMember);
-                teamMember.splice(teamMember.indexOf(userId), 1);
-                console.log("userInfo", userInfo);
+                // 过滤自己
+                if (teamMember.indexOf(userId) > -1) {
+                    teamMember.splice(teamMember.indexOf(userId), 1);
+                }
                 // 向团队成员发送即时信息
                 yield socket.broadcast.emit("newMessage", {
-                    content: "用户 " + userInfo.userName + " 加入项目",
+                    content: "用户 " + userInfo.userName + " 加入团队 " + teamList.projectName,
                     type: "team",
                     member: teamMember
                 });
+            }));
+            // 团队成员退出 {userId, projectId}
+            socket.on("userLeaveTeam", (data) => __awaiter(this, void 0, void 0, function* () {
+                const { userId, projectId, removeUserId } = data;
+                const teamList = yield controllers_1.FindTeamByProjectId(projectId);
+                const userInfo = yield controllers_1.FindUserById(userId);
+                // 提取所有的用户Id
+                const teamMember = [];
+                teamMember.push(teamList.masterId);
+                teamList.member.map((user) => {
+                    teamMember.push(user._id.toString());
+                });
+                // 过滤自己
+                if (teamMember.indexOf(userId) > -1) {
+                    teamMember.splice(teamMember.indexOf(userId), 1);
+                }
+                // 如果是主动离开的
+                if (removeUserId === userId) {
+                    // 向团队成员发送即时信息
+                    yield socket.broadcast.emit("newMessage", {
+                        content: "用户 " + userInfo.userName + " 离开团队" + teamList.projectName,
+                        projectName: teamList.projectName,
+                        type: "team",
+                        member: teamMember
+                    });
+                }
+                else {
+                    // 给被移除的用户也发条信息
+                    teamMember.push(removeUserId);
+                    // 向团队成员发送即时信息
+                    yield socket.broadcast.emit("newMessage", {
+                        content: "用户 " +
+                            userInfo.userName +
+                            "被项目" +
+                            teamList.projectName +
+                            "移除",
+                        projectName: teamList.projectName,
+                        type: "team",
+                        member: teamMember
+                    });
+                }
+            }));
+            // 邀请成员加入团队
+            socket.on("invitedTeamMember", (data) => __awaiter(this, void 0, void 0, function* () {
+                const { userId, projectId, userEmail } = data;
+                const userInfo = yield controllers_1.FindUserById(userId);
+                const invitedUser = yield controllers_1.FindUserByEmail(userEmail);
+                if (!invitedUser) {
+                    return;
+                }
+                const project = yield controllers_1.FindProjectById(projectId);
+                const member = [];
+                // 只让项目创建者显示消息
+                if (userId !== project.masterId.toString()) {
+                    member.push(project.masterId.toString());
+                }
+                yield socket.broadcast.emit("newMessage", {
+                    content: "用户" +
+                        userInfo.userName +
+                        " 邀请 " +
+                        invitedUser.userName +
+                        " 加入团队 " +
+                        project.projectName,
+                    type: "team",
+                    member: member
+                });
+            }));
+            // 成员申请加入团队
+            socket.on("applyTeamMember", (data) => __awaiter(this, void 0, void 0, function* () { }));
+            // 拒绝成员加入团队
+            socket.on("rejectTeamMember", (data) => __awaiter(this, void 0, void 0, function* () {
+                const { userId, projectId, rejectUserId, messageId } = data;
+                const userInfo = yield controllers_1.FindUserById(userId);
+                const rejectUser = yield controllers_1.FindUserById(rejectUserId);
+                const project = yield controllers_1.FindProjectById(projectId);
+                const invitedUser = yield controllers_1.FindMessageById(messageId);
+                const member = [];
+                // 谁邀请的就让谁知道...
+                member.push(invitedUser.operatorId.toString());
+                yield socket.broadcast.emit("newMessage", {
+                    content: "用户" +
+                        rejectUser.userName +
+                        " 被 " +
+                        userInfo.userName +
+                        " 拒绝加入团队 " +
+                        project.projectName,
+                    type: "team",
+                    member: member
+                });
+            }));
+            // 文档更新通知
+            socket.on("updateDocument", (data) => __awaiter(this, void 0, void 0, function* () {
+                const { userId, documentId } = data;
+                const userInfo = yield controllers_1.FindUserById(userId);
+                const documentMember = [];
+                // 获取分配的项目列表
+                const documentData = yield controllers_1.FindDocumentById(documentId);
+                const assignProjectIdList = documentData.assign;
+                // 先加入文档的创建者
+                documentMember.push(documentData.ownerId);
+                // 查找与这文档相关的所有人,发送消息
+                yield Promise.all(assignProjectIdList.map((item) => __awaiter(this, void 0, void 0, function* () {
+                    // 查找项目的对应团队
+                    const team = yield controllers_1.FindTeamByProjectId(item);
+                    team.member.map((user) => {
+                        // 防止重复
+                        if (documentMember.indexOf(user._id) === -1) {
+                            documentMember.push(user._id.toString());
+                        }
+                    });
+                })));
+                // 过滤自己
+                if (documentMember.indexOf(userId) > -1) {
+                    documentMember.splice(documentMember.indexOf(userId), 1);
+                }
+                // 向文档成员发送即时信息
+                yield socket.broadcast.emit("newMessage", {
+                    content: "用户 " + userInfo.userName + " 更改了文档 " + documentData.name,
+                    type: "document",
+                    member: documentMember
+                });
+            }));
+            // 项目更改通知
+            socket.on("updateProject", (data) => __awaiter(this, void 0, void 0, function* () {
+                const { userId, projectId } = data;
+                const teamList = yield controllers_1.FindTeamByProjectId(projectId);
+                const userInfo = yield controllers_1.FindUserById(userId);
+                try {
+                    // 提取所有的用户Id
+                    const teamMember = [];
+                    teamMember.push(teamList.masterId);
+                    teamList.member.map((user) => {
+                        teamMember.push(user._id.toString());
+                    });
+                    // 过滤自己
+                    if (teamMember.indexOf(userId) > -1) {
+                        teamMember.splice(teamMember.indexOf(userId), 1);
+                    }
+                    // 向项目成员发送即时信息
+                    yield socket.broadcast.emit("newMessage", {
+                        content: "用户 " +
+                            userInfo.userName +
+                            " 更新了项目 " +
+                            teamList.projectName,
+                        type: "project",
+                        member: teamMember
+                    });
+                }
+                catch (error) {
+                    console.log("用户更新了demo");
+                }
             }));
             // 监听断线以及关闭
             socket.on("disconnect", (data) => __awaiter(this, void 0, void 0, function* () {

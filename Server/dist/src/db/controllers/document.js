@@ -8,18 +8,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Document = require('../models/document');
+const Document = require("../models/document");
 exports.AllDocument = () => __awaiter(this, void 0, void 0, function* () {
     return yield Document.find();
+});
+exports.FindDocumentById = (documentId) => __awaiter(this, void 0, void 0, function* () {
+    return yield Document.findOne({ _id: documentId });
 });
 exports.AddDocument = (originDocument) => __awaiter(this, void 0, void 0, function* () {
     const newDocument = new Document(originDocument);
     let result;
-    yield newDocument.save((error) => __awaiter(this, void 0, void 0, function* () {
+    yield newDocument
+        .save((error) => __awaiter(this, void 0, void 0, function* () {
         if (error) {
             result = error.toString();
         }
-    })).then((document) => __awaiter(this, void 0, void 0, function* () {
+    }))
+        .then((document) => __awaiter(this, void 0, void 0, function* () {
         result = document._id;
     }));
     return result;
@@ -35,7 +40,7 @@ exports.UpdateDocument = (document) => __awaiter(this, void 0, void 0, function*
             ownerId: document.ownerId,
             ownerName: document.ownerName,
             assign: document.assign,
-            type: document.type,
+            type: document.type
         }
     });
 });

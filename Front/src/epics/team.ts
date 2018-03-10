@@ -98,6 +98,12 @@ export const ErejectJoinGroup = (action$: EpicAction) =>
         .map((response: Response) => {
           if (response.state.code === 1) {
             successMsg(response.state.msg);
+            socket.emit("rejectTeamMember", {
+              projectId: action.data.projectId,
+              userId: localStorage.getItem("userId"),
+              messageId: action.data.messageId,
+              rejectUserId: action.data.userId
+            });
             return dealJoinGroup(action.data.messageId);
           } else {
             errorMsg(response.state.msg);
@@ -144,6 +150,12 @@ export const EremoveGroupMember = (action$: EpicAction) =>
         .map((response: Response) => {
           if (response.state.code === 1) {
             successMsg(response.state.msg);
+            socket.emit("userLeaveTeam", {
+              projectId: action.data.projectId,
+              userId: localStorage.getItem("userId"),
+              removeUserId: action.data.userId
+            });
+
             return removeUser(action.data);
           } else {
             errorMsg(response.state.msg);
@@ -165,6 +177,11 @@ export const EinvitedGroupMember = (action$: EpicAction) =>
         .map((response: Response) => {
           if (response.state.code === 1) {
             successMsg(response.state.msg);
+            socket.emit("invitedTeamMember", {
+              projectId: action.data.projectId,
+              userId: localStorage.getItem("userId"),
+              userEmail: action.data.userEmail
+            });
             return nothing();
           } else {
             errorMsg(response.state.msg);
