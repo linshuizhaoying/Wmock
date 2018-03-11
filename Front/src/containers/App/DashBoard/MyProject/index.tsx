@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './index.less';
 import ProjectBase from '../ProjectBase/index'
-export class MyProject extends React.Component<ProjectProps, {}> {
+export class MyProject extends React.Component<ProjectPropsWithAdvance, {}> {
 
   render() {
     return (
@@ -17,6 +17,8 @@ export class MyProject extends React.Component<ProjectProps, {}> {
           userId={this.props.userId}
           type={'user'}
           documentRefresh={this.props.documentRefresh}
+          baseModelList={this.props.baseModelList}
+          customModelList={this.props.customModelList}
         />
       </div>
     )

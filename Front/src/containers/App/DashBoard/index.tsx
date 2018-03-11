@@ -1,20 +1,20 @@
-import * as React from 'react';
-import Badge from 'antd/lib/badge';
-import Icon from 'antd/lib/icon';
-import Layout from 'antd/lib/layout';
-import LoadingBar from '../../../components/LoadingBar';
-import Menu, { ClickParam } from 'antd/lib/menu';
-import Messages from './Messages/index';
-import MockModel from './MockModel/index';
-import Modal from 'antd/lib/modal';
-import MyProject from './MyProject/index';
-import OverView from './OverView/index';
-import ProjectDemo from './ProjectDemo/index';
-import ProjectSpec from './ProjectSpec/index';
-import TeamManage from './TeamManage/index';
-import UserInfo from './UserInfo';
+import * as React from "react";
+import Badge from "antd/lib/badge";
+import Icon from "antd/lib/icon";
+import Layout from "antd/lib/layout";
+import LoadingBar from "../../../components/LoadingBar";
+import Menu, { ClickParam } from "antd/lib/menu";
+import Messages from "./Messages/index";
+import MockModel from "./MockModel/index";
+import Modal from "antd/lib/modal";
+import MyProject from "./MyProject/index";
+import OverView from "./OverView/index";
+import ProjectDemo from "./ProjectDemo/index";
+import ProjectSpec from "./ProjectSpec/index";
+import TeamManage from "./TeamManage/index";
+import UserInfo from "./UserInfo";
 // import { ChangeEvent } from 'react';
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import {
   allProjectList,
   fetchBaseModel,
@@ -25,17 +25,17 @@ import {
   fetchProject,
   fetchTeam,
   fetchUnJoinProject
-} from '../../../actions/index';
-import { Link, Route, Switch } from 'react-router-dom';
-import { userInfo, userLogout } from '../../../actions/user';
-import './index.less';
+} from "../../../actions/index";
+import { Link, Route, Switch } from "react-router-dom";
+import { userInfo, userLogout } from "../../../actions/user";
+import "./index.less";
 
 const { Header, Sider, Content, Footer } = Layout;
 const SubMenu = Menu.SubMenu;
 
 export class DashBoard extends React.Component<AppProps, DashBoardState> {
   constructor(props: AppProps) {
-    super(props)
+    super(props);
     this.state = {
       collapsed: false,
       progress: 0,
@@ -45,135 +45,135 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
   }
   toggle = () => {
     this.setState({
-      collapsed: !this.state.collapsed,
+      collapsed: !this.state.collapsed
     });
-  }
+  };
   errorDone = () => {
-    this.setState({ error: true })
-  }
+    this.setState({ error: true });
+  };
 
   progressDone = () => {
-    this.setState({ progress: 0 })
-  }
+    this.setState({ progress: 0 });
+  };
 
   componentDidMount() {
     // 初始化拿数据
-    this.getProjectDemo()
-    this.getMessagesList()
+    this.getProjectDemo();
+    this.getProjectList();
+    this.getMessagesList();
     this.getTeamList();
-    this.getUnJoinProjectList()
+    this.getUnJoinProjectList();
     this.getBaseModelList();
-    this.getCustomModelList()
-    this.getDocumentList()
-    this.getAllProject()
+    this.getCustomModelList();
+    this.getDocumentList();
+    this.getAllProject();
   }
 
   componentWillReceiveProps(nextProps: AppProps) {
     // loadingbar处理过程
 
-    if (nextProps.loadingState === 'start') {
+    if (nextProps.loadingState === "start") {
       this.setState({
         progress: 75,
         error: false
-      })
+      });
     }
-    if (nextProps.loadingState === 'error') {
-      this.setState({ error: true })
+    if (nextProps.loadingState === "error") {
+      this.setState({ error: true });
     }
-    if (nextProps.loadingState === 'success') {
+    if (nextProps.loadingState === "success") {
       this.setState({
         progress: 100
-      })
+      });
     }
   }
 
   overView = () => {
     const { history } = this.props;
-    history.push('/wmock/OverView');
-    this.getMessagesList()
-  }
+    history.push("/wmock/OverView");
+    this.getMessagesList();
+  };
   logout = (e: ClickParam) => {
-    if (e.key === 'logout') {
+    if (e.key === "logout") {
       // this.props.changeLoginState()
       const { dispatch, history } = this.props;
-      dispatch(userLogout())
-      history.push('/login');
+      dispatch(userLogout());
+      history.push("/login");
     }
-    if (e.key === 'userinfo') {
-      this.showUserInfoVisible()
+    if (e.key === "userinfo") {
+      this.showUserInfoVisible();
     }
-  }
+  };
 
   getAllProject = () => {
     const { dispatch } = this.props;
-    dispatch(allProjectList())
-  }
+    dispatch(allProjectList());
+  };
   getMessagesList = () => {
     const { dispatch } = this.props;
-    dispatch(fetchMessages())
-  }
+    dispatch(fetchMessages());
+  };
 
   getProjectList = () => {
     const { dispatch } = this.props;
-    dispatch(fetchProject())
-  }
+    dispatch(fetchProject());
+  };
 
   getMyProject = () => {
     const { dispatch } = this.props;
-    dispatch(fetchProject())
-  }
+    dispatch(fetchProject());
+  };
 
   getProjectDemo = () => {
     const { dispatch } = this.props;
-    dispatch(fetchDemo())
-  }
+    dispatch(fetchDemo());
+  };
   getDocumentList = () => {
-    this.getAllProject()
+    this.getAllProject();
     const { dispatch } = this.props;
-    dispatch(fetchDocument())
-  }
+    dispatch(fetchDocument());
+  };
 
   getTeamList = () => {
     const { dispatch } = this.props;
-    dispatch(fetchTeam())
-    this.getMessagesList()
-  }
+    dispatch(fetchTeam());
+    this.getMessagesList();
+  };
 
   getModel = () => {
-    this.getBaseModelList()
-    this.getCustomModelList()
-  }
+    this.getBaseModelList();
+    this.getCustomModelList();
+  };
   getBaseModelList = () => {
     const { dispatch } = this.props;
-    dispatch(fetchBaseModel())
-  }
+    dispatch(fetchBaseModel());
+  };
 
   getCustomModelList = () => {
     const { dispatch } = this.props;
-    dispatch(fetchCustomModel())
-  }
+    dispatch(fetchCustomModel());
+  };
 
   showUserInfoVisible = () => {
     this.setState({
       userInfoVisible: true
-    })
-  }
+    });
+  };
 
   hideUserInfoVisible = () => {
     this.setState({
       userInfoVisible: false
-    })
-  }
+    });
+  };
   getUserInfo = () => {
     const { dispatch } = this.props;
-    dispatch(userInfo())
-  }
+    dispatch(userInfo());
+  };
 
   getUnJoinProjectList = () => {
     const { dispatch } = this.props;
-    dispatch(fetchUnJoinProject())
-
-  }
+    dispatch(fetchUnJoinProject());
+  };
   render() {
     return (
       <div id="DashBoard">
@@ -193,10 +193,12 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
               collapsed={this.state.collapsed}
             >
               <div className="logo">
-                <img src="http://haoqiao.qiniudn.com/dragonPng.png" alt="logo" />
+                <img
+                  src="http://haoqiao.qiniudn.com/dragonPng.png"
+                  alt="logo"
+                />
               </div>
-              <Menu mode="inline" defaultSelectedKeys={['1']}>
-
+              <Menu mode="inline" defaultSelectedKeys={["1"]}>
                 <SubMenu
                   key="sub0"
                   title={
@@ -208,10 +210,16 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                   <Menu.Item key="1">
                     <Link to="/wmock/messages" onClick={this.getMessagesList}>
                       <Icon type="message" />消息中心
-                      </Link>
+                    </Link>
                   </Menu.Item>
                   <Menu.Item key="3">
-                    <Link to="/wmock/teamManage" onClick={() => { this.getTeamList(); this.getUnJoinProjectList() }}>
+                    <Link
+                      to="/wmock/teamManage"
+                      onClick={() => {
+                        this.getTeamList();
+                        this.getUnJoinProjectList();
+                      }}
+                    >
                       <Icon type="team" />
                       <Badge count={this.props.teamMessagesList.length}>
                         <span className="header">团队管理</span>
@@ -219,70 +227,101 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                     </Link>
                   </Menu.Item>
                   <Menu.Item key="4">
-                    <Link to="/wmock/mockModel" onClick={() => { this.getBaseModelList(); this.getCustomModelList() }}>
+                    <Link
+                      to="/wmock/mockModel"
+                      onClick={() => {
+                        this.getBaseModelList();
+                        this.getCustomModelList();
+                      }}
+                    >
                       <Icon type="code" />Mock数据模型
-                      </Link>
+                    </Link>
                   </Menu.Item>
                 </SubMenu>
 
-                <SubMenu key="sub1" title={<span><Icon type="laptop" /><span>项目管理</span></span>}>
+                <SubMenu
+                  key="sub1"
+                  title={
+                    <span>
+                      <Icon type="laptop" />
+                      <span>项目管理</span>
+                    </span>
+                  }
+                >
                   <Menu.Item key="5">
                     <Link to="/wmock/projectDemo" onClick={this.getProjectDemo}>
                       <Icon type="credit-card" />项目示例
-                      </Link>
+                    </Link>
                   </Menu.Item>
                   <Menu.Item key="9">
                     <Link to="/wmock/myProject" onClick={this.getMyProject}>
                       <Icon type="credit-card" />我的项目
-                      </Link>
+                    </Link>
                   </Menu.Item>
                 </SubMenu>
 
                 <Menu.Item key="7">
-                  <Link to="/wmock/projectSpec" onClick={() => { this.getDocumentList(); }}>
+                  <Link
+                    to="/wmock/projectSpec"
+                    onClick={() => {
+                      this.getDocumentList();
+                    }}
+                  >
                     <Icon type="folder-open" />
-                    <span>
-                      文档与规范
-                        </span>
+                    <span>文档与规范</span>
                   </Link>
                 </Menu.Item>
-
               </Menu>
             </Sider>
             <Layout>
-              <Header style={{ background: '#fff' }}>
+              <Header style={{ background: "#fff" }}>
                 <Icon
                   className="trigger"
-                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                  type={this.state.collapsed ? "menu-unfold" : "menu-fold"}
                   onClick={this.toggle}
                 />
-                <Menu
-                  mode="horizontal"
-                  onClick={this.logout}
-                >
-                  <SubMenu title={<span><Icon type="user" />{this.props.userName}</span>}>
+                <Menu mode="horizontal" onClick={this.logout}>
+                  <SubMenu
+                    title={
+                      <span>
+                        <Icon type="user" />
+                        {this.props.userName}
+                      </span>
+                    }
+                  >
                     <Menu.Item key="userinfo">个人信息</Menu.Item>
                     <Menu.Item key="logout">退出登录</Menu.Item>
                   </SubMenu>
                 </Menu>
               </Header>
-              <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
+              <Content
+                style={{
+                  margin: "24px 16px",
+                  padding: 24,
+                  background: "#fff",
+                  minHeight: 280
+                }}
+              >
                 <Switch>
-                  <Route path="/wmock/messages" render={() => <Messages data={this.props.messagesList} />} />
+                  <Route
+                    path="/wmock/messages"
+                    render={() => <Messages data={this.props.messagesList} />}
+                  />
                   <Route
                     path="/wmock/mockModel"
-                    render={() =>
+                    render={() => (
                       <MockModel
                         refresh={() => this.getModel()}
                         baseModelList={this.props.baseModelList}
                         customModelList={this.props.customModelList}
                         userId={this.props.userId}
                         userName={this.props.userName}
-                      />}
+                      />
+                    )}
                   />
                   <Route
                     path="/wmock/myProject"
-                    render={() =>
+                    render={() => (
                       <MyProject
                         getProjectDemo={() => this.getProjectDemo()}
                         getMyProject={() => this.getMyProject()}
@@ -293,18 +332,26 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                         messagesList={this.props.messagesList}
                         userId={this.props.userId}
                         documentRefresh={() => this.getDocumentList()}
-                      />}
+                        baseModelList={this.props.baseModelList}
+                        customModelList={this.props.customModelList}
+                      />
+                    )}
                   />
                   <Route
                     path="/wmock/overView"
-                    render={() =>
+                    render={() => (
                       <OverView
+                        projectNum={this.props.allProjectList.length}
+                        teamNum={this.props.teamList.length}
+                        documentNum={this.props.documentList.length}
+                        modelNum={this.props.customModelList.length}
                         messagesList={this.props.messagesList}
-                      />}
+                      />
+                    )}
                   />
                   <Route
                     path="/wmock/projectDemo"
-                    render={() =>
+                    render={() => (
                       <ProjectDemo
                         getProjectDemo={() => this.getProjectDemo()}
                         getMyProject={() => this.getMyProject()}
@@ -315,30 +362,38 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                         messagesList={this.props.messagesList}
                         userId={this.props.userId}
                         documentRefresh={() => this.getDocumentList()}
-                      />}
+                        baseModelList={this.props.baseModelList}
+                        customModelList={this.props.customModelList}
+                      />
+                    )}
                   />
                   <Route
                     path="/wmock/projectSpec"
-                    render={() =>
+                    render={() => (
                       <ProjectSpec
                         refresh={() => this.getDocumentList()}
                         unJoinprojectList={this.props.unJoinprojectList}
                         projectList={this.props.allProjectList}
                         documentList={this.props.documentList}
                         userId={this.props.userId}
-                      />}
+                      />
+                    )}
                   />
                   <Route
                     path="/wmock/teamManage"
-                    render={() =>
+                    render={() => (
                       <TeamManage
                         unJoinprojectList={this.props.unJoinprojectList}
                         userId={this.props.userId}
                         userName={this.props.userName}
-                        refresh={() => { this.getTeamList(); this.getMessagesList() }}
+                        refresh={() => {
+                          this.getTeamList();
+                          this.getMessagesList();
+                        }}
                         teamList={this.props.teamList}
                         teamMessagesList={this.props.teamMessagesList}
-                      />}
+                      />
+                    )}
                   />
                 </Switch>
               </Content>
@@ -349,16 +404,19 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
         <Modal
           title="个人信息设置"
           visible={this.state.userInfoVisible}
-          width={'60%'}
+          width={"60%"}
           onCancel={this.hideUserInfoVisible}
           onOk={this.hideUserInfoVisible}
           cancelText="取消"
           okText="确定"
         >
-          <UserInfo getUserInfo={this.getUserInfo} userData={this.props.userData} />
+          <UserInfo
+            getUserInfo={this.getUserInfo}
+            userData={this.props.userData}
+          />
         </Modal>
       </div>
-    )
+    );
   }
 }
 
@@ -378,6 +436,6 @@ const mapStateToProps = (state: DashBoardState) => ({
   baseModelList: state.model.base,
   customModelList: state.model.custom,
   allProjectList: state.project.allProjectList
-})
+});
 
 export default connect(mapStateToProps)(DashBoard);
