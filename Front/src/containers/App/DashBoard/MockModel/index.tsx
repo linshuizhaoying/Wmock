@@ -140,7 +140,7 @@ export class MockModel extends React.Component<AppProps, MockModelState> {
                   actions={[this.renderModelTitle(item),
                   <div key={2}>
                     <Popconfirm
-                      title="确定删除该文档么?"
+                      title="确定删除该模型么?"
                       onConfirm={() => { this.remove(item._id) }}
                       okText="确定删除"
                       cancelText="取消"

@@ -33,7 +33,7 @@ const columns = [{
   title: '发布时间',
   dataIndex: 'time',
   key: 'time',
-  render: (time: Date) => `${time}`,
+  render: (time: Date) => (new Date(time).toLocaleDateString() + ' ' + new Date(time).toLocaleTimeString()),
 }];
 
 export class Messages extends React.Component<AdvanceAny, MessageState> {

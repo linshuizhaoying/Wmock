@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ProjectBase from '../ProjectBase/index';
 import './index.less';
-class ProjectDemo extends React.Component<ProjectProps, {}> {
+class ProjectDemo extends React.Component<ProjectPropsWithAdvance, {}> {
 
   render() {
     return (
@@ -17,6 +17,8 @@ class ProjectDemo extends React.Component<ProjectProps, {}> {
           userId={this.props.userId}
           type={'demo'}
           documentRefresh={this.props.documentRefresh}
+          baseModelList={this.props.baseModelList}
+          customModelList={this.props.customModelList}
         />
       </div>
     );

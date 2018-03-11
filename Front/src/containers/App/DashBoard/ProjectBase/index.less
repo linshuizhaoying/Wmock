@@ -1,108 +1,114 @@
-#ProjectBase{
+#ProjectBase {
   display: flex;
-  .projectTree .ant-card-body{
+  .projectTree .ant-card-body {
     padding-left: 0px;
     min-height: 595px;
     max-height: 640px;
     overflow-y: scroll;
   }
-  .addProject{
-    cursor:pointer;
-    font-size:18px;
-    margin-bottom:5px;
-    i{
+  .addProject {
+    cursor: pointer;
+    font-size: 18px;
+    margin-bottom: 5px;
+    i {
       margin-right: 10px;
     }
   }
-  .projectType{
-    display:flex;
+  .projectType {
+    display: flex;
     width: 240px;
   }
-  .interfaceType{
-    display:flex;
+  .interfaceType {
+    display: flex;
     width: 220px;
+    .interfaceName{
+      max-width: 200px;
+      width: 200px;
+    }
   }
-  .projectOperate,.interfaceOperate{
-    display:none;
-    
+  .projectOperate,
+  .interfaceOperate {
+    display: none;
+
     position: absolute;
     right: 0;
     font-weight: 400;
-    transition: all .2s;
-    .operate-icon{
+    transition: all 0.2s;
+    .operate-icon {
       position: relative;
       right: 0;
       float: right;
       line-height: 24px;
       width: 24px;
-      font-weight: 700
+      font-weight: 700;
     }
   }
-  .ant-tree-node-content-wrapper .projectOperate{
-    background-color: #E6F7FE;
+  .ant-tree-node-content-wrapper .projectOperate {
+    background-color: #e6f7fe;
   }
-  .ant-tree-node-selected .projectOperate{
-    background-color:#BBE7FE;
-  }
-
-  .ant-tree-node-content-wrapper .interfaceOperate{
-    background-color: #E6F7FE;
-  }
-  .ant-tree-node-selected .interfaceOperate{
-    background-color:#BBE7FE;
+  .ant-tree-node-selected .projectOperate {
+    background-color: #bbe7fe;
   }
 
-  .projectName,.interfaceName{
+  .ant-tree-node-content-wrapper .interfaceOperate {
+    background-color: #e6f7fe;
+  }
+  .ant-tree-node-selected .interfaceOperate {
+    background-color: #bbe7fe;
+  }
+
+  .projectName,
+  .interfaceName {
     margin-left: 5px;
-    max-width: 220px;
+    max-width: 200px;
     display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    i{
-      margin-right:5px;
+    i {
+      margin-right: 5px;
     }
   }
-  .projectType:hover{
-    .projectOperate{
+  .projectType:hover {
+    .projectOperate {
       margin-left: 25px;
-      display:inline-block;
-      i{
-        flex:1;
-        margin-left:10px;
+      display: inline-block;
+      i {
+        flex: 1;
+        margin-left: 10px;
       }
     }
   }
-  .interfaceType:hover{
-    .interfaceOperate{
+  .interfaceType:hover {
+    .interfaceOperate {
       margin-left: 100px;
-      display:inline-block;
-      i{
-        flex:1;
-        margin-left:10px;
+      display: inline-block;
+      i {
+        flex: 1;
+        margin-left: 10px;
       }
     }
   }
-  .projectContent{
-    padding-left:20px;
-    flex:2;
+  .projectContent {
+    padding-left: 20px;
+    flex: 2;
   }
-  .documentItem .ant-col-6{
+  .documentItem .ant-col-6 {
     width: 240px;
   }
-
-  
 }
 
 .jsondiffpatch-delta {
-  font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Courier, monospace;
+  font-family: "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Monaco, Courier,
+    monospace;
   font-size: 12px;
   margin: 0;
   padding: 0 0 0 12px;
   display: inline-block;
 }
 .jsondiffpatch-delta pre {
-  font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Courier, monospace;
+  font-family: "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Monaco, Courier,
+    monospace;
   font-size: 12px;
   margin: 0;
   padding: 0;
@@ -142,23 +148,35 @@ ul.jsondiffpatch-delta {
   overflow-y: hidden;
 }
 .jsondiffpatch-unchanged-showing .jsondiffpatch-unchanged,
-.jsondiffpatch-unchanged-showing .jsondiffpatch-movedestination > .jsondiffpatch-value {
+.jsondiffpatch-unchanged-showing
+  .jsondiffpatch-movedestination
+  > .jsondiffpatch-value {
   max-height: 100px;
 }
 .jsondiffpatch-unchanged-hidden .jsondiffpatch-unchanged,
-.jsondiffpatch-unchanged-hidden .jsondiffpatch-movedestination > .jsondiffpatch-value {
+.jsondiffpatch-unchanged-hidden
+  .jsondiffpatch-movedestination
+  > .jsondiffpatch-value {
   max-height: 0;
 }
-.jsondiffpatch-unchanged-hiding .jsondiffpatch-movedestination > .jsondiffpatch-value,
-.jsondiffpatch-unchanged-hidden .jsondiffpatch-movedestination > .jsondiffpatch-value {
+.jsondiffpatch-unchanged-hiding
+  .jsondiffpatch-movedestination
+  > .jsondiffpatch-value,
+.jsondiffpatch-unchanged-hidden
+  .jsondiffpatch-movedestination
+  > .jsondiffpatch-value {
   display: block;
 }
 .jsondiffpatch-unchanged-visible .jsondiffpatch-unchanged,
-.jsondiffpatch-unchanged-visible .jsondiffpatch-movedestination > .jsondiffpatch-value {
+.jsondiffpatch-unchanged-visible
+  .jsondiffpatch-movedestination
+  > .jsondiffpatch-value {
   max-height: 100px;
 }
 .jsondiffpatch-unchanged-hiding .jsondiffpatch-unchanged,
-.jsondiffpatch-unchanged-hiding .jsondiffpatch-movedestination > .jsondiffpatch-value {
+.jsondiffpatch-unchanged-hiding
+  .jsondiffpatch-movedestination
+  > .jsondiffpatch-value {
   max-height: 0;
 }
 .jsondiffpatch-unchanged-showing .jsondiffpatch-arrow,
@@ -174,38 +192,38 @@ ul.jsondiffpatch-delta {
   vertical-align: top;
 }
 .jsondiffpatch-property-name:after {
-  content: ': ';
+  content: ": ";
 }
 .jsondiffpatch-child-node-type-array > .jsondiffpatch-property-name:after {
-  content: ': [';
+  content: ": [";
 }
 .jsondiffpatch-child-node-type-array:after {
-  content: '],';
+  content: "],";
 }
 div.jsondiffpatch-child-node-type-array:before {
-  content: '[';
+  content: "[";
 }
 div.jsondiffpatch-child-node-type-array:after {
-  content: ']';
+  content: "]";
 }
 .jsondiffpatch-child-node-type-object > .jsondiffpatch-property-name:after {
-  content: ': {';
+  content: ": {";
 }
 .jsondiffpatch-child-node-type-object:after {
-  content: '},';
+  content: "},";
 }
 div.jsondiffpatch-child-node-type-object:before {
-  content: '{';
+  content: "{";
 }
 div.jsondiffpatch-child-node-type-object:after {
-  content: '}';
+  content: "}";
 }
 .jsondiffpatch-value pre:after {
-  content: ',';
+  content: ",";
 }
 li:last-child > .jsondiffpatch-value pre:after,
 .jsondiffpatch-modified > .jsondiffpatch-left-value pre:after {
-  content: '';
+  content: "";
 }
 .jsondiffpatch-modified .jsondiffpatch-value {
   display: inline-block;
@@ -222,7 +240,7 @@ li:last-child > .jsondiffpatch-value pre:after,
   color: #888;
 }
 .jsondiffpatch-moved .jsondiffpatch-moved-destination:before {
-  content: ' => ';
+  content: " => ";
 }
 ul.jsondiffpatch-textdiff {
   padding: 0;
@@ -236,10 +254,65 @@ ul.jsondiffpatch-textdiff {
   display: inline-block;
 }
 .jsondiffpatch-textdiff-line-number:after {
-  content: ',';
+  content: ",";
 }
 .jsondiffpatch-error {
   background: red;
   color: white;
   font-weight: bold;
+}
+.jsondiffpatch-annotated-delta {
+  font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Courier, monospace;
+  font-size: 12px;
+  margin: 0;
+  padding: 0 0 0 12px;
+  display: inline-block;
+}
+.jsondiffpatch-annotated-delta pre {
+  font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Courier, monospace;
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+.jsondiffpatch-annotated-delta td {
+  margin: 0;
+  padding: 0;
+}
+.jsondiffpatch-annotated-delta td pre:hover {
+  font-weight: bold;
+}
+td.jsondiffpatch-delta-note {
+  font-style: italic;
+  padding-left: 10px;
+}
+.jsondiffpatch-delta-note > div {
+  margin: 0;
+  padding: 0;
+}
+.jsondiffpatch-delta-note pre {
+  font-style: normal;
+}
+.jsondiffpatch-annotated-delta .jsondiffpatch-delta-note {
+  color: #777;
+}
+.jsondiffpatch-annotated-delta tr:hover {
+  background: #ffc;
+}
+.jsondiffpatch-annotated-delta tr:hover > td.jsondiffpatch-delta-note {
+  color: black;
+}
+.jsondiffpatch-error {
+  background: red;
+  color: white;
+  font-weight: bold;
+}
+
+.verify-alert {
+  display: flex;
+  p {
+    flex: 1;
+    padding: 0;
+    margin: 0;
+  }
 }
