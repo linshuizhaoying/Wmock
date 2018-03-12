@@ -25,6 +25,9 @@ export const FindMessageById = async (id: string) => {
 export const FindMessageByObjectId = async (objectId: string) => {
   return Message.find({ objectId: objectId, type: "normal" });
 };
+export const FindMessageByDocumentId = async (documentId: string) => {
+  return Message.find({ objectId: documentId });
+};
 
 export const AllMessages = async (userId: string) => {
   const projectMap = await FindProjectListByUserId(userId);
@@ -42,7 +45,6 @@ export const AllMessages = async (userId: string) => {
   objectMessages.map((message: MessageData) => {
     result.push(message);
   });
-
   return await _.uniqBy(result, "_id");
 };
 
@@ -60,6 +62,10 @@ export const AddMessage = async (message: MessageData) => {
       result = message._id;
     });
   return result;
+};
+
+export const DocumentMessages = async (documentId: string) => {
+  return await FindMessageByDocumentId(documentId);
 };
 
 export const UpdateMessageReaded = async (message: Message) => {

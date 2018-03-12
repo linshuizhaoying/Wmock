@@ -22,6 +22,7 @@ export const Router = (app: any) => {
     allProjectList,
 
     documentList,
+    documentMessages,
     removeDocument,
     addDocument,
     updateDocument,
@@ -111,6 +112,8 @@ export const Router = (app: any) => {
 
     // 获取文档列表
     .get('/api/documentList', tokenPermission, Service.documentList)
+    // 获取文档历史信息
+    .post('/api/documentMessages', tokenPermission, Service.documentMessages)
     // 添加文档
     .post('/api/addDocument', tokenPermission, Service.addDocument)
     // 更新文档

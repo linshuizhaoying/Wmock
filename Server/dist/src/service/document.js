@@ -95,21 +95,21 @@ exports.updateDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {
         return ctx.body = dataHandle_1.error('用户数据不正常,添加失败!');
     }
     yield index_1.UpdateDocument(document);
-    // // 添加对应文档更新消息
-    // const userData: UserData = await FindUserById(userId)
-    // const updateDocumentMessage: MessageData = {
-    //   operatorId: userId,
-    //   operatorName: userData.userName,
-    //   action: 'add',
-    //   projectId: '',
-    //   objectId: document._id,
-    //   objectName: name,
-    //   desc: '用户 ' + userData.userName + ' 更新了文档 ' + name,
-    //   userId: userId,
-    //   avatar: userData.avatar,
-    //   type: 'normal'
-    // }
-    // await AddMessage(updateDocumentMessage)
+    // 添加对应文档更新消息
+    const userData = yield index_1.FindUserById(userId);
+    const updateDocumentMessage = {
+        operatorId: userId,
+        operatorName: userData.userName,
+        action: 'update',
+        projectId: '',
+        objectId: document._id,
+        objectName: name,
+        desc: '用户 ' + userData.userName + ' 更新了文档 ' + name,
+        userId: userId,
+        avatar: userData.avatar,
+        type: 'document'
+    };
+    yield index_1.AddMessage(updateDocumentMessage);
     return ctx.body = dataHandle_1.success({}, '更新成功!');
 });
 exports.removeDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {

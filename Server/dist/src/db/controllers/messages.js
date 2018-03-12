@@ -31,6 +31,9 @@ exports.FindMessageById = (id) => __awaiter(this, void 0, void 0, function* () {
 exports.FindMessageByObjectId = (objectId) => __awaiter(this, void 0, void 0, function* () {
     return Message.find({ objectId: objectId, type: "normal" });
 });
+exports.FindMessageByDocumentId = (documentId) => __awaiter(this, void 0, void 0, function* () {
+    return Message.find({ objectId: documentId });
+});
 exports.AllMessages = (userId) => __awaiter(this, void 0, void 0, function* () {
     const projectMap = yield project_1.FindProjectListByUserId(userId);
     console.log("projectList", projectMap);
@@ -63,6 +66,9 @@ exports.AddMessage = (message) => __awaiter(this, void 0, void 0, function* () {
         result = message._id;
     }));
     return result;
+});
+exports.DocumentMessages = (documentId) => __awaiter(this, void 0, void 0, function* () {
+    return yield exports.FindMessageByDocumentId(documentId);
 });
 exports.UpdateMessageReaded = (message) => __awaiter(this, void 0, void 0, function* () {
     return yield Message.update({

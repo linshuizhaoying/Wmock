@@ -17,6 +17,7 @@ import UserInfo from "./UserInfo";
 import { connect } from "react-redux";
 import {
   allProjectList,
+  fetchDocumentMessages,
   fetchBaseModel,
   fetchCustomModel,
   fetchDemo,
@@ -128,10 +129,16 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
     const { dispatch } = this.props;
     dispatch(fetchDemo());
   };
+
   getDocumentList = () => {
     this.getAllProject();
     const { dispatch } = this.props;
     dispatch(fetchDocument());
+  };
+
+  getDocumentMessages = (id: string) => {
+    const { dispatch } = this.props;
+    dispatch(fetchDocumentMessages({id: id}));
   };
 
   getTeamList = () => {
@@ -375,7 +382,9 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                         unJoinprojectList={this.props.unJoinprojectList}
                         projectList={this.props.allProjectList}
                         documentList={this.props.documentList}
+                        documentMessages={this.props.documentMessages}
                         userId={this.props.userId}
+                        getDocumentMessages={this.getDocumentMessages}
                       />
                     )}
                   />
@@ -435,7 +444,8 @@ const mapStateToProps = (state: DashBoardState) => ({
   unJoinprojectList: state.project.unJoinList,
   baseModelList: state.model.base,
   customModelList: state.model.custom,
-  allProjectList: state.project.allProjectList
+  allProjectList: state.project.allProjectList,
+  documentMessages: state.document.documentMessages
 });
 
 export default connect(mapStateToProps)(DashBoard);
