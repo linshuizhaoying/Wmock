@@ -1,12 +1,14 @@
 import {
   RECEIVE_DOCUMENT,
+  RECEIVE_DOCUMENTMESSAGES,
   ERROR_DOCUMENT,
   REMOVE_LOCALDOCUMENT,
   UPDATE_LOCALDOCUMENT
   // ADD_MESSAGE
 } from '../constants/document';
 const initialState = {
-  data: []
+  data: [],
+  documentMessages: []
 }
 const removeDocument = (list: Array<Document>, id: Id) => {
   let temp: Array<Document> = []
@@ -39,10 +41,16 @@ const document = (state = initialState, action: Action) => {
         ...state,
         data: action.data.data,
       }
+    case RECEIVE_DOCUMENTMESSAGES:
+      return {
+        ...state,
+        documentMessages: action.data.data,
+      }
     case ERROR_DOCUMENT:
       return {
         ...state,
-        data: []
+        data: [],
+        documentMessages: []
       }
     case REMOVE_LOCALDOCUMENT:
       return {

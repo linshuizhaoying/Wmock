@@ -15,7 +15,7 @@ const path = require('path');
 const middleware = require('../middleware/index');
 const router = new Irouter();
 exports.Router = (app) => {
-    const { reg, login, tokenLogin, userInfo, updateUser, messagesList, userProjectList, demoProjectList, allProjectList, documentList, removeDocument, addDocument, updateDocument, uploadFile, teamList, sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember, mock, unJoinProjectList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject, addInterface, removeInterface, updateInterface, cloneInterface, baseModelList, customModelList, addModel, updateModel, removeModel, } = Service;
+    const { reg, login, tokenLogin, userInfo, updateUser, messagesList, userProjectList, demoProjectList, allProjectList, documentList, documentMessages, removeDocument, addDocument, updateDocument, uploadFile, teamList, sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember, mock, unJoinProjectList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject, addInterface, removeInterface, updateInterface, cloneInterface, baseModelList, customModelList, addModel, updateModel, removeModel, } = Service;
     router.post('/api/reg', Service.reg)
         .post('/api/login', Service.login)
         .get('/api/userInfo', token_1.default, Service.userInfo)
@@ -43,6 +43,7 @@ exports.Router = (app) => {
         .post('/api/removeGroupMember', token_1.default, Service.removeGroupMember)
         .post('/api/invitedGroupMember', token_1.default, Service.invitedGroupMember)
         .get('/api/documentList', token_1.default, Service.documentList)
+        .post('/api/documentMessages', token_1.default, Service.documentMessages)
         .post('/api/addDocument', token_1.default, Service.addDocument)
         .post('/api/updateDocument', token_1.default, Service.updateDocument)
         .post('/api/removeDocument', token_1.default, Service.removeDocument)

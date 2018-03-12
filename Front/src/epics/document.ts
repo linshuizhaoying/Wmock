@@ -3,8 +3,10 @@ import {
   ADD_DOCUMENT,
   ERROR_DOCUMENT,
   FETCH_DOCUMENT,
+  FETCH_DOCUMENTMESSAGES,
   NOTHING,
   RECEIVE_DOCUMENT,
+  RECEIVE_DOCUMENTMESSAGES,
   REMOVE_DOCUMENT,
   REMOVE_LOCALDOCUMENT,
   UPDATE_DOCUMENT,
@@ -14,7 +16,8 @@ import {
   addDocument,
   documentList,
   removeDocument,
-  updateDocument
+  updateDocument,
+  documentMessages
 } from "../service/api";
 import { errorMsg, successMsg } from "../actions/index";
 import { combineEpics } from "redux-observable";
@@ -36,6 +39,10 @@ export const documentReceive = (data: Document) => ({
   type: RECEIVE_DOCUMENT,
   data: data
 });
+export const documentMessagesReceive = (data: Document) => ({
+  type: RECEIVE_DOCUMENTMESSAGES,
+  data: data
+});
 export const updateLocalDocument = (data: Document) => ({
   type: UPDATE_LOCALDOCUMENT,
   data: data
@@ -53,7 +60,7 @@ export const fetchAllDocument = (action$: EpicAction) =>
         .get(documentList, action.data)
         .map((response: Response) => {
           if (response.state.code === 1) {
-            let temp = response.data;
+            const temp = response.data;
             return documentReceive(temp);
           } else {
             return errorMsg(response.state.msg);
@@ -68,6 +75,30 @@ export const fetchAllDocument = (action$: EpicAction) =>
         .startWith(loadingSuccess())
         .delay(200)
         .startWith(loadingStart())
+    );
+  });
+
+  export const fetchDocumentMessages = (action$: EpicAction) =>
+  action$.ofType(FETCH_DOCUMENTMESSAGES).mergeMap((action: Action) => {
+    return (
+      fetch
+        .post(documentMessages, action.data)
+        .map((response: Response) => {
+          if (response.state.code === 1) {
+            successMsg(response.state.msg);
+            console.log(response.data)
+            return documentMessagesReceive(response.data);
+          } else {
+            errorMsg(response.state.msg);
+            return nothing();
+          }
+        })
+        // 只有服务器崩溃才捕捉错误
+        .catch((e: Error): Observable<Action> => {
+          return Observable.of({ type: ERROR_DOCUMENT }).startWith(
+            loadingError()
+          );
+        })
     );
   });
 
@@ -147,6 +178,7 @@ export const EaddDocument = (action$: EpicAction) =>
 
 export default combineEpics(
   fetchAllDocument,
+  fetchDocumentMessages,
   EupdateDocument,
   EaddDocument,
   EremoveDocument

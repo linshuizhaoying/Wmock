@@ -113,21 +113,21 @@ export const updateDocument = async (ctx: any) => {
   }
   await UpdateDocument(document)
 
-  // // 添加对应文档更新消息
-  // const userData: UserData = await FindUserById(userId)
-  // const updateDocumentMessage: MessageData = {
-  //   operatorId: userId,
-  //   operatorName: userData.userName,
-  //   action: 'add',
-  //   projectId: '',
-  //   objectId: document._id,
-  //   objectName: name,
-  //   desc: '用户 ' + userData.userName + ' 更新了文档 ' + name,
-  //   userId: userId,
-  //   avatar: userData.avatar,
-  //   type: 'normal'
-  // }
-  // await AddMessage(updateDocumentMessage)
+  // 添加对应文档更新消息
+  const userData: UserData = await FindUserById(userId)
+  const updateDocumentMessage: MessageData = {
+    operatorId: userId,
+    operatorName: userData.userName,
+    action: 'update',
+    projectId: '',
+    objectId: document._id,
+    objectName: name,
+    desc: '用户 ' + userData.userName + ' 更新了文档 ' + name,
+    userId: userId,
+    avatar: userData.avatar,
+    type: 'document'
+  }
+  await AddMessage(updateDocumentMessage)
 
 
   return ctx.body = success({}, '更新成功!')

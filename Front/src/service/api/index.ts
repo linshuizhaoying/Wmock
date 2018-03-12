@@ -77,7 +77,7 @@ export const removeInterFace = baseUrl + '/api/removeInterFace';
 // 文档列表
 
 export const documentList = baseUrl + '/api/documentList';
-
+export const documentMessages = baseUrl + '/api/documentMessages'
 export const updateDocument = baseUrl + '/api/updateDocument';
 export const removeDocument = baseUrl + '/api/removeDocument';
 export const addDocument = baseUrl + '/api/addDocument';
