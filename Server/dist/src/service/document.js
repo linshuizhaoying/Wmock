@@ -113,9 +113,8 @@ exports.updateDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {
     return ctx.body = dataHandle_1.success({}, '更新成功!');
 });
 exports.removeDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const { userId } = ctx.tokenContent;
     const { id } = ctx.request.body;
-    yield exports.removeDocument(id);
+    yield index_1.RemoveDocument(id);
     return ctx.body = dataHandle_1.success({}, '删除成功!');
 });
 //# sourceMappingURL=document.js.map

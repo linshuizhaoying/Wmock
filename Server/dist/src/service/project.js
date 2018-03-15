@@ -14,9 +14,9 @@ const dataHandle_1 = require("../utils/dataHandle");
 const mock_1 = require("./mock");
 const tools_1 = require("../utils/tools");
 const mock_2 = require("./mock");
-const _ = require('lodash');
-const field = require('../db/models/field');
-const getProjectList = (projectList, userType = 'user') => __awaiter(this, void 0, void 0, function* () {
+const _ = require("lodash");
+const field = require("../db/models/field");
+const getProjectList = (projectList, userType = "user") => __awaiter(this, void 0, void 0, function* () {
     const result = [];
     yield Promise.all(projectList.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
         // 洗下项目数据
@@ -26,14 +26,14 @@ const getProjectList = (projectList, userType = 'user') => __awaiter(this, void 
         // 洗下接口数据
         const interfaceList = interfaceOldData.map((item) => _.pick(item, field.interfaceField));
         const fullProject = item;
-        if (userType !== 'demo') {
+        if (userType !== "demo") {
             // 获取团队信息
             const team = yield index_1.FindTeamByProjectId(item._id);
             const master = {
-                _id: '',
-                userName: '',
-                role: '',
-                avatar: ''
+                _id: "",
+                userName: "",
+                role: "",
+                avatar: ""
             };
             master._id = team.masterId;
             master.avatar = team.masterAvatar;
@@ -45,10 +45,10 @@ const getProjectList = (projectList, userType = 'user') => __awaiter(this, void 
             // 团队列表加入成员
             yield team.member.map((member) => {
                 const temp = {
-                    _id: '',
-                    userName: '',
-                    role: '',
-                    avatar: ''
+                    _id: "",
+                    userName: "",
+                    role: "",
+                    avatar: ""
                 };
                 temp._id = member._id;
                 temp.avatar = member.avatar;
@@ -56,9 +56,9 @@ const getProjectList = (projectList, userType = 'user') => __awaiter(this, void 
                 temp.userName = member.userName;
                 teamMember.push(temp);
             });
-            fullProject['teamMember'] = yield teamMember;
+            fullProject["teamMember"] = yield teamMember;
         }
-        fullProject['interfaceList'] = yield interfaceList;
+        fullProject["interfaceList"] = yield interfaceList;
         result.push(fullProject);
         return fullProject;
     })));
@@ -73,7 +73,7 @@ exports.allProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const data = yield index_1.FindProjectDataListByUserId(userId);
     const projectList = data.map((item) => _.pick(item, field.projectList));
     // const projectList = data.map((item: ProjectData) => _.pick(item, field.projectList))
-    return ctx.body = dataHandle_1.success(projectList, '获取成功');
+    return (ctx.body = dataHandle_1.success(projectList, "获取成功"));
 });
 exports.userProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
@@ -81,36 +81,36 @@ exports.userProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () 
     // 获取项目信息
     const projectList = yield index_1.UserProject(userId);
     result = yield getProjectList(projectList);
-    return ctx.body = dataHandle_1.success(result, '获取成功');
+    return (ctx.body = dataHandle_1.success(result, "获取成功"));
 });
 exports.demoProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
     let result = [];
     // 获取项目信息
     const projectList = yield index_1.DemoProject(userId);
-    result = yield getProjectList(projectList, 'demo');
-    return ctx.body = dataHandle_1.success(result, '获取成功');
+    result = yield getProjectList(projectList, "demo");
+    return (ctx.body = dataHandle_1.success(result, "获取成功"));
 });
 exports.unJoinProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
     const result = yield index_1.UnJoinProjectList(userId);
     // console.log(result)
-    return ctx.body = dataHandle_1.success(result, '获取成功');
+    return (ctx.body = dataHandle_1.success(result, "获取成功"));
 });
 const addUserProject = (userId, project) => __awaiter(this, void 0, void 0, function* () {
     const result = yield index_1.AddProject(project);
     // 如果只是创建示例项目,不创建团队
-    if (project.type === 'demo') {
+    if (project.type === "demo") {
         return result;
     }
     // 添加对应团队
     const team = {
-        masterAvatar: '',
-        masterId: '',
-        role: '',
-        masterName: '',
-        projectId: '',
-        projectName: '',
+        masterAvatar: "",
+        masterId: "",
+        role: "",
+        masterName: "",
+        projectId: "",
+        projectName: "",
         member: []
     };
     const userData = yield index_1.FindUserById(userId);
@@ -118,14 +118,14 @@ const addUserProject = (userId, project) => __awaiter(this, void 0, void 0, func
     const projectMessage = {
         operatorId: userId,
         operatorName: userData.userName,
-        action: 'add',
+        action: "add",
         projectId: result,
         objectId: result,
         objectName: project.projectName,
-        desc: '用户 ' + userData.userName + '添加了新项目 ' + project.projectName,
+        desc: "用户 " + userData.userName + "添加了新项目 " + project.projectName,
         userId: userId,
         avatar: userData.avatar,
-        type: 'normal'
+        type: "normal"
     };
     team.masterAvatar = userData.avatar;
     team.masterId = userData._id;
@@ -134,19 +134,19 @@ const addUserProject = (userId, project) => __awaiter(this, void 0, void 0, func
     team.projectId = result;
     team.projectName = project.projectName;
     const teamId = yield index_1.AddTeam(team);
-    console.log('teamId', teamId);
+    console.log("teamId", teamId);
     // 添加对应项目消息
     const teamMessage = {
         operatorId: userId,
         operatorName: userData.userName,
-        action: 'add',
+        action: "add",
         projectId: result,
         objectId: teamId,
         objectName: project.projectName,
-        desc: '添加了新团队 ' + project.projectName,
+        desc: "添加了新团队 " + project.projectName,
         userId: userId,
         avatar: userData.avatar,
-        type: 'normal'
+        type: "normal"
     };
     yield index_1.AddMessage(projectMessage);
     yield index_1.AddMessage(teamMessage);
@@ -156,33 +156,51 @@ exports.addProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     // 添加项目
     const { userId } = ctx.tokenContent;
     const project = ctx.request.body;
-    const projectName = ctx.checkBody('projectName').notEmpty().len(1, 32).value;
-    const projectUrl = ctx.checkBody('projectUrl').notEmpty().len(1, 20).value;
-    const projectDesc = ctx.checkBody('projectDesc').notEmpty().len(1, 40).value;
-    const ProjectTransferUrl = ctx.checkBody('transferUrl').notEmpty();
-    const type = ctx.checkBody('type').notEmpty().value;
+    const projectName = ctx
+        .checkBody("projectName")
+        .notEmpty()
+        .len(1, 32).value;
+    const projectUrl = ctx
+        .checkBody("projectUrl")
+        .notEmpty()
+        .len(1, 20).value;
+    const projectDesc = ctx
+        .checkBody("projectDesc")
+        .notEmpty()
+        .len(1, 40).value;
+    const ProjectTransferUrl = ctx.checkBody("transferUrl").notEmpty();
+    const type = ctx.checkBody("type").notEmpty().value;
     if (ctx.errors) {
         console.log(ctx.errors);
-        return ctx.body = dataHandle_1.error('用户数据不正常,添加失败!');
+        return (ctx.body = dataHandle_1.error("用户数据不正常,添加失败!"));
     }
     project.masterId = userId;
     yield addUserProject(userId, project);
-    return ctx.body = dataHandle_1.success({}, '添加项目成功!');
+    return (ctx.body = dataHandle_1.success({}, "添加项目成功!"));
 });
 exports.updateProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const project = ctx.request.body;
-    const _id = ctx.checkBody('_id').notEmpty().value;
+    const _id = ctx.checkBody("_id").notEmpty().value;
     if (ctx.errors) {
         console.log(ctx.errors);
-        return ctx.body = dataHandle_1.error('用户数据不正常,更新失败!');
+        return (ctx.body = dataHandle_1.error("用户数据不正常,更新失败!"));
     }
     const currentProject = yield index_1.FindProjectById(_id);
+    // 如果更新的是项目名称，需要同步更新团队名称
+    if (project.projectName &&
+        project.projectName !== currentProject.projectName) {
+        console.log("同步团队名称");
+        yield index_1.UpdateTeamName(_id, project.projectName);
+    }
     // 如果不是格式正常或者不是正在修改的属性,则保留原先数据
-    currentProject.projectName = project.projectName || currentProject.projectName;
+    currentProject.projectName =
+        project.projectName || currentProject.projectName;
     currentProject.projectUrl = project.projectUrl || currentProject.projectUrl;
-    currentProject.projectDesc = project.projectDesc || currentProject.projectDesc;
+    currentProject.projectDesc =
+        project.projectDesc || currentProject.projectDesc;
     currentProject.version = project.version || currentProject.version;
-    currentProject.transferUrl = project.transferUrl || currentProject.transferUrl;
+    currentProject.transferUrl =
+        project.transferUrl || currentProject.transferUrl;
     currentProject.status = project.status || currentProject.status;
     currentProject.type = project.type || currentProject.type;
     currentProject.masterId = project.masterId || currentProject.masterId;
@@ -194,28 +212,28 @@ exports.updateProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const updateProjectMessage = {
         operatorId: userId,
         operatorName: userData.userName,
-        action: 'update',
+        action: "update",
         projectId: _id,
         objectId: _id,
         objectName: currentProject.projectName,
-        desc: '用户 ' + userData.userName + ' 更新了项目 ' + currentProject.projectName,
+        desc: "用户 " + userData.userName + " 更新了项目 " + currentProject.projectName,
         userId: userId,
         avatar: userData.avatar,
-        type: 'normal'
+        type: "normal"
     };
     yield index_1.AddMessage(updateProjectMessage);
-    return ctx.body = dataHandle_1.success(result, '更新成功!');
+    return (ctx.body = dataHandle_1.success(result, "更新成功!"));
 });
 exports.removeProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    const id = ctx.checkBody('id').notEmpty().value;
+    const id = ctx.checkBody("id").notEmpty().value;
     if (ctx.errors) {
-        return ctx.body = dataHandle_1.error('用户数据不正常,删除失败!');
+        return (ctx.body = dataHandle_1.error("用户数据不正常,删除失败!"));
     }
     // 先批量删除对应项目下的接口
     const interfaceListData = yield index_1.InterfaceList(id);
     yield interfaceListData.map((item) => __awaiter(this, void 0, void 0, function* () { return yield index_1.RemoveInterface(item._id); }));
     const result = yield index_1.RemoveProject(id);
-    return ctx.body = dataHandle_1.success({}, '删除成功!');
+    return (ctx.body = dataHandle_1.success({}, "删除成功!"));
 });
 exports.importProjectData = (project) => __awaiter(this, void 0, void 0, function* () {
     const newProjectId = yield addUserProject(project.masterId, project);
@@ -231,7 +249,7 @@ exports.importProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const data = ctx.request.body;
     data.masterId = userId;
     yield exports.importProjectData(data);
-    return ctx.body = dataHandle_1.success({}, '导入成功!');
+    return (ctx.body = dataHandle_1.success({}, "导入成功!"));
 });
 /**
  * 项目的克隆不再是和接口一样简单的新建一个接口然后把原接口内容复制过去
@@ -242,9 +260,9 @@ exports.importProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
 exports.cloneProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
     const { projectId, type } = ctx.request.body;
-    const vaildProjectId = ctx.checkBody('projectId').notEmpty().value;
+    const vaildProjectId = ctx.checkBody("projectId").notEmpty().value;
     if (ctx.errors) {
-        return ctx.body = dataHandle_1.error('用户数据不正常,克隆失败!');
+        return (ctx.body = dataHandle_1.error("用户数据不正常,克隆失败!"));
     }
     const oldProject = yield index_1.FindProjectById(projectId);
     const newProject = {
@@ -260,12 +278,12 @@ exports.cloneProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const newProjectId = yield index_1.AddProject(newProject);
     // 添加对应团队
     const team = {
-        masterAvatar: '',
-        masterId: '',
-        role: '',
-        masterName: '',
-        projectId: '',
-        projectName: '',
+        masterAvatar: "",
+        masterId: "",
+        role: "",
+        masterName: "",
+        projectId: "",
+        projectName: "",
         member: []
     };
     const user = yield index_1.FindUserById(userId);
@@ -280,23 +298,28 @@ exports.cloneProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const interfaceListData = yield index_1.InterfaceList(projectId);
     // 批量克隆接口到新项目上
     yield interfaceListData.map((item) => __awaiter(this, void 0, void 0, function* () { return yield interface_1.cloneInterfaceItem(newProjectId, item._id); }));
-    return ctx.body = dataHandle_1.success({}, '克隆成功!');
+    return (ctx.body = dataHandle_1.success({}, "克隆成功!"));
 });
 exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { id } = ctx.request.body;
     console.log(id);
     const project = yield index_1.FindProjectById(id);
-    if (project.status === 'mock') {
-        return ctx.body = dataHandle_1.error('自动校验只用于接口转发模式!');
+    if (project.status === "mock") {
+        return (ctx.body = dataHandle_1.error("自动校验只用于接口转发模式!"));
     }
     // 找到所有接口然后一一去匹配
     const interfaceListData = yield index_1.InterfaceList(id);
     const verifyResult = [];
     let allMatch = true;
     yield Promise.all(yield interfaceListData.map((item) => __awaiter(this, void 0, void 0, function* () {
-        const remoteData = yield mock_1.getRemoteData(item.method, project.transferUrl + '/' + item.url);
+        const remoteData = yield mock_1.getRemoteData(item.method, project.transferUrl + "/" + item.url);
         // const diffResult = await FindDifferent(item.mode, remoteData)
-        const formatData = { interfaceName: '', expect: '', actual: '', compare: '' };
+        const formatData = {
+            interfaceName: "",
+            expect: "",
+            actual: "",
+            compare: ""
+        };
         formatData.interfaceName = item.interfaceName;
         try {
             formatData.expect = yield mock_2.getModeMock(item.mode);
@@ -307,20 +330,23 @@ exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
             formatData.actual = JSON.parse(JSON.stringify(remoteData));
         }
         catch (_a) {
-            console.log('error:' + item.mode);
-            formatData.expect = '无法模拟该请求,可能包含无法模拟的参数,请自行校对';
+            console.log("error:" + item.mode);
+            formatData.expect = "无法模拟该请求,可能包含无法模拟的参数,请自行校对";
             // console.log(await getModeMock(item.mode))
         }
-        formatData.compare = tools_1.isEqual(formatData.expect, formatData.actual) === true ? 'match' : 'dismatch';
-        if (formatData.compare !== 'match') {
+        formatData.compare =
+            tools_1.isEqual(formatData.expect, formatData.actual) === true
+                ? "match"
+                : "dismatch";
+        if (formatData.compare !== "match") {
             allMatch = false;
         }
         verifyResult.push(formatData);
     })));
-    console.log('verifyResult', verifyResult);
-    return ctx.body = dataHandle_1.success({
-        result: allMatch ? 'yes' : 'no',
+    console.log("verifyResult", verifyResult);
+    return (ctx.body = dataHandle_1.success({
+        result: allMatch ? "yes" : "no",
         data: verifyResult
-    }, '验证成功');
+    }, "验证成功"));
 });
 //# sourceMappingURL=project.js.map

@@ -3,6 +3,7 @@ import {
   AddMessage,
   AddProject,
   AddTeam,
+  UpdateTeamName,
   AllProjectList,
   DemoProject,
   FindProjectById,
@@ -15,258 +16,285 @@ import {
   UnJoinProjectList,
   UpdateProject,
   UserProject
-} from '../db/controllers/index';
-import { cloneInterfaceItem } from './interface';
-import { error, success } from '../utils/dataHandle';
-import { getRemoteData } from './mock';
-import { isEqual } from '../utils/tools';
-import { getModeMock } from './mock'
-const _ = require('lodash')
-const field = require('../db/models/field')
+} from "../db/controllers/index";
+import { cloneInterfaceItem } from "./interface";
+import { error, success } from "../utils/dataHandle";
+import { getRemoteData } from "./mock";
+import { isEqual } from "../utils/tools";
+import { getModeMock } from "./mock";
+const _ = require("lodash");
+const field = require("../db/models/field");
 
-const getProjectList = async (projectList: Array<ProjectData>, userType: string = 'user') => {
-  const result: Array<ProjectData> = []
-  await Promise.all(projectList.map(async (oldItem: ProjectData) => {
-    // 洗下项目数据
-    const item = _.pick(oldItem, field.projectField)
-    // 获取对应接口信息
-    const interfaceOldData = await InterfaceList(item._id)
-    // 洗下接口数据
-    const interfaceList = interfaceOldData.map((item: InterfaceData) => _.pick(item, field.interfaceField))
+const getProjectList = async (
+  projectList: Array<ProjectData>,
+  userType: string = "user"
+) => {
+  const result: Array<ProjectData> = [];
+  await Promise.all(
+    projectList.map(async (oldItem: ProjectData) => {
+      // 洗下项目数据
+      const item = _.pick(oldItem, field.projectField);
+      // 获取对应接口信息
+      const interfaceOldData = await InterfaceList(item._id);
+      // 洗下接口数据
+      const interfaceList = interfaceOldData.map((item: InterfaceData) =>
+        _.pick(item, field.interfaceField)
+      );
 
-    const fullProject = item
+      const fullProject = item;
 
-    if (userType !== 'demo') {
-      // 获取团队信息
-      const team = await FindTeamByProjectId(item._id)
-      const master = {
-        _id: '',
-        userName: '',
-        role: '',
-        avatar: ''
+      if (userType !== "demo") {
+        // 获取团队信息
+        const team = await FindTeamByProjectId(item._id);
+        const master = {
+          _id: "",
+          userName: "",
+          role: "",
+          avatar: ""
+        };
+        master._id = team.masterId;
+        master.avatar = team.masterAvatar;
+        master.role = team.role;
+        master.userName = team.masterName;
+        const teamMember: Array<UserData> = [];
+        // 团队列表加入创始者
+        await teamMember.push(master);
+        // 团队列表加入成员
+        await team.member.map((member: UserData) => {
+          const temp = {
+            _id: "",
+            userName: "",
+            role: "",
+            avatar: ""
+          };
+          temp._id = member._id;
+          temp.avatar = member.avatar;
+          temp.role = member.role;
+          temp.userName = member.userName;
+          teamMember.push(temp);
+        });
+        fullProject["teamMember"] = await teamMember;
       }
-      master._id = team.masterId
-      master.avatar = team.masterAvatar
-      master.role = team.role
-      master.userName = team.masterName
-      const teamMember: Array<UserData> = []
-      // 团队列表加入创始者
-      await teamMember.push(master)
-      // 团队列表加入成员
-      await team.member.map((member: UserData) => {
-        const temp = {
-          _id: '',
-          userName: '',
-          role: '',
-          avatar: ''
-        }
-        temp._id = member._id
-        temp.avatar = member.avatar
-        temp.role = member.role
-        temp.userName = member.userName
-        teamMember.push(temp)
-      })
-      fullProject['teamMember'] = await teamMember
-    }
-    fullProject['interfaceList'] = await interfaceList
-    result.push(fullProject)
-    return fullProject
-  }))
+      fullProject["interfaceList"] = await interfaceList;
+      result.push(fullProject);
+      return fullProject;
+    })
+  );
   // 对名称做个排序
   result.sort((a: ProjectData, b: ProjectData) => {
-    return a.projectName < b.projectName ? -1 : 1
-  })
-  return result
-}
+    return a.projectName < b.projectName ? -1 : 1;
+  });
+  return result;
+};
 
 export const allProjectList = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
-  const data = await FindProjectDataListByUserId(userId)
-  const projectList = data.map((item: ProjectData) => _.pick(item, field.projectList))
+  const data = await FindProjectDataListByUserId(userId);
+  const projectList = data.map((item: ProjectData) =>
+    _.pick(item, field.projectList)
+  );
 
   // const projectList = data.map((item: ProjectData) => _.pick(item, field.projectList))
 
-  return ctx.body = success(projectList, '获取成功')
-}
+  return (ctx.body = success(projectList, "获取成功"));
+};
 export const userProjectList = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
-  let result: Array<ProjectData> = []
+  let result: Array<ProjectData> = [];
   // 获取项目信息
-  const projectList = await UserProject(userId)
-  result = await getProjectList(projectList)
-  return ctx.body = success(result, '获取成功')
-}
+  const projectList = await UserProject(userId);
+  result = await getProjectList(projectList);
+  return (ctx.body = success(result, "获取成功"));
+};
 
 export const demoProjectList = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
-  let result: Array<ProjectData> = []
+  let result: Array<ProjectData> = [];
   // 获取项目信息
-  const projectList = await DemoProject(userId)
-  result = await getProjectList(projectList, 'demo')
-  return ctx.body = success(result, '获取成功')
-}
+  const projectList = await DemoProject(userId);
+  result = await getProjectList(projectList, "demo");
+  return (ctx.body = success(result, "获取成功"));
+};
 
 export const unJoinProjectList = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
-  const result = await UnJoinProjectList(userId)
+  const result = await UnJoinProjectList(userId);
   // console.log(result)
-  return ctx.body = success(result, '获取成功')
-}
+  return (ctx.body = success(result, "获取成功"));
+};
 
 const addUserProject = async (userId: string, project: Project) => {
-  const result = await AddProject(project)
+  const result = await AddProject(project);
   // 如果只是创建示例项目,不创建团队
-  if (project.type === 'demo') {
-    return result
+  if (project.type === "demo") {
+    return result;
   }
   // 添加对应团队
   const team: TeamData = {
-    masterAvatar: '',
-    masterId: '',
-    role: '',
-    masterName: '',
-    projectId: '',
-    projectName: '',
+    masterAvatar: "",
+    masterId: "",
+    role: "",
+    masterName: "",
+    projectId: "",
+    projectName: "",
     member: []
-  }
-  const userData: UserData = await FindUserById(userId)
+  };
+  const userData: UserData = await FindUserById(userId);
 
   // 添加对应项目消息
   const projectMessage: MessageData = {
     operatorId: userId,
     operatorName: userData.userName,
-    action: 'add',
+    action: "add",
     projectId: result,
     objectId: result,
     objectName: project.projectName,
-    desc: '用户 ' + userData.userName + '添加了新项目 ' + project.projectName,
+    desc: "用户 " + userData.userName + "添加了新项目 " + project.projectName,
     userId: userId,
     avatar: userData.avatar,
-    type: 'normal'
-  }
+    type: "normal"
+  };
 
-
-  team.masterAvatar = userData.avatar
-  team.masterId = userData._id
-  team.role = userData.role
-  team.masterName = userData.userName
-  team.projectId = result
-  team.projectName = project.projectName
-  const teamId = await AddTeam(team)
-  console.log('teamId', teamId)
+  team.masterAvatar = userData.avatar;
+  team.masterId = userData._id;
+  team.role = userData.role;
+  team.masterName = userData.userName;
+  team.projectId = result;
+  team.projectName = project.projectName;
+  const teamId = await AddTeam(team);
+  console.log("teamId", teamId);
   // 添加对应项目消息
   const teamMessage: MessageData = {
     operatorId: userId,
     operatorName: userData.userName,
-    action: 'add',
+    action: "add",
     projectId: result,
     objectId: teamId,
     objectName: project.projectName,
-    desc: '添加了新团队 ' + project.projectName,
+    desc: "添加了新团队 " + project.projectName,
     userId: userId,
     avatar: userData.avatar,
-    type: 'normal'
-  }
-  await AddMessage(projectMessage)
-  await AddMessage(teamMessage)
+    type: "normal"
+  };
+  await AddMessage(projectMessage);
+  await AddMessage(teamMessage);
 
-  return result
-}
+  return result;
+};
 
 export const addProject = async (ctx: any) => {
   // 添加项目
   const { userId } = ctx.tokenContent;
   const project: Project = ctx.request.body;
-  const projectName = ctx.checkBody('projectName').notEmpty().len(1, 32).value
-  const projectUrl = ctx.checkBody('projectUrl').notEmpty().len(1, 20).value
-  const projectDesc = ctx.checkBody('projectDesc').notEmpty().len(1, 40).value
-  const ProjectTransferUrl = ctx.checkBody('transferUrl').notEmpty()
-  const type = ctx.checkBody('type').notEmpty().value
+  const projectName = ctx
+    .checkBody("projectName")
+    .notEmpty()
+    .len(1, 32).value;
+  const projectUrl = ctx
+    .checkBody("projectUrl")
+    .notEmpty()
+    .len(1, 20).value;
+  const projectDesc = ctx
+    .checkBody("projectDesc")
+    .notEmpty()
+    .len(1, 40).value;
+  const ProjectTransferUrl = ctx.checkBody("transferUrl").notEmpty();
+  const type = ctx.checkBody("type").notEmpty().value;
   if (ctx.errors) {
-    console.log(ctx.errors)
-    return ctx.body = error('用户数据不正常,添加失败!')
+    console.log(ctx.errors);
+    return (ctx.body = error("用户数据不正常,添加失败!"));
   }
 
-  project.masterId = userId
-  await addUserProject(userId, project)
-  return ctx.body = success({}, '添加项目成功!')
-}
-
+  project.masterId = userId;
+  await addUserProject(userId, project);
+  return (ctx.body = success({}, "添加项目成功!"));
+};
 
 export const updateProject = async (ctx: any) => {
   const project: Project = ctx.request.body;
-  const _id = ctx.checkBody('_id').notEmpty().value
+  const _id = ctx.checkBody("_id").notEmpty().value;
   if (ctx.errors) {
-    console.log(ctx.errors)
-    return ctx.body = error('用户数据不正常,更新失败!')
+    console.log(ctx.errors);
+    return (ctx.body = error("用户数据不正常,更新失败!"));
   }
-  const currentProject = await FindProjectById(_id)
-
+  const currentProject = await FindProjectById(_id);
+  // 如果更新的是项目名称，需要同步更新团队名称
+  if (
+    project.projectName &&
+    project.projectName !== currentProject.projectName
+  ) {
+    console.log("同步团队名称");
+    await UpdateTeamName(_id, project.projectName);
+  }
   // 如果不是格式正常或者不是正在修改的属性,则保留原先数据
-  currentProject.projectName = project.projectName || currentProject.projectName
-  currentProject.projectUrl = project.projectUrl || currentProject.projectUrl
-  currentProject.projectDesc = project.projectDesc || currentProject.projectDesc
-  currentProject.version = project.version || currentProject.version
-  currentProject.transferUrl = project.transferUrl || currentProject.transferUrl
-  currentProject.status = project.status || currentProject.status
-  currentProject.type = project.type || currentProject.type
-  currentProject.masterId = project.masterId || currentProject.masterId
-  console.log(currentProject)
-  const result = await UpdateProject(currentProject)
+  currentProject.projectName =
+    project.projectName || currentProject.projectName;
+  currentProject.projectUrl = project.projectUrl || currentProject.projectUrl;
+  currentProject.projectDesc =
+    project.projectDesc || currentProject.projectDesc;
+  currentProject.version = project.version || currentProject.version;
+  currentProject.transferUrl =
+    project.transferUrl || currentProject.transferUrl;
+  currentProject.status = project.status || currentProject.status;
+  currentProject.type = project.type || currentProject.type;
+  currentProject.masterId = project.masterId || currentProject.masterId;
+  console.log(currentProject);
+  const result = await UpdateProject(currentProject);
 
   // 添加对应项目更新消息
   const { userId } = ctx.tokenContent;
-  const userData: UserData = await FindUserById(userId)
+  const userData: UserData = await FindUserById(userId);
   const updateProjectMessage: MessageData = {
     operatorId: userId,
     operatorName: userData.userName,
-    action: 'update',
+    action: "update",
     projectId: _id,
     objectId: _id,
     objectName: currentProject.projectName,
-    desc: '用户 ' + userData.userName + ' 更新了项目 ' + currentProject.projectName,
+    desc:
+      "用户 " + userData.userName + " 更新了项目 " + currentProject.projectName,
     userId: userId,
     avatar: userData.avatar,
-    type: 'normal'
-  }
-  await AddMessage(updateProjectMessage)
+    type: "normal"
+  };
+  await AddMessage(updateProjectMessage);
 
-
-  return ctx.body = success(result, '更新成功!')
-}
+  return (ctx.body = success(result, "更新成功!"));
+};
 
 export const removeProject = async (ctx: any) => {
-  const id = ctx.checkBody('id').notEmpty().value
+  const id = ctx.checkBody("id").notEmpty().value;
   if (ctx.errors) {
-    return ctx.body = error('用户数据不正常,删除失败!')
+    return (ctx.body = error("用户数据不正常,删除失败!"));
   }
   // 先批量删除对应项目下的接口
-  const interfaceListData = await InterfaceList(id)
-  await interfaceListData.map(async (item: InterfaceData) => await RemoveInterface(item._id))
+  const interfaceListData = await InterfaceList(id);
+  await interfaceListData.map(
+    async (item: InterfaceData) => await RemoveInterface(item._id)
+  );
 
-  const result = await RemoveProject(id)
+  const result = await RemoveProject(id);
 
-  return ctx.body = success({}, '删除成功!')
-}
+  return (ctx.body = success({}, "删除成功!"));
+};
 
 export const importProjectData = async (project: any) => {
-  const newProjectId = await addUserProject(project.masterId, project)
+  const newProjectId = await addUserProject(project.masterId, project);
   // 批量添加接口
   await project.interfaceList.map(async (item: InterfaceData) => {
-
-    item.projectId = newProjectId // 将项目Id替换为新增加的项目
-    await AddInterface(item)
-  })
-  return
-}
+    item.projectId = newProjectId; // 将项目Id替换为新增加的项目
+    await AddInterface(item);
+  });
+  return;
+};
 
 export const importProject = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
   const data = ctx.request.body;
-  data.masterId = userId
-  await importProjectData(data)
-  return ctx.body = success({}, '导入成功!')
-}
+  data.masterId = userId;
+  await importProjectData(data);
+  return (ctx.body = success({}, "导入成功!"));
+};
 
 /**
  * 项目的克隆不再是和接口一样简单的新建一个接口然后把原接口内容复制过去
@@ -278,11 +306,11 @@ export const importProject = async (ctx: any) => {
 export const cloneProject = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
   const { projectId, type } = ctx.request.body;
-  const vaildProjectId = ctx.checkBody('projectId').notEmpty().value
+  const vaildProjectId = ctx.checkBody("projectId").notEmpty().value;
   if (ctx.errors) {
-    return ctx.body = error('用户数据不正常,克隆失败!')
+    return (ctx.body = error("用户数据不正常,克隆失败!"));
   }
-  const oldProject = await FindProjectById(projectId)
+  const oldProject = await FindProjectById(projectId);
   const newProject = {
     projectName: oldProject.projectName,
     projectUrl: oldProject.projectUrl,
@@ -292,76 +320,94 @@ export const cloneProject = async (ctx: any) => {
     status: oldProject.status,
     type: type,
     masterId: userId
-  }
-  const newProjectId = await AddProject(newProject)
+  };
+  const newProjectId = await AddProject(newProject);
   // 添加对应团队
   const team: TeamData = {
-    masterAvatar: '',
-    masterId: '',
-    role: '',
-    masterName: '',
-    projectId: '',
-    projectName: '',
+    masterAvatar: "",
+    masterId: "",
+    role: "",
+    masterName: "",
+    projectId: "",
+    projectName: "",
     member: []
-  }
-  const user = await FindUserById(userId)
+  };
+  const user = await FindUserById(userId);
 
-  team.masterAvatar = user.avatar
-  team.masterId = user._id
-  team.role = user.role
-  team.masterName = user.userName
-  team.projectId = newProjectId
-  team.projectName = oldProject.projectName
-  await AddTeam(team)
+  team.masterAvatar = user.avatar;
+  team.masterId = user._id;
+  team.role = user.role;
+  team.masterName = user.userName;
+  team.projectId = newProjectId;
+  team.projectName = oldProject.projectName;
+  await AddTeam(team);
 
   // 获取旧项目的接口信息
-  const interfaceListData = await InterfaceList(projectId)
+  const interfaceListData = await InterfaceList(projectId);
   // 批量克隆接口到新项目上
-  await interfaceListData.map(async (item: InterfaceData) => await cloneInterfaceItem(newProjectId, item._id))
+  await interfaceListData.map(
+    async (item: InterfaceData) =>
+      await cloneInterfaceItem(newProjectId, item._id)
+  );
 
-  return ctx.body = success({}, '克隆成功!')
-}
+  return (ctx.body = success({}, "克隆成功!"));
+};
 
 export const verifyProject = async (ctx: any) => {
   const { id } = ctx.request.body;
-  console.log(id)
-  const project = await FindProjectById(id)
-  if (project.status === 'mock') {
-    return ctx.body = error('自动校验只用于接口转发模式!')
+  console.log(id);
+  const project = await FindProjectById(id);
+  if (project.status === "mock") {
+    return (ctx.body = error("自动校验只用于接口转发模式!"));
   }
   // 找到所有接口然后一一去匹配
-  const interfaceListData = await InterfaceList(id)
-  const verifyResult: any[] = []
+  const interfaceListData = await InterfaceList(id);
+  const verifyResult: any[] = [];
   let allMatch = true;
-  await Promise.all(await interfaceListData.map(async (item: InterfaceData) => {
-    const remoteData = await getRemoteData(item.method, project.transferUrl + '/' + item.url)
-    // const diffResult = await FindDifferent(item.mode, remoteData)
-    const formatData = { interfaceName: '', expect: '', actual: '', compare: '' }
+  await Promise.all(
+    await interfaceListData.map(async (item: InterfaceData) => {
+      const remoteData = await getRemoteData(
+        item.method,
+        project.transferUrl + "/" + item.url
+      );
+      // const diffResult = await FindDifferent(item.mode, remoteData)
+      const formatData = {
+        interfaceName: "",
+        expect: "",
+        actual: "",
+        compare: ""
+      };
 
-    formatData.interfaceName = item.interfaceName
+      formatData.interfaceName = item.interfaceName;
 
-    try {
-
-      formatData.expect = await getModeMock(item.mode)
-      // formatData.expect =
-      //   JSON.parse(JSON.parse(JSON.stringify(item.mode)
-      //     .replace(/\n/g, '')
-      //   ).replace(/\n/g, ' '))
-      formatData.actual = JSON.parse(JSON.stringify(remoteData))
-    } catch {
-      console.log('error:' + item.mode)
-      formatData.expect = '无法模拟该请求,可能包含无法模拟的参数,请自行校对'
-      // console.log(await getModeMock(item.mode))
-    }
-    formatData.compare = isEqual(formatData.expect, formatData.actual) === true ? 'match' : 'dismatch'
-    if (formatData.compare !== 'match') {
-      allMatch = false
-    }
-    verifyResult.push(formatData)
-  }))
-  console.log('verifyResult', verifyResult)
-  return ctx.body = success({
-    result: allMatch ? 'yes' : 'no',
-    data: verifyResult
-  }, '验证成功')
-}
+      try {
+        formatData.expect = await getModeMock(item.mode);
+        // formatData.expect =
+        //   JSON.parse(JSON.parse(JSON.stringify(item.mode)
+        //     .replace(/\n/g, '')
+        //   ).replace(/\n/g, ' '))
+        formatData.actual = JSON.parse(JSON.stringify(remoteData));
+      } catch {
+        console.log("error:" + item.mode);
+        formatData.expect = "无法模拟该请求,可能包含无法模拟的参数,请自行校对";
+        // console.log(await getModeMock(item.mode))
+      }
+      formatData.compare =
+        isEqual(formatData.expect, formatData.actual) === true
+          ? "match"
+          : "dismatch";
+      if (formatData.compare !== "match") {
+        allMatch = false;
+      }
+      verifyResult.push(formatData);
+    })
+  );
+  console.log("verifyResult", verifyResult);
+  return (ctx.body = success(
+    {
+      result: allMatch ? "yes" : "no",
+      data: verifyResult
+    },
+    "验证成功"
+  ));
+};

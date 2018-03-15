@@ -134,8 +134,7 @@ export const updateDocument = async (ctx: any) => {
 }
 
 export const removeDocument = async (ctx: any) => {
-  const { userId } = ctx.tokenContent;
   const { id } = ctx.request.body;
-  await removeDocument(id)
+  await RemoveDocument(id)
   return ctx.body = success({}, '删除成功!')
 }
