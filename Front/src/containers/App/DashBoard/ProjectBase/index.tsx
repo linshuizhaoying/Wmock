@@ -81,7 +81,8 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
       currentCloneInterfaceProjectId: "",
       verifyDisplay: "html",
       baseModelList: [],
-      customModelList: []
+      customModelList: [],
+      verifyModalState: "hide"
     };
   }
 
@@ -116,16 +117,17 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
     // console.log(isEqual(nextProps.projectVerify.data, this.state.verifyData));
     if (
       nextProps.projectVerify.data &&
+      nextProps.projectVerify.data.length > 0 &&
       !isEqual(nextProps.projectVerify.data, this.state.verifyData)
     ) {
-      // // 只有有数据才显示Modal
-      // this.setState({
-      //   autoCheckVisible: true
-      // });
-      this.setState({
-        verifyResult: nextProps.projectVerify.result,
-        verifyData: nextProps.projectVerify.data
-      });
+      if (this.state.verifyModalState === "show") {
+        // 只有有数据而且点击了展示按钮才显示Modal
+        this.setState({
+          autoCheckVisible: true,
+          verifyResult: nextProps.projectVerify.result,
+          verifyData: nextProps.projectVerify.data
+        });
+      }
     }
     // 更新自动文档数据
 
@@ -542,23 +544,25 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
   };
 
   showAutoCheckVisible = (projectId: string) => {
-    this.verify({ id: projectId });
-    this.setState({
-      autoCheckVisible: true
-    })
+    this.setState(
+      {
+        verifyResult: "",
+        verifyData: [],
+        verifyModalState: "show"
+      },
+      () => {
+        this.verify({ id: projectId });
+      }
+    );
   };
 
   hideAutoCheckVisible = () => {
     this.setState({
       autoCheckVisible: false,
-      verifyResult: ""
+      verifyResult: "",
+      verifyData: [],
+      verifyModalState: "hide"
     });
-    // 延迟1秒清空
-    setTimeout(() => {
-      this.setState({
-        verifyData: []
-      });
-    }, 1000);
   };
 
   changeVerifyDisplay = (type: string) => {

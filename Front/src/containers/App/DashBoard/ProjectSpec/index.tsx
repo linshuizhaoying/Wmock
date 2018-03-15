@@ -204,7 +204,12 @@ export class ProjectSpec extends React.Component<AppProps, ProjectSpecState> {
                       >
                         <ul className="documentDesc">
                           <li>名称:{item.name}</li>
-                          <li>类别:{item.type}</li>
+                          <li>
+                            类别:
+                            {item.type === "spec" ? "规范" : ""}
+                            {item.type === "project" ? "项目文档" : ""}
+                            {item.type === "other" ? "其它" : ""}
+                          </li>
                           <li>创建者: {item.ownerName}</li>
                         </ul>
                       </Card>
@@ -234,34 +239,30 @@ export class ProjectSpec extends React.Component<AppProps, ProjectSpecState> {
           cancelText="取消"
         >
           <div className="doucmentHistory">
-           {
-             this.state.currentDocumentMessage.length === 0 ?
-             <div>暂时还没有记录~</div>:
-             null         
-           }
+            {this.state.currentDocumentMessage.length === 0 ? (
+              <div>暂时还没有记录~</div>
+            ) : null}
             <Timeline>
-              {this.state.currentDocumentMessage.length > 0 ? (
-                this.state.currentDocumentMessage.map(
-                  (item: Message, index: number) => {
-                    return (
-                      <Timeline.Item key={index}>
-                        <div className="timeline">
-                          <p className="date">
-                            {new Date(item.time).toLocaleDateString() +
-                              " " +
-                              new Date(item.time).toLocaleTimeString()}
-                          </p>
-                          <div>
-                            <div className="content">{item.desc}</div>
+              {this.state.currentDocumentMessage.length > 0
+                ? this.state.currentDocumentMessage.map(
+                    (item: Message, index: number) => {
+                      return (
+                        <Timeline.Item key={index}>
+                          <div className="timeline">
+                            <p className="date">
+                              {new Date(item.time).toLocaleDateString() +
+                                " " +
+                                new Date(item.time).toLocaleTimeString()}
+                            </p>
+                            <div>
+                              <div className="content">{item.desc}</div>
+                            </div>
                           </div>
-                        </div>
-                      </Timeline.Item>
-                    );
-                  }
-                )
-              ) : 
-                null
-              }
+                        </Timeline.Item>
+                      );
+                    }
+                  )
+                : null}
             </Timeline>
           </div>
         </Modal>

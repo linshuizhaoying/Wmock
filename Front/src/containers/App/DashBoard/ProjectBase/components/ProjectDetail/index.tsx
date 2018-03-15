@@ -259,7 +259,7 @@ export class ProjectDetail extends React.Component<
             </div>
           </TabPane>
           <TabPane tab="接口列表" key="2">
-            <div>
+            <div className="interfaceContent">
               {this.props.data.status === "mock" ? (
                 <Divider>
                   {" "}
