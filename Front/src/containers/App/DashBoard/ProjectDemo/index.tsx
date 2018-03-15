@@ -19,6 +19,8 @@ class ProjectDemo extends React.Component<ProjectPropsWithAdvance, {}> {
           documentRefresh={this.props.documentRefresh}
           baseModelList={this.props.baseModelList}
           customModelList={this.props.customModelList}
+          documentMessages={this.props.documentMessages}
+          getDocumentMessages={this.props.getDocumentMessages}
         />
       </div>
     );

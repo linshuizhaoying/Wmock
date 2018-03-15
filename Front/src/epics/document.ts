@@ -78,7 +78,7 @@ export const fetchAllDocument = (action$: EpicAction) =>
     );
   });
 
-  export const fetchDocumentMessages = (action$: EpicAction) =>
+export const fetchDocumentMessages = (action$: EpicAction) =>
   action$.ofType(FETCH_DOCUMENTMESSAGES).mergeMap((action: Action) => {
     return (
       fetch
@@ -86,7 +86,7 @@ export const fetchAllDocument = (action$: EpicAction) =>
         .map((response: Response) => {
           if (response.state.code === 1) {
             successMsg(response.state.msg);
-            console.log(response.data)
+            // console.log(response.data);
             return documentMessagesReceive(response.data);
           } else {
             errorMsg(response.state.msg);

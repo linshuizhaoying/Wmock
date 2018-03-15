@@ -211,7 +211,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                   title={
                     <span onClick={this.overView}>
                       <Icon type="appstore" />
-                      <span>项目概况</span>
+                      <span>平台概况</span>
                     </span>}
                 >
                   <Menu.Item key="1">
@@ -341,6 +341,8 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                         documentRefresh={() => this.getDocumentList()}
                         baseModelList={this.props.baseModelList}
                         customModelList={this.props.customModelList}
+                        documentMessages={this.props.documentMessages}
+                        getDocumentMessages={this.getDocumentMessages}
                       />
                     )}
                   />
@@ -371,6 +373,8 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                         documentRefresh={() => this.getDocumentList()}
                         baseModelList={this.props.baseModelList}
                         customModelList={this.props.customModelList}
+                        documentMessages={this.props.documentMessages}
+                        getDocumentMessages={this.getDocumentMessages}
                       />
                     )}
                   />

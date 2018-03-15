@@ -36,7 +36,7 @@ export class Overview extends React.Component<OverviewProps, OverviewState> {
       <div id="Overview">
         <div className="content-left">
           <div className="base">
-            <h4>基础功能</h4>
+            <h4>概况</h4>
             <ul>
               <Link to="/wmock/myProject">
                 <li>

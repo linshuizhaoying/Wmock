@@ -394,6 +394,8 @@ export class ProjectDetail extends React.Component<
               documentList={this.props.documentList}
               projectList={this.props.projectList}
               refresh={this.props.documentRefresh}
+              documentMessages={this.props.documentMessages}
+              getDocumentMessages={this.props.getDocumentMessages}
             />
           </TabPane>
         </Tabs>

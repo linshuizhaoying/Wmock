@@ -82,7 +82,6 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
       verifyDisplay: "html",
       baseModelList: [],
       customModelList: []
-
     };
   }
 
@@ -113,14 +112,16 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
       });
     }
     // 更新自动校验内的数据
+    // console.log(nextProps.projectVerify.data, this.state.verifyData);
+    // console.log(isEqual(nextProps.projectVerify.data, this.state.verifyData));
     if (
       nextProps.projectVerify.data &&
       !isEqual(nextProps.projectVerify.data, this.state.verifyData)
     ) {
-      // 只有有数据才显示Modal
-      this.setState({
-        autoCheckVisible: true
-      });
+      // // 只有有数据才显示Modal
+      // this.setState({
+      //   autoCheckVisible: true
+      // });
       this.setState({
         verifyResult: nextProps.projectVerify.result,
         verifyData: nextProps.projectVerify.data
@@ -141,17 +142,23 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
     }
 
     // 每次只更新变动的模型
-    if (nextProps.baseModelList.length >= 0 && !isEqual(nextProps.baseModelList, this.state.baseModelList)) {
+    if (
+      nextProps.baseModelList.length >= 0 &&
+      !isEqual(nextProps.baseModelList, this.state.baseModelList)
+    ) {
       this.setState({
         baseModelList: nextProps.baseModelList
-      })
+      });
     }
 
     // 每次只更新变动的模型
-    if (nextProps.customModelList.length >= 0 && !isEqual(nextProps.customModelList, this.state.customModelList)) {
+    if (
+      nextProps.customModelList.length >= 0 &&
+      !isEqual(nextProps.customModelList, this.state.customModelList)
+    ) {
       this.setState({
         customModelList: nextProps.customModelList
-      })
+      });
     }
   }
 
@@ -536,20 +543,25 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
 
   showAutoCheckVisible = (projectId: string) => {
     this.verify({ id: projectId });
-    // this.setState({
-    //   autoCheckVisible: true
-    // });
+    this.setState({
+      autoCheckVisible: true
+    })
   };
 
   hideAutoCheckVisible = () => {
     this.setState({
       autoCheckVisible: false,
-      verifyData: [],
       verifyResult: ""
     });
+    // 延迟1秒清空
+    setTimeout(() => {
+      this.setState({
+        verifyData: []
+      });
+    }, 1000);
   };
 
-  changeVerifyDisplay = (type:string) => {
+  changeVerifyDisplay = (type: string) => {
     this.setState({
       verifyDisplay: type
     });
@@ -728,15 +740,30 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
                   selectCurrentInterface={this.selectCurrentInterface}
                   update={this.update}
                   documentRefresh={this.props.documentRefresh}
+                  documentMessages={this.props.documentMessages}
+                  getDocumentMessages={this.props.getDocumentMessages}
                 />
               ) : (
                 <div>
-                  <h2>项目示例说明</h2>
-                  <div className="demoDesc">
-                    <h3>
-                      项目示例仅作为演示项目,如果需要可以复制到自己账号上,基于模板进行开发。
-                    </h3>
-                  </div>
+                  {this.props.type === "demo" ? (
+                    <div>
+                      <h2>项目示例说明</h2>
+                      <div className="demoDesc">
+                        <h3>
+                          项目示例仅作为演示项目,如果需要可以复制到自己账号上,基于模板进行开发。
+                        </h3>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <h2>我的项目说明</h2>
+                      <div className="demoDesc">
+                        <h3>
+                          项目可以自由导入导出、克隆，接口也支持克隆操作。项目默认转发本身，支持切换到实际后台接口。
+                        </h3>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -847,11 +874,17 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
                           <div className="verify-alert">
                             <p>接口校验不匹配</p>{" "}
                             {this.state.verifyDisplay === "html" ? (
-                              <div onClick={()=>this.changeVerifyDisplay('annotated')}>
+                              <div
+                                onClick={() =>
+                                  this.changeVerifyDisplay("annotated")
+                                }
+                              >
                                 <Tag color="magenta">转为详细说明</Tag>
                               </div>
                             ) : (
-                              <div onClick={()=>this.changeVerifyDisplay('html')}>
+                              <div
+                                onClick={() => this.changeVerifyDisplay("html")}
+                              >
                                 <Tag color="cyan">转为可视化界面</Tag>
                               </div>
                             )}

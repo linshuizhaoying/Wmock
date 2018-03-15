@@ -104,28 +104,6 @@ export const mock = async (ctx: any) => {
         }
         return
       }
-      // try {
-      //   console.log(foundProject.transferUrl + '/' + foundMock.url)
-      //   const apiData = await axios({
-      //     method: foundMock.method,
-      //     url: foundProject.transferUrl + '/' + foundMock.url,
-      //     params: Object.assign({}, query),
-      //     data: body,
-      //     timeout: 3000
-      //   }).then((res: any) => {
-      //     return res.data
-      //   })
-      //   result = apiData
-      // } catch (error) {
-      //   ctx.body = {
-      //     'state': {
-      //       'code': 500,
-      //       'msg': '转发请求出错,请检查转发服务是否正常!'
-      //     },
-      //     'data': undefined
-      //   }
-      //   return
-      // }
     }
   }
   return ctx.body = result

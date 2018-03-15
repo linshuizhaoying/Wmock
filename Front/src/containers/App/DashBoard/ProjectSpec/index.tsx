@@ -163,7 +163,7 @@ export class ProjectSpec extends React.Component<AppProps, ProjectSpecState> {
               {this.state.allDocuments.map((item: Document) => {
                 return (
                   <Col span={6} key={item._id}>
-                    {item._id !== this.props.userId ? (
+                    {item.ownerId !== this.props.userId ? (
                       <Card
                         hoverable={true}
                         actions={[

@@ -10,9 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = require("./user");
 const project_1 = require("./project");
-const Team = require('../models/team');
+const Team = require("../models/team");
 exports.FindTeamByProjectId = (id) => __awaiter(this, void 0, void 0, function* () {
-    const result = yield Team.findOne({ projectId: id }).populate('member');
+    const result = yield Team.findOne({ projectId: id }).populate("member");
     return result;
 });
 exports.TeamList = (userId) => __awaiter(this, void 0, void 0, function* () {
@@ -27,12 +27,14 @@ exports.TeamList = (userId) => __awaiter(this, void 0, void 0, function* () {
 });
 exports.AddTeam = (team) => __awaiter(this, void 0, void 0, function* () {
     const newTeam = new Team(team);
-    let result = '';
-    yield newTeam.save((error) => __awaiter(this, void 0, void 0, function* () {
+    let result = "";
+    yield newTeam
+        .save((error) => __awaiter(this, void 0, void 0, function* () {
         if (error) {
             result = error.toString();
         }
-    })).then((team) => __awaiter(this, void 0, void 0, function* () {
+    }))
+        .then((team) => __awaiter(this, void 0, void 0, function* () {
         result = team._id;
     }));
     return result;
@@ -43,6 +45,15 @@ exports.UpdateTeamMember = (team) => __awaiter(this, void 0, void 0, function* (
     }, {
         $set: {
             member: team.member
+        }
+    });
+});
+exports.UpdateTeamName = (projectId, teamName) => __awaiter(this, void 0, void 0, function* () {
+    return yield Team.update({
+        projectId: projectId
+    }, {
+        $set: {
+            projectName: teamName
         }
     });
 });
