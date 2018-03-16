@@ -1,9 +1,9 @@
 // 定义测试接口地址
 // const baseUrl = 'http://new.haoqiao.me:8866'
 // 部署地址
-// const baseUrl = 'http://wmock.haoqiao.me:9966'
+export const baseUrl = 'http://wmock.haoqiao.me:9966'
 
-export const baseUrl = 'http://localhost:9966'
+// export const baseUrl = 'http://localhost:9966'
 export const imgBaseUrl = baseUrl + '/images/up/'
 
 // mock数据访问地址
