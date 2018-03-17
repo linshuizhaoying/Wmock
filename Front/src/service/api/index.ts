@@ -3,7 +3,7 @@
 // 部署地址
 // const baseUrl = 'http://wmock.haoqiao.me:9966'
 
-export const baseUrl = 'http://localhost:9966'
+export const baseUrl = 'http://118.24.8.25:9966'
 export const imgBaseUrl = baseUrl + '/images/up/'
 
 // mock数据访问地址
