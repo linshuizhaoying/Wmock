@@ -1,10 +1,24 @@
 const Document = require("../models/document");
 
 export const AllDocument = async () => {
-  return await Document.find();
+  return await Document.find()
+    .populate({
+      path: "ownerName",
+      select: "-_id userName"
+    })
+    .exec((err: any, documents: any) => {
+      documents = documents.map((document: any) => {
+        document.ownerName = document.ownerName.userName;
+      });
+    });
 };
 export const FindDocumentById = async (documentId: string) => {
-  return await Document.findOne({ _id: documentId });
+  const result = await Document.findOne({ _id: documentId }).populate({
+    path: "ownerName",
+    select: "-_id userName"
+  });
+  result.ownerName = result.ownerName.userName;
+  return result;
 };
 
 export const AddDocument = async (originDocument: DocumentData) => {

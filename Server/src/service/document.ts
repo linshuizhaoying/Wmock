@@ -89,23 +89,9 @@ export const addDocument = async (ctx: any) => {
     return (ctx.body = error("用户数据不正常,添加失败!"));
   }
   const userData: UserData = await FindUserById(userId);
-  document.ownerName = userData.userName;
+  document.ownerName = userId;
   document.ownerId = userId;
   await AddDocument(document);
-  // // 添加对应文档增加消息
-  // const addDocumentMessage: MessageData = {
-  //   operatorId: userId,
-  //   operatorName: userData.userName,
-  //   action: 'add',
-  //   projectId: '',
-  //   objectId: documentId,
-  //   objectName: name,
-  //   desc: '用户 ' + userData.userName + ' 增加了文档 ' + name,
-  //   userId: userId,
-  //   avatar: userData.avatar,
-  //   type: 'normal'
-  // }
-  // await AddMessage(addDocumentMessage)
 
   return (ctx.body = success({}, "添加成功!"));
 };
