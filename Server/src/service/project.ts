@@ -155,12 +155,12 @@ const addUserProject = async (userId: string, project: Project) => {
     type: "normal"
   };
 
-  team.masterAvatar = userData.avatar;
+  team.masterAvatar = userData._id;
   team.masterId = userData._id;
   team.role = userData.role;
-  team.masterName = userData.userName;
+  team.masterName = userData._id;
   team.projectId = result;
-  team.projectName = project.projectName;
+  team.projectName = result;
   const teamId = await AddTeam(team);
   console.log("teamId", teamId);
   // 添加对应项目消息
@@ -219,13 +219,13 @@ export const updateProject = async (ctx: any) => {
   }
   const currentProject = await FindProjectById(_id);
   // 如果更新的是项目名称，需要同步更新团队名称
-  if (
-    project.projectName &&
-    project.projectName !== currentProject.projectName
-  ) {
-    console.log("同步团队名称");
-    await UpdateTeamName(_id, project.projectName);
-  }
+  // if (
+  //   project.projectName &&
+  //   project.projectName !== currentProject.projectName
+  // ) {
+  //   console.log("同步团队名称");
+  //   await UpdateTeamName(_id, project.projectName);
+  // }
   // 如果不是格式正常或者不是正在修改的属性,则保留原先数据
   currentProject.projectName =
     project.projectName || currentProject.projectName;

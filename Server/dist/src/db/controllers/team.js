@@ -12,7 +12,14 @@ const user_1 = require("./user");
 const project_1 = require("./project");
 const Team = require("../models/team");
 exports.FindTeamByProjectId = (id) => __awaiter(this, void 0, void 0, function* () {
-    const result = yield Team.findOne({ projectId: id }).populate("member");
+    const result = yield Team.findOne({ projectId: id })
+        .populate("member")
+        .populate({ path: "masterAvatar", select: "-_id avatar" })
+        .populate({ path: "masterName", select: "-_id userName" })
+        .populate({ path: "projectName", select: "-_id projectName" });
+    result.masterAvatar = result.masterAvatar.avatar;
+    result.masterName = result.masterName.userName;
+    result.projectName = result.projectName.projectName;
     return result;
 });
 exports.TeamList = (userId) => __awaiter(this, void 0, void 0, function* () {

@@ -10,10 +10,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Document = require("../models/document");
 exports.AllDocument = () => __awaiter(this, void 0, void 0, function* () {
-    return yield Document.find();
+    return yield Document.find()
+        .populate({
+        path: "ownerName",
+        select: "-_id userName"
+    })
+        .exec((err, documents) => {
+        documents = documents.map((document) => {
+            document.ownerName = document.ownerName.userName;
+        });
+    });
 });
 exports.FindDocumentById = (documentId) => __awaiter(this, void 0, void 0, function* () {
-    return yield Document.findOne({ _id: documentId });
+    const result = yield Document.findOne({ _id: documentId }).populate({
+        path: "ownerName",
+        select: "-_id userName"
+    });
+    result.ownerName = result.ownerName.userName;
+    return result;
 });
 exports.AddDocument = (originDocument) => __awaiter(this, void 0, void 0, function* () {
     const newDocument = new Document(originDocument);

@@ -5,7 +5,7 @@ const ModelSchema = new mongoose.Schema({
   modelDesc: { type: String },
   modelMode: { type: String },
   userId: { type: String },
-  userName: { type: String },
+  // userName: { type: String },
 });
 
 module.exports = mongoose.model('Model', ModelSchema);

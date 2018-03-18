@@ -2,7 +2,14 @@ import { FindUserById } from "./user";
 import { FindProjectListByUserId } from "./project";
 const Team = require("../models/team");
 export const FindTeamByProjectId = async (id: string) => {
-  const result = await Team.findOne({ projectId: id }).populate("member");
+  const result = await Team.findOne({ projectId: id })
+    .populate("member")
+    .populate({ path: "masterAvatar", select: "-_id avatar" })
+    .populate({ path: "masterName", select: "-_id userName" })
+    .populate({ path: "projectName", select: "-_id projectName" });
+  result.masterAvatar = result.masterAvatar.avatar;
+  result.masterName = result.masterName.userName;
+  result.projectName = result.projectName.projectName;
   return result;
 };
 

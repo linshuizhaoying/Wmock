@@ -8,46 +8,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const User = require('../models/user');
+const User = require("../models/user");
+exports.FindUserById = (id) => __awaiter(this, void 0, void 0, function* () {
+    console.log("正在查找Id:");
+    return yield User.findOne({ _id: id });
+});
+exports.FindUserByName = (userName) => __awaiter(this, void 0, void 0, function* () {
+    return yield User.findOne({ userName: userName });
+});
+exports.FindUserByEmail = (email) => __awaiter(this, void 0, void 0, function* () {
+    return yield User.findOne({ email: email });
+});
 exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
     console.log(user);
     const { userName, passWord, email, role } = user;
     const newUser = new User({ userName, passWord, email, role });
-    let hadUser = '';
+    // let hadUser: any = ''
     const result = {
-        status: '',
-        userId: '',
-        userName: '',
-        msg: '',
-        avatar: '',
-        email: '',
-        role: '',
+        status: "",
+        userId: "",
+        userName: "",
+        msg: "",
+        avatar: "",
+        email: "",
+        role: "",
         regDate: undefined
     };
-    // 先对用户名进行重复校验
-    hadUser = yield User.findOne({ 'userName': userName }, (err, data) => {
-        return data;
-    });
-    console.log('hadUser:', hadUser);
-    if (hadUser && hadUser.userName === userName) {
-        result.msg = '用户名不能重复';
-        result.status = 'error';
-        return result;
-    }
-    const hadEmail = yield User.findOne({ 'email': email }, (err, data) => {
-        return data;
-    });
-    if (hadEmail && hadEmail.email === email) {
-        result.msg = '该邮箱已存在';
-        result.status = 'error';
-        return result;
-    }
-    console.log('添加用户成功');
     yield newUser.save().then((data) => {
-        console.log('保存后的信息为:');
+        console.log("保存后的信息为:");
         console.log(data);
-        result.msg = '用户注册成功!';
-        result.status = 'success';
+        result.msg = "用户注册成功!";
+        result.status = "success";
         result.userId = data._id;
         result.userName = data.userName;
         result.avatar = data.avatar;
@@ -60,16 +51,9 @@ exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
 });
 exports.LoginUser = (user) => __awaiter(this, void 0, void 0, function* () {
     const { userName, passWord } = user;
-    console.log('用户正在登录:');
+    console.log("用户正在登录:");
     console.log(user);
-    return User.findOne({ 'userName': userName });
-});
-exports.FindUserById = (id) => __awaiter(this, void 0, void 0, function* () {
-    console.log('正在查找Id:');
-    return yield User.findOne({ _id: id });
-});
-exports.FindUserByEmail = (email) => __awaiter(this, void 0, void 0, function* () {
-    return yield User.findOne({ email: email });
+    return User.findOne({ userName: userName });
 });
 exports.UpdateUser = (user) => __awaiter(this, void 0, void 0, function* () {
     return User.update({

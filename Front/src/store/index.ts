@@ -43,6 +43,7 @@ export function configureStore(preloadState: {} = {}) {
       case "project":
         type = "项目信息";
         store.dispatch(fetchProject());
+        store.dispatch(fetchTeam());
         break;
       case "document":
         type = "文档信息";
