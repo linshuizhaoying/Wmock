@@ -1,4 +1,5 @@
 import * as jwt from 'jsonwebtoken'
+
 import { config } from '../config'
 
 export default async(ctx: any, next: any) => {
@@ -18,5 +19,7 @@ export default async(ctx: any, next: any) => {
   // 将token解析的数据传递到下一个中间层、
   ctx.token = authorization
   ctx.tokenContent = tokenContent
+  global.koaLogger.info("tokenContent:");
+  global.koaLogger.info(tokenContent);
   await next()
 }

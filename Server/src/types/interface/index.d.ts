@@ -148,3 +148,14 @@ interface TokenData {
   userName: string;
   exp: string;
 }
+
+interface AdvanceAny {
+  [propName: string]: any;
+}
+
+declare module NodeJS  {
+  interface Global {
+    koaLogger?: any,
+    logger?: any
+  }
+}

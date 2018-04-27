@@ -5,8 +5,7 @@
   "scripts": {
     "start": "yarn run build && yarn run watch",
     "build": "yarn run build-ts && yarn run tslint",
-    "serve":
-      "NODE_ENV=production babel-node dist/src/app.js --exec babel-node --presets es2015 ",
+    "serve": "NODE_ENV=production babel-node dist/src/app.js --exec babel-node --presets es2015 ",
     "watch": "concurrently -k -p  \"yarn run watch-ts\" \"yarn run serve\" ",
     "test": "jest --forceExit",
     "build-ts": "tsc",
@@ -34,8 +33,11 @@
     "jsondiffpatch": "^0.3.5",
     "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
+    "koa-convert": "^1.2.0",
     "koa-cors": "^0.0.16",
-    "koa-logger": "^3.0.1",
+    "koa-logger": "^3.2.0",
+    "koa-logs-full": "^0.0.8",
+    "koa-middlewares": "^6.0.0",
     "koa-router": "^7.2.1",
     "koa-static": "^4.0.2",
     "koa-validate": "^1.0.7",
@@ -55,5 +57,7 @@
     "typescript": "^2.5.2",
     "vm2": "^3.5.2"
   },
-  "presets": ["es2015"]
+  "presets": [
+    "es2015"
+  ]
 }

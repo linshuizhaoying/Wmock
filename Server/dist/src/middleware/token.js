@@ -28,6 +28,8 @@ exports.default = (ctx, next) => __awaiter(this, void 0, void 0, function* () {
     // 将token解析的数据传递到下一个中间层、
     ctx.token = authorization;
     ctx.tokenContent = tokenContent;
+    global.koaLogger.info("tokenContent:");
+    global.koaLogger.info(tokenContent);
     yield next();
 });
 //# sourceMappingURL=token.js.map

@@ -1,7 +1,6 @@
 const pathToRegexp = require('path-to-regexp');
 module.exports = class Middleware {
     static mockFilter(ctx, next) {
-        // console.log(ctx.path)
         // projectId需要是24位 也就是需要mongodb自动生成的长度
         const pathNode = pathToRegexp('/mock/:projectId(.{24})/:mockURL*').exec(ctx.path);
         // console.log(pathNode)
