@@ -71,6 +71,11 @@ exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
         initUserBackDocumentData.ownerId = result.userId;
         initUserBackDocumentData.ownerName = result.userId;
         yield controllers_1.AddDocument(initUserBackDocumentData);
+        // 初始化用户API接口文档
+        const initUserApiDocumentData = JSON.parse(mockEaxmple.ApiDocumentTemplate);
+        initUserApiDocumentData.ownerId = result.userId;
+        initUserApiDocumentData.ownerName = result.userId;
+        yield controllers_1.AddDocument(initUserApiDocumentData);
         return (ctx.body = dataHandle_1.success({
             userName,
             userId: result.userId,

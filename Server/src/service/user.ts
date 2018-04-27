@@ -88,6 +88,13 @@ export const reg = async (ctx: any) => {
     initUserBackDocumentData.ownerId = result.userId;
     initUserBackDocumentData.ownerName = result.userId;
     await AddDocument(initUserBackDocumentData);
+    // 初始化用户API接口文档
+    const initUserApiDocumentData: DocumentData = JSON.parse(
+      mockEaxmple.ApiDocumentTemplate
+    );
+    initUserApiDocumentData.ownerId = result.userId;
+    initUserApiDocumentData.ownerName = result.userId;
+    await AddDocument(initUserApiDocumentData);
 
     return (ctx.body = success(
       {
