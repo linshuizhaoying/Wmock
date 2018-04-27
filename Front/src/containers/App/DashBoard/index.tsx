@@ -1,9 +1,27 @@
+import "./index.less";
+
 import * as React from "react";
+
+import { Link, Route, Switch } from "react-router-dom";
+import Menu, { ClickParam } from "antd/lib/menu";
+import {
+  allProjectList,
+  fetchBaseModel,
+  fetchCustomModel,
+  fetchDemo,
+  fetchDocument,
+  fetchDocumentMessages,
+  fetchMessages,
+  fetchProject,
+  fetchTeam,
+  fetchUnJoinProject
+} from "../../../actions/index";
+import { userInfo, userLogout } from "../../../actions/user";
+
 import Badge from "antd/lib/badge";
 import Icon from "antd/lib/icon";
 import Layout from "antd/lib/layout";
 import LoadingBar from "../../../components/LoadingBar";
-import Menu, { ClickParam } from "antd/lib/menu";
 import Messages from "./Messages/index";
 import MockModel from "./MockModel/index";
 import Modal from "antd/lib/modal";
@@ -15,21 +33,6 @@ import TeamManage from "./TeamManage/index";
 import UserInfo from "./UserInfo";
 // import { ChangeEvent } from 'react';
 import { connect } from "react-redux";
-import {
-  allProjectList,
-  fetchDocumentMessages,
-  fetchBaseModel,
-  fetchCustomModel,
-  fetchDemo,
-  fetchDocument,
-  fetchMessages,
-  fetchProject,
-  fetchTeam,
-  fetchUnJoinProject
-} from "../../../actions/index";
-import { Link, Route, Switch } from "react-router-dom";
-import { userInfo, userLogout } from "../../../actions/user";
-import "./index.less";
 
 const { Header, Sider, Content, Footer } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -338,6 +341,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                         projectList={this.props.projectList}
                         messagesList={this.props.messagesList}
                         userId={this.props.userId}
+                        userRole={this.props.userRole}
                         documentRefresh={() => this.getDocumentList()}
                         baseModelList={this.props.baseModelList}
                         customModelList={this.props.customModelList}
@@ -370,6 +374,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
                         otherList={this.props.projectList}
                         messagesList={this.props.messagesList}
                         userId={this.props.userId}
+                        userRole={this.props.userRole}
                         documentRefresh={() => this.getDocumentList()}
                         baseModelList={this.props.baseModelList}
                         customModelList={this.props.customModelList}
@@ -436,6 +441,7 @@ export class DashBoard extends React.Component<AppProps, DashBoardState> {
 const mapStateToProps = (state: DashBoardState) => ({
   userName: state.user.userName,
   userId: state.user.userId,
+  userRole: state.user.role,
   userData: state.user,
   loadingState: state.loading.loadingState,
   messagesList: state.messages.data,

@@ -1,24 +1,27 @@
-import * as copy from "copy-to-clipboard";
+import "./index.less";
+
 import * as React from "react";
+import * as copy from "copy-to-clipboard";
+
 import Alert from "antd/lib/alert";
 import Avatar from "antd/lib/avatar";
 import Button from "antd/lib/button";
+import { ChangeEvent } from "react";
 import Divider from "antd/lib/divider";
 import Icon from "antd/lib/icon";
 import Input from "antd/lib/input";
 import InterfaceList from "./components/InterfaceList";
+import { Link } from "react-router-dom";
 import Message from "antd/lib/message";
+import { MockUrl } from "../../../../../../service/api";
 import Popover from "antd/lib/popover";
 import ProjectSpec from "../../../ProjectSpec";
 import Tabs from "antd/lib/tabs";
 import TimeAgo from "timeago-react";
 import Timeline from "antd/lib/timeline";
 import Tooltip from "antd/lib/tooltip";
-import { ChangeEvent } from "react";
-import { Link } from "react-router-dom";
-import { MockUrl } from "../../../../../../service/api";
 import { imgBaseUrl } from "../../../../../../service/api/index";
-import "./index.less";
+
 const TabPane = Tabs.TabPane;
 
 class EditableCell extends React.Component<
@@ -325,6 +328,7 @@ export class ProjectDetail extends React.Component<
                 data={this.props.data.interfaceList}
                 projectId={this.props.data._id}
                 baseUrl={MockUrl + "/" + this.props.data._id}
+                userRole={this.props.userRole}
               />
             </div>
           </TabPane>

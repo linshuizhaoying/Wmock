@@ -5,9 +5,9 @@
   时间: 2017-11-30  19:44:35  
 */
 
-import { Observable } from 'rxjs/Rx'
-import { AjaxResponse } from 'rxjs/Rx'
 import { AjaxError } from 'rxjs/Rx'
+import { AjaxResponse } from 'rxjs/Rx'
+import { Observable } from 'rxjs/Rx'
 import notification from 'antd/lib/notification';
 
 const defaultHeaders = {
@@ -15,21 +15,16 @@ const defaultHeaders = {
   'Content-Type': 'application/json'
 };
 export const handleAjaxError = (ajaxError: AjaxError) => {
-  if (ajaxError.status === 0) {
+  if (ajaxError.status !== 200) {
     notification.error({
-      message: '服务器访问错误!',
-      description: '服务器可能崩溃了~',
+      message: '非法用户数据!',
+      description: '非法用户数据！',
       duration: 2
     })
     localStorage.setItem('token', '')
     window.location.replace(location.href)
   }
-  if (ajaxError.status !== 200) {
-    localStorage.setItem('token', '')
-    window.location.replace(location.href)
-  }
   return
-
 }
 
 export const get = (url: string, headers: {} = {

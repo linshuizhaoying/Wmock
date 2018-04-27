@@ -1,23 +1,7 @@
+import "./index.less";
+
 import * as React from "react";
-import Alert from "antd/lib/alert";
-import Button from "antd/lib/button";
-import Card from "antd/lib/card";
-import Collapse from "antd/lib/collapse";
-import Icon from "antd/lib/icon";
-import InterfaceMode from "./components/ProjectDetail/components/InterfaceMode";
-import Message from "antd/lib/message";
-import Modal from "antd/lib/modal";
-import Tag from "antd/lib/tag";
-import NewProject from "./components/NewProject";
-import notification from "antd/lib/notification";
-import Popconfirm from "antd/lib/popconfirm";
-import ProjectDetail from "./components/ProjectDetail";
-import Select from "antd/lib/select";
-import Spin from "antd/lib/spin";
-import Tooltip from "antd/lib/tooltip";
-import Tree from "antd/lib/tree";
-import Upload from "antd/lib/upload";
-import Validator from "../../../../util/validator";
+
 import {
   addInterface,
   addProject,
@@ -31,14 +15,34 @@ import {
   updateProject,
   verifyProject
 } from "../../../../actions";
+
+import Alert from "antd/lib/alert";
+import Button from "antd/lib/button";
+import Card from "antd/lib/card";
 import { ChangeEvent } from "react";
+import Collapse from "antd/lib/collapse";
+import Icon from "antd/lib/icon";
+import InterfaceMode from "./components/ProjectDetail/components/InterfaceMode";
+import Message from "antd/lib/message";
+import { MockUrl } from "../../../../service/api";
+import Modal from "antd/lib/modal";
+import NewProject from "./components/NewProject";
+import Popconfirm from "antd/lib/popconfirm";
+import ProjectDetail from "./components/ProjectDetail";
+import Select from "antd/lib/select";
+import Spin from "antd/lib/spin";
+import Tag from "antd/lib/tag";
+import Tooltip from "antd/lib/tooltip";
+import Tree from "antd/lib/tree";
+import Upload from "antd/lib/upload";
+import { UploadFile } from "antd/es/upload/interface";
+import Validator from "../../../../util/validator";
 import { connect } from "react-redux";
 import { exportFile } from "../../../../util/fileExport";
 import { isEqual } from "../../../../util/helper";
 import { isJson } from "../../../../util/helper";
-import { MockUrl } from "../../../../service/api";
-import { UploadFile } from "antd/es/upload/interface";
-import "./index.less";
+import notification from "antd/lib/notification";
+
 // import jsBeautify from 'js-beautify/js/lib/beautify';
 // import jsondiffpatch from 'jsondiffpatch'
 let jsondiffpatch = require("jsondiffpatch");
@@ -618,17 +622,27 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
   renderTreeInterfaceTitle = (projectId: string, item: InterfaceWithFull) => {
     return (
       <div className="interfaceType">
-        <div
-          className="interfaceName"
-          onClick={() => {
-            this.selectProject(projectId);
-            this.selectCurrentInterface(item);
-            this.showInterfaceMode();
-          }}
-        >
-          <Icon type="code-o" />
-          {item.interfaceName}
-        </div>
+        {this.props.userRole !== "front" ? (
+          <div
+            className="interfaceName"
+          >
+            <Icon type="code-o" />
+            {item.interfaceName}
+          </div>
+        ) : (
+          <div
+            className="interfaceName"
+            onClick={() => {
+              this.selectProject(projectId);
+              this.selectCurrentInterface(item);
+              this.showInterfaceMode();
+            }}
+          >
+            <Icon type="code-o" />
+            {item.interfaceName}
+          </div>
+        )}
+
         <div className="interfaceOperate">
           <Popconfirm
             title="确定克隆该接口么?"
@@ -731,6 +745,7 @@ export class ProjectBase extends React.Component<AppProps, ProjectState> {
                 <ProjectDetail
                   selectDocument={this.selectDocument}
                   userId={this.props.userId}
+                  userRole={this.props.userRole}
                   documentList={this.state.currentDocumentList}
                   projectList={this.props.projectList}
                   removeInterface={this.removeInterface}

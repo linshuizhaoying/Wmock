@@ -1,5 +1,7 @@
-import * as React from 'react';
 import './index.less';
+
+import * as React from 'react';
+
 import ProjectBase from '../ProjectBase/index'
 export class MyProject extends React.Component<ProjectPropsWithAdvance, {}> {
 
@@ -15,6 +17,7 @@ export class MyProject extends React.Component<ProjectPropsWithAdvance, {}> {
           projectList={this.props.projectList}
           messagesList={this.props.messagesList}
           userId={this.props.userId}
+          userRole={this.props.userRole}
           type={'user'}
           documentRefresh={this.props.documentRefresh}
           baseModelList={this.props.baseModelList}
