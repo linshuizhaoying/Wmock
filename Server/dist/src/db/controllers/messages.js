@@ -36,7 +36,7 @@ exports.FindMessageByDocumentId = (documentId) => __awaiter(this, void 0, void 0
 });
 exports.AllMessages = (userId) => __awaiter(this, void 0, void 0, function* () {
     const projectMap = yield project_1.FindProjectListByUserId(userId);
-    console.log("projectList", projectMap);
+    // console.log("projectList", projectMap);
     const result = [];
     // 找到项目相关的信息
     for (const projectId in projectMap) {
@@ -53,7 +53,7 @@ exports.AllMessages = (userId) => __awaiter(this, void 0, void 0, function* () {
     return yield _.uniqBy(result, "_id");
 });
 exports.AddMessage = (message) => __awaiter(this, void 0, void 0, function* () {
-    console.log("message", message);
+    // console.log("message", message);
     const newMessage = new Message(message);
     let result;
     yield newMessage

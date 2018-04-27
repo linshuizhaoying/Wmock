@@ -1,17 +1,20 @@
 import * as jwt from "jsonwebtoken";
-import Validator from "../utils/validator";
+
 import {
-  AddRegUser,
-  FindUserById,
-  LoginUser,
-  UpdateUser,
   AddDocument,
+  AddRegUser,
+  FindUserByEmail,
+  FindUserById,
   FindUserByName,
-  FindUserByEmail
+  LoginUser,
+  UpdateUser
 } from "../db/controllers";
-import { config } from "../config";
 import { error, success } from "../utils/dataHandle";
+
+import Validator from "../utils/validator";
+import { config } from "../config";
 import { importProjectData } from "./project";
+
 const mockEaxmple = require("../utils/mockExample");
 /**
  *  用户注册
@@ -34,7 +37,7 @@ const mockEaxmple = require("../utils/mockExample");
  */
 
 export const reg = async (ctx: any) => {
-  console.log(ctx.request.body);
+  // console.log(ctx.request.body);
   const { userName, passWord, email, role } = ctx.request.body;
   // 后端先做初步的数据校验和非法字符处理
   if (
@@ -136,13 +139,13 @@ export const login = async (ctx: any) => {
       regDate: undefined
     };
     const hadUser = await LoginUser({ userName, passWord });
-    console.log("登录用户状况:\n", result);
+    // console.log("登录用户状况:\n", result);
     if (hadUser === null || hadUser.passWord !== passWord) {
       result.msg = "账户不存在或者密码错误";
       result.status = "error";
     } else {
-      console.log("查询后的信息为:");
-      console.log(hadUser);
+      // console.log("查询后的信息为:");
+      // console.log(hadUser);
       result.msg = "用户登录成功!";
       result.status = "success";
     }
@@ -151,7 +154,7 @@ export const login = async (ctx: any) => {
       // 用户不存在 或者 用户密码错误
       return (ctx.body = error(result.msg));
     } else {
-      console.log("result", result);
+      // console.log("result", result);
       const { userName, _id, msg, avatar, regDate, email, role } = hadUser;
       const token = jwt.sign(
         {
@@ -254,7 +257,7 @@ export const updateUser = async (ctx: any) => {
     : undefined;
 
   if (ctx.errors) {
-    console.log(ctx.errors);
+    // console.log(ctx.errors);
     return (ctx.body = error("用户数据不正常,更新失败!"));
   }
 

@@ -1,5 +1,5 @@
-import { FindUserById } from "./user";
 import { FindProjectListByUserId } from "./project";
+import { FindUserById } from "./user";
 const Team = require("../models/team");
 export const FindTeamByProjectId = async (id: string) => {
   const result = await Team.findOne({ projectId: id })
@@ -69,7 +69,7 @@ export const AddUserToTeam = async (projectId: string, userId: string) => {
   const originTeam: TeamData = await Team.findOne({ projectId: projectId });
   const user: UserData = await FindUserById(userId);
   originTeam.member.push(user);
-  console.log(originTeam);
+  // console.log(originTeam);
   return await UpdateTeamMember(originTeam);
 };
 

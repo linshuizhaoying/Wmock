@@ -60,7 +60,7 @@ exports.Router = (app) => {
             fileType: 'up',
             path: serverFilePath
         });
-        console.log(result);
+        // console.log(result)
         ctx.body = result;
     }));
     // 根据对应请求返回 mock数据

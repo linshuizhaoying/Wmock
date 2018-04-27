@@ -18,18 +18,18 @@ export class Validator {
     if (!RULES.required(value)) {
       return false
     }else {
-      console.log('userCheck:' + new RegExp(RULES.username).test(value))
+      // console.log('userCheck:' + new RegExp(RULES.username).test(value))
       return  new RegExp(RULES.username).test(value)
     }
   }
 
   passCheck = (value: string) => {
-    console.log('passCheck:' + new RegExp(RULES.password).test(value))
+    // console.log('passCheck:' + new RegExp(RULES.password).test(value))
     return new RegExp(RULES.password).test(value)
   }
 
   emailCheck = (value: string) => {
-    console.log('emailCheck:' + new RegExp(RULES.email).test(value))
+    // console.log('emailCheck:' + new RegExp(RULES.email).test(value))
     return new RegExp(RULES.email).test(value)
   }
 }

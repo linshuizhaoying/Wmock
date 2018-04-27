@@ -29,7 +29,7 @@ exports.CheckInterfaceExist = (projectId, url, method) => __awaiter(this, void 0
         url: url,
         method: method
     }).then((data) => {
-        console.log(data);
+        // console.log(data)
         result = data;
     });
     return result;

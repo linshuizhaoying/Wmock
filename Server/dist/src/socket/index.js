@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = require("jsonwebtoken");
-const config_1 = require("../config");
 const controllers_1 = require("../db/controllers");
+const config_1 = require("../config");
 let io = require("socket.io");
 const http = require("http");
 const onlineSocket = new Map(); // 维护一个在线的Socket表,和用户ID一对一对应。里面保存socket对象。用于筛选消息接受者
@@ -25,7 +25,7 @@ module.exports = function () {
         io.on("connection", (socket) => {
             // 监听客户端传来的登录信息，更新在线人数。
             socket.on("userLogin", (data) => __awaiter(this, void 0, void 0, function* () {
-                console.log("socket信息接收:用户登录socket", data);
+                // console.log("socket信息接收:用户登录socket", data);
                 // 先判断用户token是否正常(过期或者校验不对则抛弃, 登录接口也做了校验，因此这个socket消息大部分是安全的)
                 let tokenContent;
                 try {
@@ -37,12 +37,12 @@ module.exports = function () {
                 }
                 catch (err) {
                     // 如果以后有日志可以写进去
-                    console.log("无效的token");
+                    // console.log("无效的token");
                 }
             }));
             // 监听客户端传来的退出登录，然后更新在线人数
             socket.on("userLogout", (data) => __awaiter(this, void 0, void 0, function* () {
-                console.log("socket信息接收:用户退出", data);
+                // console.log("socket信息接收:用户退出", data);
                 // 先判断用户token是否正常(过期或者校验不对则抛弃, 登录接口也做了校验，因此这个socket消息大部分是安全的)
                 let tokenContent;
                 try {
@@ -54,13 +54,13 @@ module.exports = function () {
                 }
                 catch (err) {
                     // 如果以后有日志可以写进去
-                    console.log(err);
-                    console.log("无效的token");
+                    // console.log(err);
+                    // console.log("无效的token");
                 }
             }));
             // 监听 客户端 的断线重连,此时可以查看用户是否在soket在线表中
             socket.on("token", (data) => __awaiter(this, void 0, void 0, function* () {
-                console.log("socket信息接收: 用户重新连接", data);
+                // console.log("socket信息接收: 用户重新连接", data);
                 // 先判断用户token是否正常(过期或者校验不对则抛弃, 登录接口也做了校验，因此这个socket消息大部分是安全的)
                 let tokenContent;
                 try {
@@ -72,7 +72,7 @@ module.exports = function () {
                 }
                 catch (err) {
                     // 如果以后有日志可以写进去
-                    console.log("无效的token");
+                    // console.log("无效的token");
                 }
             }));
             // 团队成员加入 {userId, projectId}
@@ -245,7 +245,7 @@ module.exports = function () {
                     });
                 }
                 catch (error) {
-                    console.log("用户更新了demo");
+                    // console.log("用户更新了demo");
                 }
             }));
             // 监听断线以及关闭

@@ -43,8 +43,8 @@ export const documentList = async (ctx: any) => {
       }
     })
   );
-  console.log("userJoinProject", userJoinProject);
-  console.log(data.length);
+  // console.log("userJoinProject", userJoinProject);
+  // console.log(data.length);
   await Promise.all(
     data.map(async (item: DocumentData) => {
       // 不然对分配的项目进行查找,看看团队里有没有用户
@@ -52,7 +52,7 @@ export const documentList = async (ctx: any) => {
       await Promise.all(
         item.assign.map(async (projectId: string) => {
           const teamData: TeamData = await FindTeamByProjectId(projectId);
-          console.log("teamData", teamData);
+          // console.log("teamData", teamData);
           // 如果成员分配了自己的文档给项目
           if (teamData.masterId.toString() === userId.toString()) {
             result.push(item);
@@ -72,7 +72,7 @@ export const documentList = async (ctx: any) => {
       }
     })
   );
-  console.log(result.length);
+  // console.log(result.length);
   return (ctx.body = success(await _.uniqBy(result, "_id"), "获取成功"));
 };
 
@@ -85,7 +85,7 @@ export const addDocument = async (ctx: any) => {
   const name = ctx.checkBody("name").notEmpty().value;
   const type = ctx.checkBody("type").notEmpty().value;
   if (ctx.errors) {
-    console.log(ctx.errors);
+    // console.log(ctx.errors);
     return (ctx.body = error("用户数据不正常,添加失败!"));
   }
   const userData: UserData = await FindUserById(userId);
@@ -105,7 +105,7 @@ export const updateDocument = async (ctx: any) => {
   const name = ctx.checkBody("name").notEmpty().value;
   const type = ctx.checkBody("type").notEmpty().value;
   if (ctx.errors) {
-    console.log(ctx.errors);
+    // console.log(ctx.errors);
     return (ctx.body = error("用户数据不正常,添加失败!"));
   }
   await UpdateDocument(document);

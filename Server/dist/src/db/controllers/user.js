@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const User = require("../models/user");
 exports.FindUserById = (id) => __awaiter(this, void 0, void 0, function* () {
-    console.log("正在查找Id:");
+    // console.log("正在查找Id:");
     return yield User.findOne({ _id: id });
 });
 exports.FindUserByName = (userName) => __awaiter(this, void 0, void 0, function* () {
@@ -20,7 +20,7 @@ exports.FindUserByEmail = (email) => __awaiter(this, void 0, void 0, function* (
     return yield User.findOne({ email: email });
 });
 exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
-    console.log(user);
+    // console.log(user);
     const { userName, passWord, email, role } = user;
     const newUser = new User({ userName, passWord, email, role });
     // let hadUser: any = ''
@@ -35,8 +35,8 @@ exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
         regDate: undefined
     };
     yield newUser.save().then((data) => {
-        console.log("保存后的信息为:");
-        console.log(data);
+        // console.log("保存后的信息为:");
+        // console.log(data);
         result.msg = "用户注册成功!";
         result.status = "success";
         result.userId = data._id;
@@ -45,14 +45,14 @@ exports.AddRegUser = (user) => __awaiter(this, void 0, void 0, function* () {
         result.email = data.email;
         result.regDate = data.regDate;
         result.role = data.role;
-        console.log(result);
+        // console.log(result);
     });
     return result;
 });
 exports.LoginUser = (user) => __awaiter(this, void 0, void 0, function* () {
     const { userName, passWord } = user;
-    console.log("用户正在登录:");
-    console.log(user);
+    // console.log("用户正在登录:");
+    // console.log(user);
     return User.findOne({ userName: userName });
 });
 exports.UpdateUser = (user) => __awaiter(this, void 0, void 0, function* () {

@@ -30,14 +30,14 @@ exports.documentList = (ctx) => __awaiter(this, void 0, void 0, function* () {
             }
         }
     })));
-    console.log("userJoinProject", userJoinProject);
-    console.log(data.length);
+    // console.log("userJoinProject", userJoinProject);
+    // console.log(data.length);
     yield Promise.all(data.map((item) => __awaiter(this, void 0, void 0, function* () {
         // 不然对分配的项目进行查找,看看团队里有没有用户
         if (item.ownerId != userId) {
             yield Promise.all(item.assign.map((projectId) => __awaiter(this, void 0, void 0, function* () {
                 const teamData = yield index_1.FindTeamByProjectId(projectId);
-                console.log("teamData", teamData);
+                // console.log("teamData", teamData);
                 // 如果成员分配了自己的文档给项目
                 if (teamData.masterId.toString() === userId.toString()) {
                     result.push(item);
@@ -55,7 +55,7 @@ exports.documentList = (ctx) => __awaiter(this, void 0, void 0, function* () {
             })));
         }
     })));
-    console.log(result.length);
+    // console.log(result.length);
     return (ctx.body = dataHandle_1.success(yield _.uniqBy(result, "_id"), "获取成功"));
 });
 exports.addDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -67,7 +67,7 @@ exports.addDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const name = ctx.checkBody("name").notEmpty().value;
     const type = ctx.checkBody("type").notEmpty().value;
     if (ctx.errors) {
-        console.log(ctx.errors);
+        // console.log(ctx.errors);
         return (ctx.body = dataHandle_1.error("用户数据不正常,添加失败!"));
     }
     const userData = yield index_1.FindUserById(userId);
@@ -85,7 +85,7 @@ exports.updateDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const name = ctx.checkBody("name").notEmpty().value;
     const type = ctx.checkBody("type").notEmpty().value;
     if (ctx.errors) {
-        console.log(ctx.errors);
+        // console.log(ctx.errors);
         return (ctx.body = dataHandle_1.error("用户数据不正常,添加失败!"));
     }
     yield index_1.UpdateDocument(document);

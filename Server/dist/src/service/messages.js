@@ -17,13 +17,13 @@ exports.messagesList = (ctx) => __awaiter(this, void 0, void 0, function* () {
 });
 exports.documentMessages = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const documentId = ctx.checkBody("id").notEmpty().value;
-    console.log('documentId: ', documentId);
+    // console.log('documentId: ', documentId)
     if (ctx.errors) {
-        console.log(ctx.errors);
+        // console.log(ctx.errors)
         return ctx.body = dataHandle_1.error('用户数据不正常,获取失败!');
     }
     const result = yield index_1.DocumentMessages(documentId);
-    console.log('result', result);
+    // console.log('result', result)
     return (ctx.body = dataHandle_1.success(result, "获取成功"));
 });
 exports.addMessage = (message) => __awaiter(this, void 0, void 0, function* () {

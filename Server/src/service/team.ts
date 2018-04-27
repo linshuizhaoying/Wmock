@@ -2,14 +2,14 @@ import {
   AddMessage,
   AddUserToTeam,
   FindMessageById,
+  FindMessageByprojectIdAndObjectId,
   FindProjectById,
   FindTeamByProjectId,
   FindUserByEmail,
   FindUserById,
   RemoveGroupMember,
   TeamList,
-  UpdateMessageReaded,
-  FindMessageByprojectIdAndObjectId
+  UpdateMessageReaded
 } from "../db/controllers/index";
 import { error, success } from "../utils/dataHandle";
 const _ = require("lodash");
@@ -50,7 +50,7 @@ export const teamList = async (ctx: any) => {
 
 export const sendApply = async (ctx: any) => {
   const apply: Apply = ctx.request.body;
-  console.log(apply);
+  // console.log(apply);
   // 对每个属性做不为空的校验
   const operatorId = ctx.checkBody("operatorId").notEmpty().value;
   const operatorName = ctx.checkBody("operatorName").notEmpty().value;
@@ -62,7 +62,7 @@ export const sendApply = async (ctx: any) => {
   const type = ctx.checkBody("type").notEmpty().value;
 
   if (ctx.errors) {
-    console.log(ctx.errors);
+    // console.log(ctx.errors);
     return (ctx.body = error("用户数据不正常,申请失败!"));
   }
   const userData: UserData = await FindUserById(operatorId);
@@ -90,7 +90,7 @@ export const rejectJoinGroup = async (ctx: any) => {
   const projectId = ctx.checkBody("projectId").notEmpty().value;
   const messageId = ctx.checkBody("messageId").notEmpty().value;
   if (ctx.errors) {
-    console.log(ctx.errors);
+    // console.log(ctx.errors);
     return (ctx.body = error("用户数据不正常,操作失败!"));
   }
   const project = await FindProjectById(projectId);
@@ -123,7 +123,7 @@ export const removeGroupMember = async (ctx: any) => {
   const removeUserId = ctx.checkBody("userId").notEmpty().value;
   const projectId = ctx.checkBody("projectId").notEmpty().value;
   if (ctx.errors) {
-    console.log(ctx.errors);
+    // console.log(ctx.errors);
     return (ctx.body = error("用户数据不正常,操作失败!"));
   }
   await RemoveGroupMember(projectId, removeUserId);
@@ -163,7 +163,7 @@ export const allowedJoinGroup = async (ctx: any) => {
   const projectId = ctx.checkBody("projectId").notEmpty().value;
   const messageId = ctx.checkBody("messageId").notEmpty().value;
   if (ctx.errors) {
-    console.log(ctx.errors);
+    // console.log(ctx.errors);
     return (ctx.body = error("用户数据不正常,操作失败!"));
   }
   // 先将用户加入团队
@@ -199,7 +199,7 @@ export const invitedGroupMember = async (ctx: any) => {
   const userEmail = ctx.checkBody("userEmail").notEmpty().value;
   const projectId = ctx.checkBody("projectId").notEmpty().value;
   if (ctx.errors) {
-    console.log(ctx.errors);
+    // console.log(ctx.errors);
     return (ctx.body = error("用户数据不正常,操作失败!"));
   }
   const inviter: UserData = await FindUserById(userId);
@@ -223,7 +223,7 @@ export const invitedGroupMember = async (ctx: any) => {
   } else {
     // 判断用户是否重复被邀请,如果重复,那么就不加消息了
     const exist = await FindMessageByprojectIdAndObjectId(projectId, user._id);
-    console.log("exist", exist);
+    // console.log("exist", exist);
     if (exist) {
       return (ctx.body = error("邀请重复!"));
     } else {

@@ -27,7 +27,7 @@ exports.addModel = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const userId = ctx.checkBody('userId').notEmpty().value;
     const userName = ctx.checkBody('userName').notEmpty().value;
     if (ctx.errors) {
-        console.log(ctx.errors);
+        // console.log(ctx.errors)
         return ctx.body = dataHandle_1.error('用户数据不正常,添加失败!');
     }
     yield index_1.AddModel(model);
@@ -40,7 +40,7 @@ exports.updateModel = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const modelDataName = ctx.checkBody('modelDataName').notEmpty().value;
     const _id = ctx.checkBody('_id').notEmpty().value;
     if (ctx.errors) {
-        console.log(ctx.errors);
+        // console.log(ctx.errors)
         return ctx.body = dataHandle_1.error('用户数据不正常,更新失败!');
     }
     yield index_1.UpdateModel(model);
@@ -50,7 +50,7 @@ exports.removeModel = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { id } = ctx.request.body;
     const modelId = ctx.checkBody('id').notEmpty().value;
     if (ctx.errors) {
-        console.log(ctx.errors);
+        // console.log(ctx.errors)
         return ctx.body = dataHandle_1.error('用户数据不正常,删除失败!');
     }
     yield index_1.RemoveModel(id);

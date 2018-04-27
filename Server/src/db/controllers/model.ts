@@ -2,7 +2,7 @@ const Model = require('../models/model')
 
 // 基础模型列表
 export const BaseModelList = async () => {
-  console.log('base')
+  // console.log('base')
   const data = [{
     modelDataName: '字符串',
     modelMode: '{"string|1-10": "$"}'

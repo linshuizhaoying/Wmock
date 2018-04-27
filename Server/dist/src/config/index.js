@@ -13,8 +13,8 @@ exports.config = {
         'url': 'mongodb://wmock:wmock233@127.0.0.1:27017/wmock'
     },
     'admin': {
-        'user': 'linshuizhaoying',
-        'password': '123456'
+        'user': 'admin',
+        'password': 'wmock888'
     }
 };
 //# sourceMappingURL=index.js.map

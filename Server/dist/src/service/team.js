@@ -27,7 +27,7 @@ exports.teamList = (ctx) => __awaiter(this, void 0, void 0, function* () {
 });
 exports.sendApply = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const apply = ctx.request.body;
-    console.log(apply);
+    // console.log(apply);
     // 对每个属性做不为空的校验
     const operatorId = ctx.checkBody("operatorId").notEmpty().value;
     const operatorName = ctx.checkBody("operatorName").notEmpty().value;
@@ -38,7 +38,7 @@ exports.sendApply = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const desc = ctx.checkBody("desc").notEmpty().value;
     const type = ctx.checkBody("type").notEmpty().value;
     if (ctx.errors) {
-        console.log(ctx.errors);
+        // console.log(ctx.errors);
         return (ctx.body = dataHandle_1.error("用户数据不正常,申请失败!"));
     }
     const userData = yield index_1.FindUserById(operatorId);
@@ -64,7 +64,7 @@ exports.rejectJoinGroup = (ctx) => __awaiter(this, void 0, void 0, function* () 
     const projectId = ctx.checkBody("projectId").notEmpty().value;
     const messageId = ctx.checkBody("messageId").notEmpty().value;
     if (ctx.errors) {
-        console.log(ctx.errors);
+        // console.log(ctx.errors);
         return (ctx.body = dataHandle_1.error("用户数据不正常,操作失败!"));
     }
     const project = yield index_1.FindProjectById(projectId);
@@ -94,7 +94,7 @@ exports.removeGroupMember = (ctx) => __awaiter(this, void 0, void 0, function* (
     const removeUserId = ctx.checkBody("userId").notEmpty().value;
     const projectId = ctx.checkBody("projectId").notEmpty().value;
     if (ctx.errors) {
-        console.log(ctx.errors);
+        // console.log(ctx.errors);
         return (ctx.body = dataHandle_1.error("用户数据不正常,操作失败!"));
     }
     yield index_1.RemoveGroupMember(projectId, removeUserId);
@@ -130,7 +130,7 @@ exports.allowedJoinGroup = (ctx) => __awaiter(this, void 0, void 0, function* ()
     const projectId = ctx.checkBody("projectId").notEmpty().value;
     const messageId = ctx.checkBody("messageId").notEmpty().value;
     if (ctx.errors) {
-        console.log(ctx.errors);
+        // console.log(ctx.errors);
         return (ctx.body = dataHandle_1.error("用户数据不正常,操作失败!"));
     }
     // 先将用户加入团队
@@ -163,7 +163,7 @@ exports.invitedGroupMember = (ctx) => __awaiter(this, void 0, void 0, function* 
     const userEmail = ctx.checkBody("userEmail").notEmpty().value;
     const projectId = ctx.checkBody("projectId").notEmpty().value;
     if (ctx.errors) {
-        console.log(ctx.errors);
+        // console.log(ctx.errors);
         return (ctx.body = dataHandle_1.error("用户数据不正常,操作失败!"));
     }
     const inviter = yield index_1.FindUserById(userId);
@@ -188,7 +188,7 @@ exports.invitedGroupMember = (ctx) => __awaiter(this, void 0, void 0, function* 
     else {
         // 判断用户是否重复被邀请,如果重复,那么就不加消息了
         const exist = yield index_1.FindMessageByprojectIdAndObjectId(projectId, user._id);
-        console.log("exist", exist);
+        // console.log("exist", exist);
         if (exist) {
             return (ctx.body = dataHandle_1.error("邀请重复!"));
         }

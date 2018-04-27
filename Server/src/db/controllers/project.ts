@@ -98,7 +98,7 @@ export const UserProject = async (userId: string) => {
 };
 
 export const UnJoinProjectList = async (userId: string) => {
-  console.log(userId);
+  // console.log(userId);
   const allProject = await Project.find({});
   const unJoinList: ProjectData[] = [];
   await Promise.all(
@@ -129,7 +129,7 @@ export const UnJoinProjectList = async (userId: string) => {
     })
   );
 
-  console.log("自己未加入的团队", unJoinList);
+  // console.log("自己未加入的团队", unJoinList);
   return unJoinList;
 };
 

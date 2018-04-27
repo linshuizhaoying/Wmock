@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const dataHandle_1 = require("../utils/dataHandle");
 // import { AllProject } from '../db/controllers/index';
 const index_1 = require("../db/controllers/index");
+const dataHandle_1 = require("../utils/dataHandle");
 const { VM } = require('vm2');
 const Mock = require('mockjs');
 const axios = require('axios');
@@ -86,7 +86,7 @@ exports.mock = (ctx) => __awaiter(this, void 0, void 0, function* () {
         });
         vm.run('Mock.mock(new Function("return " + mode)())'); // 数据验证，检测 setTimeout 等方法, 顺便将内部的函数执行了
         const apiData = vm.run('Mock.mock(template())');
-        console.log('apiData:', apiData);
+        // console.log('apiData:', apiData)
         result = dataHandle_1.mockSuccess(apiData);
     }
     else if (foundProject.status === 'transfer') {
@@ -96,7 +96,7 @@ exports.mock = (ctx) => __awaiter(this, void 0, void 0, function* () {
         }
         else {
             result = yield exports.getRemoteData(foundMock.method, foundProject.transferUrl + '/' + foundMock.url, query, body);
-            console.log('final result:', result);
+            // console.log('final result:', result)
             if (result === '') {
                 ctx.body = {
                     'state': {

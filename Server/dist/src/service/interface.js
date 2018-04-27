@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const dataHandle_1 = require("../utils/dataHandle");
 const index_1 = require("../db/controllers/index");
+const dataHandle_1 = require("../utils/dataHandle");
 const _ = require('lodash');
 const field = require('../db/models/field');
 exports.addInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -24,7 +24,7 @@ exports.addInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
         return ctx.body = dataHandle_1.error('用户数据不正常,添加失败!');
     }
     const exist = yield index_1.CheckInterfaceExist(projectId, url, method);
-    console.log(exist);
+    // console.log(exist)
     if (exist) {
         return ctx.body = dataHandle_1.error('接口已经存在!');
     }
@@ -118,10 +118,10 @@ exports.cloneInterface = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const oldInterface = yield index_1.FindInterfaceById(interfaceId);
     // 洗下接口数据
     // const cleanInterface = oldInterface.map((item: InterfaceData) => _.pick(item, field.pureInterfaceField))
-    console.log(oldInterface);
+    // console.log(oldInterface)
     const cleanInterface = _.pick(oldInterface, field.pureInterfaceField);
     cleanInterface.projectId = projectId;
-    console.log(cleanInterface);
+    // console.log(cleanInterface)
     const result = yield index_1.AddInterface(cleanInterface);
     return ctx.body = dataHandle_1.success({}, '克隆成功!');
 });

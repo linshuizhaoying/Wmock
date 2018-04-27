@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Model = require('../models/model');
 // 基础模型列表
 exports.BaseModelList = () => __awaiter(this, void 0, void 0, function* () {
-    console.log('base');
+    // console.log('base')
     const data = [{
             modelDataName: '字符串',
             modelMode: '{"string|1-10": "$"}'

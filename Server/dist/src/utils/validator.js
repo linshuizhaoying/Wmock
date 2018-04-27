@@ -22,16 +22,16 @@ class Validator {
                 return false;
             }
             else {
-                console.log('userCheck:' + new RegExp(RULES.username).test(value));
+                // console.log('userCheck:' + new RegExp(RULES.username).test(value))
                 return new RegExp(RULES.username).test(value);
             }
         };
         this.passCheck = (value) => {
-            console.log('passCheck:' + new RegExp(RULES.password).test(value));
+            // console.log('passCheck:' + new RegExp(RULES.password).test(value))
             return new RegExp(RULES.password).test(value);
         };
         this.emailCheck = (value) => {
-            console.log('emailCheck:' + new RegExp(RULES.email).test(value));
+            // console.log('emailCheck:' + new RegExp(RULES.email).test(value))
             return new RegExp(RULES.email).test(value);
         };
     }

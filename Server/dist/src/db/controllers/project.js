@@ -94,7 +94,7 @@ exports.UserProject = (userId) => __awaiter(this, void 0, void 0, function* () {
     return projectList;
 });
 exports.UnJoinProjectList = (userId) => __awaiter(this, void 0, void 0, function* () {
-    console.log(userId);
+    // console.log(userId);
     const allProject = yield Project.find({});
     const unJoinList = [];
     yield Promise.all(allProject.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
@@ -122,7 +122,7 @@ exports.UnJoinProjectList = (userId) => __awaiter(this, void 0, void 0, function
             }
         }
     })));
-    console.log("自己未加入的团队", unJoinList);
+    // console.log("自己未加入的团队", unJoinList);
     return unJoinList;
 });
 exports.AddProject = (originProject) => __awaiter(this, void 0, void 0, function* () {

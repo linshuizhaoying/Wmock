@@ -32,7 +32,7 @@ export const addModel = async (ctx: any) => {
   const userId = ctx.checkBody('userId').notEmpty().value
   const userName = ctx.checkBody('userName').notEmpty().value
   if (ctx.errors) {
-    console.log(ctx.errors)
+    // console.log(ctx.errors)
     return ctx.body = error('用户数据不正常,添加失败!')
   }
   await AddModel(model)
@@ -48,7 +48,7 @@ export const updateModel = async (ctx: any) => {
   const modelDataName = ctx.checkBody('modelDataName').notEmpty().value
   const _id = ctx.checkBody('_id').notEmpty().value
   if (ctx.errors) {
-    console.log(ctx.errors)
+    // console.log(ctx.errors)
     return ctx.body = error('用户数据不正常,更新失败!')
   }
   await UpdateModel(model)
@@ -60,7 +60,7 @@ export const removeModel = async (ctx: any) => {
   const { id } = ctx.request.body;
   const modelId = ctx.checkBody('id').notEmpty().value
   if (ctx.errors) {
-    console.log(ctx.errors)
+    // console.log(ctx.errors)
     return ctx.body = error('用户数据不正常,删除失败!')
   }
   await RemoveModel(id)

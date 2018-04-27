@@ -31,7 +31,7 @@ export const FindMessageByDocumentId = async (documentId: string) => {
 
 export const AllMessages = async (userId: string) => {
   const projectMap = await FindProjectListByUserId(userId);
-  console.log("projectList", projectMap);
+  // console.log("projectList", projectMap);
   const result: any = [];
   // 找到项目相关的信息
   for (const projectId in projectMap) {
@@ -49,7 +49,7 @@ export const AllMessages = async (userId: string) => {
 };
 
 export const AddMessage = async (message: MessageData) => {
-  console.log("message", message);
+  // console.log("message", message);
   const newMessage = new Message(message);
   let result;
   await newMessage

@@ -23,7 +23,7 @@ export const CheckInterfaceExist = async (projectId: string, url: string, method
     url: url,
     method: method
   }).then((data: any) => {
-    console.log(data)
+    // console.log(data)
     result = data
   })
   return result

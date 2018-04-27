@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const user_1 = require("./user");
 const project_1 = require("./project");
+const user_1 = require("./user");
 const Team = require("../models/team");
 exports.FindTeamByProjectId = (id) => __awaiter(this, void 0, void 0, function* () {
     const result = yield Team.findOne({ projectId: id })
@@ -68,7 +68,7 @@ exports.AddUserToTeam = (projectId, userId) => __awaiter(this, void 0, void 0, f
     const originTeam = yield Team.findOne({ projectId: projectId });
     const user = yield user_1.FindUserById(userId);
     originTeam.member.push(user);
-    console.log(originTeam);
+    // console.log(originTeam);
     return yield exports.UpdateTeamMember(originTeam);
 });
 exports.RemoveGroupMember = (projectId, userId) => __awaiter(this, void 0, void 0, function* () {

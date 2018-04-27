@@ -1,9 +1,9 @@
-import { error, mockSuccess } from '../utils/dataHandle';
 // import { AllProject } from '../db/controllers/index';
 import {
   FindInterfaceByMock,
   FindProjectById
 } from '../db/controllers/index';
+import { error, mockSuccess } from '../utils/dataHandle';
 const { VM } = require('vm2')
 const Mock = require('mockjs')
 const axios = require('axios')
@@ -85,7 +85,7 @@ export const mock = async (ctx: any) => {
     })
     vm.run('Mock.mock(new Function("return " + mode)())') // 数据验证，检测 setTimeout 等方法, 顺便将内部的函数执行了
     const apiData = vm.run('Mock.mock(template())')
-    console.log('apiData:', apiData)
+    // console.log('apiData:', apiData)
     result = mockSuccess(apiData)
   } else if (foundProject.status === 'transfer') {
     // 如果代理成自己,会造成无限循环，因此一开始就判断然后拒绝代理
@@ -93,7 +93,7 @@ export const mock = async (ctx: any) => {
       return ctx.body = error('接口无法转发自身!')
     } else {
       result = await getRemoteData(foundMock.method, foundProject.transferUrl + '/' + foundMock.url, query, body)
-      console.log('final result:', result)
+      // console.log('final result:', result)
       if (result === '') {
         ctx.body = {
           'state': {

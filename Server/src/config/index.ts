@@ -11,7 +11,7 @@ export const config = {
       'url': 'mongodb://wmock:wmock233@127.0.0.1:27017/wmock'
   },
   'admin': {  // 后台初始化的用户名密码
-      'user': 'linshuizhaoying',
-      'password': '123456'
+      'user': 'admin',
+      'password': 'wmock888'
   }
 };

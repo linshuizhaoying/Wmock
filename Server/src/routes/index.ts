@@ -1,7 +1,8 @@
 import * as Irouter from 'koa-router';
 import * as Service from '../service';
-import tokenPermission from '../middleware/token';
+
 import { config } from '../config';
+import tokenPermission from '../middleware/token';
 
 const path = require('path');
 const middleware = require('../middleware/index')
@@ -140,7 +141,7 @@ export const Router = (app: any) => {
         fileType: 'up', // common or album
         path: serverFilePath
       })
-      console.log(result)
+      // console.log(result)
       ctx.body = result
     });
 

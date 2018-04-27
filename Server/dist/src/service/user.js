@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = require("jsonwebtoken");
-const validator_1 = require("../utils/validator");
 const controllers_1 = require("../db/controllers");
-const config_1 = require("../config");
 const dataHandle_1 = require("../utils/dataHandle");
+const validator_1 = require("../utils/validator");
+const config_1 = require("../config");
 const project_1 = require("./project");
 const mockEaxmple = require("../utils/mockExample");
 /**
@@ -35,7 +35,7 @@ const mockEaxmple = require("../utils/mockExample");
  * }
  */
 exports.reg = (ctx) => __awaiter(this, void 0, void 0, function* () {
-    console.log(ctx.request.body);
+    // console.log(ctx.request.body);
     const { userName, passWord, email, role } = ctx.request.body;
     // 后端先做初步的数据校验和非法字符处理
     if (validator_1.default.userCheck(userName) &&
@@ -117,14 +117,14 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
             regDate: undefined
         };
         const hadUser = yield controllers_1.LoginUser({ userName, passWord });
-        console.log("登录用户状况:\n", result);
+        // console.log("登录用户状况:\n", result);
         if (hadUser === null || hadUser.passWord !== passWord) {
             result.msg = "账户不存在或者密码错误";
             result.status = "error";
         }
         else {
-            console.log("查询后的信息为:");
-            console.log(hadUser);
+            // console.log("查询后的信息为:");
+            // console.log(hadUser);
             result.msg = "用户登录成功!";
             result.status = "success";
         }
@@ -133,7 +133,7 @@ exports.login = (ctx) => __awaiter(this, void 0, void 0, function* () {
             return (ctx.body = dataHandle_1.error(result.msg));
         }
         else {
-            console.log("result", result);
+            // console.log("result", result);
             const { userName, _id, msg, avatar, regDate, email, role } = hadUser;
             const token = jwt.sign({
                 userId: _id,
@@ -223,7 +223,7 @@ exports.updateUser = (ctx) => __awaiter(this, void 0, void 0, function* () {
             .isEmail("输入的邮箱格式不正确!").value
         : undefined;
     if (ctx.errors) {
-        console.log(ctx.errors);
+        // console.log(ctx.errors);
         return (ctx.body = dataHandle_1.error("用户数据不正常,更新失败!"));
     }
     const user = yield controllers_1.FindUserById(userId);

@@ -1,16 +1,15 @@
-import { error, success } from '../utils/dataHandle';
 import {
   AddInterface,
-  RemoveInterface,
-  UpdateInterface,
+  AddMessage,
+  CheckInterfaceExist,
   FindInterfaceById,
   FindInterfaceListById,
-  CheckInterfaceExist,
   FindProjectById,
   FindUserById,
-  AddMessage
-
+  RemoveInterface,
+  UpdateInterface
 } from '../db/controllers/index';
+import { error, success } from '../utils/dataHandle';
 const _ = require('lodash')
 const field = require('../db/models/field')
 
@@ -26,7 +25,7 @@ export const addInterface = async (ctx: any) => {
     return ctx.body = error('用户数据不正常,添加失败!')
   }
   const exist = await CheckInterfaceExist(projectId, url, method)
-  console.log(exist)
+  // console.log(exist)
   if (exist) {
     return ctx.body = error('接口已经存在!')
   } else {
@@ -130,10 +129,10 @@ export const cloneInterface = async (ctx: any) => {
   const oldInterface = await FindInterfaceById(interfaceId)
   // 洗下接口数据
   // const cleanInterface = oldInterface.map((item: InterfaceData) => _.pick(item, field.pureInterfaceField))
-  console.log(oldInterface)
+  // console.log(oldInterface)
   const cleanInterface = _.pick(oldInterface, field.pureInterfaceField)
   cleanInterface.projectId = projectId
-  console.log(cleanInterface)
+  // console.log(cleanInterface)
   const result = await AddInterface(cleanInterface)
   return ctx.body = success({}, '克隆成功!')
 }

@@ -46,7 +46,7 @@ export function uploadFile(ctx: any, options: any) {
   const mkdirResult = mkdirsSync(filePath)
 
   return new Promise((resolve, reject) => {
-    console.log('文件上传中...')
+    // console.log('文件上传中...')
     const result: any = {
       success: false,
       formData: {},
@@ -58,7 +58,7 @@ export function uploadFile(ctx: any, options: any) {
     busboy.on('file', function (fieldname: any, file: any, filename: any, encoding: any, mimetype: any) {
       const fileName = Math.random().toString(16).substr(2) + '.' + getSuffixName(filename)
       if (getSuffixName(filename) === 'PNG' || getSuffixName(filename) === 'JPG') {
-        console.log('getSuffixName(filename)', getSuffixName(filename))
+        // console.log('getSuffixName(filename)', getSuffixName(filename))
         const _uploadFilePath = path.join(filePath, fileName)
         const saveTo = path.join(_uploadFilePath)
 
@@ -71,13 +71,13 @@ export function uploadFile(ctx: any, options: any) {
           result.image = fileName
           // result.save = saveTo
           result.message = '文件上传成功'
-          console.log('文件上传成功！')
+          // console.log('文件上传成功！')
         })
       } else {
         result.success = false
         result.image = ''
         result.message = '文件类型非法!'
-        console.log('非法文件')
+        // console.log('非法文件')
         resolve(result)
         return req.pipe(busboy)
       }
@@ -86,19 +86,19 @@ export function uploadFile(ctx: any, options: any) {
 
     // 解析表单中其他字段信息
     busboy.on('field', function (fieldname: any, val: any, fieldnameTruncated: any, valTruncated: any, encoding: any, mimetype: any) {
-      console.log('表单字段数据 [' + fieldname + ']: value: ' + inspect(val));
+      // console.log('表单字段数据 [' + fieldname + ']: value: ' + inspect(val));
       result.formData[fieldname] = inspect(val);
     });
 
     // 解析结束事件
     busboy.on('finish', function () {
-      console.log('文件上结束')
+      // console.log('文件上结束')
       resolve(result)
     })
 
     // 解析错误事件
     busboy.on('error', function (err: any) {
-      console.log('文件上出错')
+      // console.log('文件上出错')
       reject(result)
     })
 
