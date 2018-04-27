@@ -52,7 +52,7 @@ exports.UpdateDocument = (document) => __awaiter(this, void 0, void 0, function*
             desc: document.desc,
             name: document.name,
             ownerId: document.ownerId,
-            ownerName: document.ownerName,
+            ownerName: document.ownerId,
             assign: document.assign,
             type: document.type
         }
