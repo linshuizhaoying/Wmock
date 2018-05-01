@@ -2,6 +2,7 @@ import * as jwt from "jsonwebtoken";
 
 import {
   AddDocument,
+  AddModel,
   AddRegUser,
   FindUserByEmail,
   FindUserById,
@@ -95,6 +96,12 @@ export const reg = async (ctx: any) => {
     initUserApiDocumentData.ownerId = result.userId;
     initUserApiDocumentData.ownerName = result.userId;
     await AddDocument(initUserApiDocumentData);
+    // 初始化用户自定义模型模板
+    const initUserAdvanceModelData: ModelData = JSON.parse(
+      mockEaxmple.AdvanceModelTemplate
+    );
+    initUserAdvanceModelData.userId = result.userId;
+    await AddModel(initUserAdvanceModelData);
 
     return (ctx.body = success(
       {
