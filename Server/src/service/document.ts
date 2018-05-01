@@ -4,7 +4,9 @@ import {
   AllDocument,
   FindTeamByProjectId,
   FindUserById,
+  RecoverDocument,
   RemoveDocument,
+  RemovedDocumentList,
   UpdateDocument
 } from "../db/controllers/index";
 import { error, success } from "../utils/dataHandle";
@@ -133,4 +135,32 @@ export const removeDocument = async (ctx: any) => {
   const { id } = ctx.request.body;
   await RemoveDocument(id);
   return (ctx.body = success({}, "删除成功!"));
+};
+
+export const removedDocumentList = async (ctx: any) => {
+  const { userId } = ctx.tokenContent;
+  // 获取误删接口信息
+  const DocumentList = await RemovedDocumentList();
+  const result: any = [];
+  await Promise.all(DocumentList.map(async (item: any) => {
+    const master = await FindUserById(item.ownerId)
+    const documentData = {
+      _id: item._id,
+      masterName: master.userName,
+      version: item.version,
+      name: item.name,
+      desc: item.desc,
+      type: item.type
+    }
+    result.push(documentData);
+    return item
+  }));
+  return (ctx.body = success(result, "获取成功"));
+};
+
+
+export const recoverDocument = async (ctx: any) => {
+  const data: AdvanceAny = ctx.request.body;
+  await RecoverDocument(data.DocumentId);
+  return (ctx.body = success({}, "恢复成功!"));
 };

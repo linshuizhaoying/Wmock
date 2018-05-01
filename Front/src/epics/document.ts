@@ -1,4 +1,6 @@
 import * as fetch from "../service/fetch";
+import * as io from "socket.io-client";
+
 import {
   ADD_DOCUMENT,
   ERROR_DOCUMENT,
@@ -7,29 +9,35 @@ import {
   NOTHING,
   RECEIVE_DOCUMENT,
   RECEIVE_DOCUMENTMESSAGES,
+  RECEIVE_REMOVEDDOCUMENT,
+  RECOVER_DOCUMENT,
+  REMOVED_DOCUMENT,
   REMOVE_DOCUMENT,
   REMOVE_LOCALDOCUMENT,
   UPDATE_DOCUMENT,
   UPDATE_LOCALDOCUMENT
 } from "../constants/document";
 import {
-  addDocument,
-  documentList,
-  removeDocument,
-  updateDocument,
-  documentMessages
-} from "../service/api";
-import { errorMsg, successMsg } from "../actions/index";
-import { combineEpics } from "redux-observable";
-import {
   LOADING_ERROR,
   LOADING_START,
   LOADING_SUCCESS
 } from "../constants/loading";
+import {
+  addDocument,
+  documentList,
+  documentMessages,
+  recoverDocument,
+  removeDocument,
+  removedDocumentList,
+  updateDocument
+} from "../service/api";
+import { errorMsg, successMsg } from "../actions/index";
+
 import { Observable } from "rxjs/Observable";
 import { Response } from "./typing";
-import * as io from "socket.io-client";
 import { baseUrl } from "../service/api";
+import { combineEpics } from "redux-observable";
+
 const socket = io(baseUrl);
 
 export const loadingStart = () => ({ type: LOADING_START });
@@ -41,6 +49,10 @@ export const documentReceive = (data: Document) => ({
 });
 export const documentMessagesReceive = (data: Document) => ({
   type: RECEIVE_DOCUMENTMESSAGES,
+  data: data
+});
+export const removedDocumentListReceive = (data: Project) => ({
+  type: RECEIVE_REMOVEDDOCUMENT,
   data: data
 });
 export const updateLocalDocument = (data: Document) => ({
@@ -78,6 +90,52 @@ export const fetchAllDocument = (action$: EpicAction) =>
     );
   });
 
+export const fetchRemovedDocumentList = (action$: EpicAction) =>
+  action$.ofType(REMOVED_DOCUMENT).mergeMap((action: Action) => {
+    return (
+      fetch
+        .get(removedDocumentList)
+        .map((response: Response) => {
+          if (response.state.code === 1) {
+            let temp = response.data.data;
+            return removedDocumentListReceive(temp);
+          } else {
+            return errorMsg(response.state.msg);
+          }
+        })
+        // 只有服务器崩溃才捕捉错误
+        .catch((e: Error): Observable<Action> => {
+          return Observable.of({ type: ERROR_DOCUMENT }).startWith(
+            loadingError()
+          );
+        })
+        .startWith(loadingSuccess())
+        .delay(200)
+        .startWith(loadingStart())
+    );
+  });
+export const ErecoverDocument = (action$: EpicAction) =>
+  action$.ofType(RECOVER_DOCUMENT).mergeMap((action: Action) => {
+    return (
+      fetch
+        .post(recoverDocument, action.data)
+        .map((response: Response) => {
+          if (response.state.code === 1) {
+            successMsg(response.state.msg);
+            return nothing();
+          } else {
+            errorMsg(response.state.msg);
+            return nothing();
+          }
+        })
+        // 只有服务器崩溃才捕捉错误
+        .catch((e: Error): Observable<Action> => {
+          return Observable.of({ type: ERROR_DOCUMENT }).startWith(
+            loadingError()
+          );
+        })
+    );
+  });
 export const fetchDocumentMessages = (action$: EpicAction) =>
   action$.ofType(FETCH_DOCUMENTMESSAGES).mergeMap((action: Action) => {
     return (
@@ -181,5 +239,7 @@ export default combineEpics(
   fetchDocumentMessages,
   EupdateDocument,
   EaddDocument,
-  EremoveDocument
+  EremoveDocument,
+  fetchRemovedDocumentList,
+  ErecoverDocument
 );

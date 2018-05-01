@@ -7,6 +7,7 @@ const InterfaceSchema = new mongoose.Schema({
   method: { type: String },
   desc: { type: String },
   mode: { type: String },
+  visible: { type: Boolean, default: true }
 });
 
 module.exports = mongoose.model('Interface', InterfaceSchema);

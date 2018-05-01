@@ -16,6 +16,7 @@ export default async(ctx: any, next: any) => {
     }
     ctx.throw(401, '无效的token')
   }
+  tokenContent = await jwt.verify(authorization, config.app.keys)
   // 将token解析的数据传递到下一个中间层、
   ctx.token = authorization
   ctx.tokenContent = tokenContent

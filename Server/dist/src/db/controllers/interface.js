@@ -20,7 +20,10 @@ exports.FindInterfaceByMock = (projectId, url, method) => __awaiter(this, void 0
 });
 // 获取项目Id相同的接口
 exports.InterfaceList = (projectId) => __awaiter(this, void 0, void 0, function* () {
-    return yield Interface.find({ projectId: projectId });
+    return yield Interface.find({ projectId: projectId, visible: true });
+});
+exports.RemovedInterfaceList = () => __awaiter(this, void 0, void 0, function* () {
+    return yield Interface.find({ visible: false });
 });
 exports.CheckInterfaceExist = (projectId, url, method) => __awaiter(this, void 0, void 0, function* () {
     let result;
@@ -47,8 +50,21 @@ exports.AddInterface = (interfaceItem) => __awaiter(this, void 0, void 0, functi
     return result;
 });
 exports.RemoveInterface = (interfaceId) => __awaiter(this, void 0, void 0, function* () {
-    return Interface.remove({
+    return Interface.update({
         _id: interfaceId
+    }, {
+        $set: {
+            visible: false
+        }
+    });
+});
+exports.RecoverInterface = (interfaceId) => __awaiter(this, void 0, void 0, function* () {
+    return Interface.update({
+        _id: interfaceId
+    }, {
+        $set: {
+            visible: true
+        }
     });
 });
 exports.UpdateInterface = (interfaceItem) => __awaiter(this, void 0, void 0, function* () {

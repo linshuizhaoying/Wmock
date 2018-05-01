@@ -10,12 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Irouter = require("koa-router");
 const Service = require("../service");
+const isAdmin_1 = require("../middleware/isAdmin");
 const token_1 = require("../middleware/token");
 const path = require('path');
 const middleware = require('../middleware/index');
 const router = new Irouter();
 exports.Router = (app) => {
-    const { reg, login, tokenLogin, userInfo, updateUser, messagesList, userProjectList, demoProjectList, allProjectList, documentList, documentMessages, removeDocument, addDocument, updateDocument, uploadFile, teamList, sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember, mock, unJoinProjectList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject, addInterface, removeInterface, updateInterface, cloneInterface, baseModelList, customModelList, addModel, updateModel, removeModel, } = Service;
+    const { reg, login, tokenLogin, userInfo, updateUser, messagesList, userProjectList, demoProjectList, allProjectList, removedInterfaceList, recoverInterface, removedProjectList, recoverProject, documentList, documentMessages, removeDocument, addDocument, updateDocument, removedDocumentList, recoverDocument, uploadFile, teamList, sendApply, allowedJoinGroup, rejectJoinGroup, removeGroupMember, invitedGroupMember, mock, unJoinProjectList, addProject, removeProject, updateProject, importProject, cloneProject, verifyProject, addInterface, removeInterface, updateInterface, cloneInterface, baseModelList, customModelList, addModel, updateModel, removeModel, } = Service;
     router.post('/api/reg', Service.reg)
         .post('/api/login', Service.login)
         .get('/api/userInfo', token_1.default, Service.userInfo)
@@ -24,6 +25,10 @@ exports.Router = (app) => {
         .get('/api/messagesList', token_1.default, Service.messagesList)
         .get('/api/allProjectList', token_1.default, Service.allProjectList)
         .get('/api/demoList', token_1.default, Service.demoProjectList)
+        .get('/api/removedInterfaceList', token_1.default, isAdmin_1.default, Service.removedInterfaceList)
+        .post('/api/recoverInterface', token_1.default, isAdmin_1.default, Service.recoverInterface)
+        .get('/api/removedProjectList', token_1.default, isAdmin_1.default, Service.removedProjectList)
+        .post('/api/recoverProject', token_1.default, isAdmin_1.default, Service.recoverProject)
         .get('/api/projectList', token_1.default, Service.userProjectList)
         .get('/api/unJoinProjectList', token_1.default, Service.unJoinProjectList)
         .post('/api/addProject', token_1.default, Service.addProject)
@@ -47,6 +52,8 @@ exports.Router = (app) => {
         .post('/api/addDocument', token_1.default, Service.addDocument)
         .post('/api/updateDocument', token_1.default, Service.updateDocument)
         .post('/api/removeDocument', token_1.default, Service.removeDocument)
+        .get('/api/removedDocumentList', token_1.default, isAdmin_1.default, Service.removedDocumentList)
+        .post('/api/recoverDocument', token_1.default, isAdmin_1.default, Service.recoverDocument)
         .get('/api/baseModelList', token_1.default, Service.baseModelList)
         .get('/api/customModelList', token_1.default, Service.customModelList)
         .post('/api/addModel', token_1.default, Service.addModel)

@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Project = require("../models/project");
 const team_1 = require("./team");
 exports.FindProjectListByUserId = (userId) => __awaiter(this, void 0, void 0, function* () {
-    const allProject = yield Project.find({});
+    const allProject = yield Project.find({ visible: true });
     // 返回与用户相关的所有项目
     const relatedProjectMap = new Map();
     yield Promise.all(allProject.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
@@ -36,7 +36,7 @@ exports.FindProjectListByUserId = (userId) => __awaiter(this, void 0, void 0, fu
     return relatedProjectMap;
 });
 exports.FindProjectDataListByUserId = (userId) => __awaiter(this, void 0, void 0, function* () {
-    const allProject = yield Project.find({});
+    const allProject = yield Project.find({ visible: true });
     // 返回与用户相关的所有项目
     const relatedProjectList = [];
     yield Promise.all(allProject.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
@@ -67,7 +67,10 @@ exports.FindProjectById = (projectId) => __awaiter(this, void 0, void 0, functio
     return yield Project.findOne({ _id: projectId });
 });
 exports.AllProjectList = () => __awaiter(this, void 0, void 0, function* () {
-    return yield Project.find();
+    return yield Project.find({ visible: true });
+});
+exports.RemovedProjectList = () => __awaiter(this, void 0, void 0, function* () {
+    return yield Project.find({ visible: false });
 });
 exports.DemoProject = (userId) => __awaiter(this, void 0, void 0, function* () {
     // const projectMap = await FindProjectListByUserId(userId)
@@ -79,7 +82,7 @@ exports.DemoProject = (userId) => __awaiter(this, void 0, void 0, function* () {
     //   }
     // }
     // return projectList
-    return yield Project.find({ masterId: userId, type: "demo" });
+    return yield Project.find({ masterId: userId, type: "demo", visible: true });
 });
 exports.UserProject = (userId) => __awaiter(this, void 0, void 0, function* () {
     // return await Project.find({ masterId: userId, type: 'user' })
@@ -95,7 +98,7 @@ exports.UserProject = (userId) => __awaiter(this, void 0, void 0, function* () {
 });
 exports.UnJoinProjectList = (userId) => __awaiter(this, void 0, void 0, function* () {
     // console.log(userId);
-    const allProject = yield Project.find({});
+    const allProject = yield Project.find({ visible: true });
     const unJoinList = [];
     yield Promise.all(allProject.map((oldItem) => __awaiter(this, void 0, void 0, function* () {
         if (oldItem.type !== "demo") {
@@ -161,8 +164,21 @@ exports.UpdateProject = (project) => __awaiter(this, void 0, void 0, function* (
     });
 });
 exports.RemoveProject = (id) => __awaiter(this, void 0, void 0, function* () {
-    return Project.remove({
+    return Project.update({
         _id: id
+    }, {
+        $set: {
+            visible: false
+        }
+    });
+});
+exports.RecoverProject = (projectId) => __awaiter(this, void 0, void 0, function* () {
+    return Project.update({
+        _id: projectId
+    }, {
+        $set: {
+            visible: true
+        }
     });
 });
 //# sourceMappingURL=project.js.map

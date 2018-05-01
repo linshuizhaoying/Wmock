@@ -14,8 +14,13 @@ export const FindInterfaceByMock = async (projectId: string, url: string, method
 // 获取项目Id相同的接口
 
 export const InterfaceList = async (projectId: string) => {
-  return await Interface.find({ projectId: projectId })
+  return await Interface.find({ projectId: projectId, visible: true  })
 }
+
+export const RemovedInterfaceList = async () => {
+  return await Interface.find({ visible: false })
+}
+
 export const CheckInterfaceExist = async (projectId: string, url: string, method: string) => {
   let result
   await Interface.findOne({
@@ -43,8 +48,22 @@ export const AddInterface = async (interfaceItem: InterfaceData) => {
 }
 
 export const RemoveInterface = async (interfaceId: string) => {
-  return Interface.remove({
+  return Interface.update({
     _id: interfaceId
+  }, {
+    $set: {
+      visible: false
+    }
+  })
+}
+
+export const RecoverInterface = async (interfaceId: string) => {
+  return Interface.update({
+    _id: interfaceId
+  }, {
+    $set: {
+      visible: true
+    }
   })
 }
 

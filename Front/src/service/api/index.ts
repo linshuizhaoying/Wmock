@@ -29,6 +29,14 @@ export const allProjectList = baseUrl + '/api/allProjectList';
 
 export const projectList = baseUrl + '/api/projectList';
 
+export const removedInterfaceList = baseUrl + '/api/removedInterfaceList';
+
+export const recoverInterface = baseUrl + '/api/recoverInterface';
+
+export const removedProjectList = baseUrl + '/api/removedProjectList';
+
+export const recoverProject = baseUrl + '/api/recoverProject';
+
 export const addProject = baseUrl + '/api/addProject';
 
 export const updateProject = baseUrl + '/api/updateProject';
@@ -81,7 +89,8 @@ export const documentMessages = baseUrl + '/api/documentMessages'
 export const updateDocument = baseUrl + '/api/updateDocument';
 export const removeDocument = baseUrl + '/api/removeDocument';
 export const addDocument = baseUrl + '/api/addDocument';
-
+export const removedDocumentList = baseUrl + '/api/removedDocumentList';
+export const recoverDocument = baseUrl + '/api/recoverDocument';
 // mock模型
 export const baseModelList = baseUrl + '/api/baseModelList';
 export const customModelList = baseUrl + '/api/customModelList';

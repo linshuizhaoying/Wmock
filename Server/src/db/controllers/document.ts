@@ -1,7 +1,7 @@
 const Document = require("../models/document");
 
 export const AllDocument = async () => {
-  return await Document.find()
+  return await Document.find({ visible: true })
     .populate({
       path: "ownerName",
       select: "-_id userName"
@@ -12,6 +12,11 @@ export const AllDocument = async () => {
       });
     });
 };
+
+export const RemovedDocumentList = async () => {
+  return await Document.find({ visible: false })
+}
+
 export const FindDocumentById = async (documentId: string) => {
   const result = await Document.findOne({ _id: documentId }).populate({
     path: "ownerName",
@@ -56,7 +61,22 @@ export const UpdateDocument = async (document: DocumentData) => {
 };
 
 export const RemoveDocument = async (id: string) => {
-  return Document.remove({
+  return Document.update({
     _id: id
-  });
+  }, {
+    $set: {
+      visible: false
+    }
+  })
 };
+
+
+export const RecoverDocument = async (DocumentId: string) => {
+  return Document.update({
+    _id: DocumentId
+  }, {
+    $set: {
+      visible: true
+    }
+  })
+}

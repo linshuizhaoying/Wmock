@@ -2,6 +2,7 @@ import * as Irouter from 'koa-router';
 import * as Service from '../service';
 
 import { config } from '../config';
+import isAdmin from '../middleware/isAdmin'
 import tokenPermission from '../middleware/token';
 
 const path = require('path');
@@ -21,12 +22,18 @@ export const Router = (app: any) => {
     userProjectList,
     demoProjectList,
     allProjectList,
+    removedInterfaceList,
+    recoverInterface,
+    removedProjectList,
+    recoverProject,
 
     documentList,
     documentMessages,
     removeDocument,
     addDocument,
     updateDocument,
+    removedDocumentList,
+    recoverDocument,
     uploadFile,
 
     teamList,
@@ -72,6 +79,14 @@ export const Router = (app: any) => {
     .get('/api/allProjectList', tokenPermission, Service.allProjectList)
     // 获取示例项目列表
     .get('/api/demoList', tokenPermission, Service.demoProjectList)
+    // 获取被误删的接口列表
+    .get('/api/removedInterfaceList', tokenPermission, isAdmin, Service.removedInterfaceList)
+    // 恢复被误删的接口
+    .post('/api/recoverInterface', tokenPermission, isAdmin, Service.recoverInterface)
+    // 获取被误删的项目列表
+    .get('/api/removedProjectList', tokenPermission, isAdmin, Service.removedProjectList)
+    // 恢复被误删的项目
+    .post('/api/recoverProject', tokenPermission, isAdmin, Service.recoverProject)
     // 获取用户项目列表
     .get('/api/projectList', tokenPermission, Service.userProjectList)
     // 获取未加入的项目列表
@@ -121,7 +136,10 @@ export const Router = (app: any) => {
     .post('/api/updateDocument', tokenPermission, Service.updateDocument)
     // 删除文档
     .post('/api/removeDocument', tokenPermission, Service.removeDocument)
-
+    // 获取被误删的文档列表
+    .get('/api/removedDocumentList', tokenPermission, isAdmin, Service.removedDocumentList)
+    // 恢复被误删的文档
+    .post('/api/recoverDocument', tokenPermission, isAdmin, Service.recoverDocument)
     // 获取Mock模型
     .get('/api/baseModelList', tokenPermission, Service.baseModelList)
     .get('/api/customModelList', tokenPermission, Service.customModelList)

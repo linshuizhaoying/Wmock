@@ -111,4 +111,29 @@ exports.removeDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {
     yield index_1.RemoveDocument(id);
     return (ctx.body = dataHandle_1.success({}, "删除成功!"));
 });
+exports.removedDocumentList = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const { userId } = ctx.tokenContent;
+    // 获取误删接口信息
+    const DocumentList = yield index_1.RemovedDocumentList();
+    const result = [];
+    yield Promise.all(DocumentList.map((item) => __awaiter(this, void 0, void 0, function* () {
+        const master = yield index_1.FindUserById(item.ownerId);
+        const documentData = {
+            _id: item._id,
+            masterName: master.userName,
+            version: item.version,
+            name: item.name,
+            desc: item.desc,
+            type: item.type
+        };
+        result.push(documentData);
+        return item;
+    })));
+    return (ctx.body = dataHandle_1.success(result, "获取成功"));
+});
+exports.recoverDocument = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const data = ctx.request.body;
+    yield index_1.RecoverDocument(data.DocumentId);
+    return (ctx.body = dataHandle_1.success({}, "恢复成功!"));
+});
 //# sourceMappingURL=document.js.map

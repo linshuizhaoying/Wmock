@@ -3,7 +3,6 @@ import {
   AddMessage,
   AddProject,
   AddTeam,
-  UpdateTeamName,
   AllProjectList,
   DemoProject,
   FindProjectById,
@@ -11,17 +10,22 @@ import {
   FindTeamByProjectId,
   FindUserById,
   InterfaceList,
+  RecoverProject,
   RemoveInterface,
   RemoveProject,
+  RemovedProjectList,
   UnJoinProjectList,
   UpdateProject,
+  UpdateTeamName,
   UserProject
 } from "../db/controllers/index";
-import { cloneInterfaceItem } from "./interface";
 import { error, success } from "../utils/dataHandle";
+
+import { cloneInterfaceItem } from "./interface";
+import { getModeMock } from "./mock";
 import { getRemoteData } from "./mock";
 import { isEqual } from "../utils/tools";
-import { getModeMock } from "./mock";
+
 const _ = require("lodash");
 const field = require("../db/models/field");
 
@@ -93,7 +97,6 @@ export const allProjectList = async (ctx: any) => {
   const projectList = data.map((item: ProjectData) =>
     _.pick(item, field.projectList)
   );
-
   // const projectList = data.map((item: ProjectData) => _.pick(item, field.projectList))
 
   return (ctx.body = success(projectList, "获取成功"));
@@ -410,4 +413,34 @@ export const verifyProject = async (ctx: any) => {
     },
     "验证成功"
   ));
+};
+
+
+export const removedProjectList = async (ctx: any) => {
+  const { userId } = ctx.tokenContent;
+  // 获取误删接口信息
+  const ProjectList = await RemovedProjectList();
+  const result: any = [];
+  await Promise.all(ProjectList.map(async (item: any) => {
+    const master = await FindUserById(item.masterId)
+    const projectData = {
+      _id: item._id,
+      masterName: master.userName,
+      version: item.version,
+      interfaceName: item.interfaceName,
+      projectUrl: item.projectUrl,
+      type: item.type,
+      projectName: item.projectName,
+    }
+    result.push(projectData);
+    return item
+  }));
+  return (ctx.body = success(result, "获取成功"));
+};
+
+
+export const recoverProject = async (ctx: any) => {
+  const data: AdvanceAny = ctx.request.body;
+  await RecoverProject(data.projectId);
+  return (ctx.body = success({}, "恢复成功!"));
 };

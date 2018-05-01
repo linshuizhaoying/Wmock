@@ -9,11 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../db/controllers/index");
-const interface_1 = require("./interface");
 const dataHandle_1 = require("../utils/dataHandle");
+const interface_1 = require("./interface");
 const mock_1 = require("./mock");
-const tools_1 = require("../utils/tools");
 const mock_2 = require("./mock");
+const tools_1 = require("../utils/tools");
 const _ = require("lodash");
 const field = require("../db/models/field");
 const getProjectList = (projectList, userType = "user") => __awaiter(this, void 0, void 0, function* () {
@@ -314,7 +314,7 @@ exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const verifyResult = [];
     let allMatch = true;
     yield Promise.all(yield interfaceListData.map((item) => __awaiter(this, void 0, void 0, function* () {
-        const remoteData = yield mock_1.getRemoteData(item.method, project.transferUrl + "/" + item.url);
+        const remoteData = yield mock_2.getRemoteData(item.method, project.transferUrl + "/" + item.url);
         // const diffResult = await FindDifferent(item.mode, remoteData)
         const formatData = {
             interfaceName: "",
@@ -324,7 +324,7 @@ exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
         };
         formatData.interfaceName = item.interfaceName;
         try {
-            formatData.expect = yield mock_2.getModeMock(item.mode);
+            formatData.expect = yield mock_1.getModeMock(item.mode);
             // formatData.expect =
             //   JSON.parse(JSON.parse(JSON.stringify(item.mode)
             //     .replace(/\n/g, '')
@@ -350,5 +350,31 @@ exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
         result: allMatch ? "yes" : "no",
         data: verifyResult
     }, "验证成功"));
+});
+exports.removedProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const { userId } = ctx.tokenContent;
+    // 获取误删接口信息
+    const ProjectList = yield index_1.RemovedProjectList();
+    const result = [];
+    yield Promise.all(ProjectList.map((item) => __awaiter(this, void 0, void 0, function* () {
+        const master = yield index_1.FindUserById(item.masterId);
+        const projectData = {
+            _id: item._id,
+            masterName: master.userName,
+            version: item.version,
+            interfaceName: item.interfaceName,
+            projectUrl: item.projectUrl,
+            type: item.type,
+            projectName: item.projectName,
+        };
+        result.push(projectData);
+        return item;
+    })));
+    return (ctx.body = dataHandle_1.success(result, "获取成功"));
+});
+exports.recoverProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
+    const data = ctx.request.body;
+    yield index_1.RecoverProject(data.projectId);
+    return (ctx.body = dataHandle_1.success({}, "恢复成功!"));
 });
 //# sourceMappingURL=project.js.map

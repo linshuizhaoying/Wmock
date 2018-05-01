@@ -1,14 +1,15 @@
 import {
+  ERROR_DOCUMENT,
   RECEIVE_DOCUMENT,
   RECEIVE_DOCUMENTMESSAGES,
-  ERROR_DOCUMENT,
+  RECEIVE_REMOVEDDOCUMENT,
   REMOVE_LOCALDOCUMENT,
   UPDATE_LOCALDOCUMENT
-  // ADD_MESSAGE
 } from '../constants/document';
 const initialState = {
   data: [],
-  documentMessages: []
+  documentMessages: [],
+  removedDocumentList: []
 }
 const removeDocument = (list: Array<Document>, id: Id) => {
   let temp: Array<Document> = []
@@ -62,6 +63,11 @@ const document = (state = initialState, action: Action) => {
         ...state,
         data: updateDocument(state.data, action.data),
       }
+    case RECEIVE_REMOVEDDOCUMENT:
+      return {
+        ...state,
+        removedDocumentList: action.data
+      }    
     default:
       return state
   }

@@ -10,6 +10,7 @@ const DocumentSchema = new mongoose.Schema({
     ref: "User"
   },
   assign: [],
+  visible: { type: Boolean, default: true },
   type: { type: String } // project other  spec
 });
 

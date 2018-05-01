@@ -8,7 +8,8 @@ const ProjectSchema = new mongoose.Schema({
   transferUrl: { type: String },
   status: { type: String, default: 'mock' }, // mock || transfer
   type: { type: String },
-  masterId: { type: String }
+  masterId: { type: String },
+  visible: { type: Boolean, default: true }
 });
 
 module.exports = mongoose.model('Project', ProjectSchema);

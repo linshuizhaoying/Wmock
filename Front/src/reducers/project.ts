@@ -1,10 +1,12 @@
 import {
   ERROR_PROJECT,
+  RECEIVE_ALLPROJECT,
   RECEIVE_DEMO,
   RECEIVE_PROJECT,
+  RECEIVE_REMOVEDINTERFACE,
+  RECEIVE_REMOVEDPROJECT,
   RECEIVE_UNJOINPROJECT,
   RECEIVE_VERIFYPROJECT,
-  RECEIVE_ALLPROJECT,
   REMOVE_LOCALINTERFACE,
   REMOVE_LOCALPROJECT,
   UPDATE_LOCALINTERFACE,
@@ -15,7 +17,9 @@ const initialState = {
   unJoinList: [],
   demo: [],
   verify: '',
-  allProjectList: []
+  allProjectList: [],
+  removedInterfaceList: [],
+  removedProjectList: []
 }
 const updateProject = (list: Array<Project>, projectData: Project) => {
   const temp: Array<Project> = []
@@ -129,6 +133,16 @@ const project = (state = initialState, action: Action) => {
         ...state,
         allProjectList: action.data
       }
+    case RECEIVE_REMOVEDINTERFACE:
+    return {
+      ...state,
+      removedInterfaceList: action.data
+    }  
+    case RECEIVE_REMOVEDPROJECT:
+    return {
+      ...state,
+      removedProjectList: action.data
+    }    
     default:
       return state
   }

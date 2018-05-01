@@ -8,6 +8,10 @@ import {
   FETCH_PROJECT,
   FETCH_UNJOINPROJECT,
   IMPORT_PROJECT,
+  RECOVER_INTERFACE,
+  RECOVER_PROJECT,
+  REMOVED_INTERFACE,
+  REMOVED_PROJECT,
   REMOVE_INTERFACE,
   REMOVE_PROJECT,
   UPDATE_INTERFACE,
@@ -21,6 +25,24 @@ const fetchProjectData = () => ({
 
 const allProjectListData = () => ({
   type: ALL_PROJECT
+})
+
+const removedInterfaceListData = () => ({
+  type: REMOVED_INTERFACE
+})
+
+const recoverInterfaceData = (data: AdvanceAny) => ({
+  type: RECOVER_INTERFACE,
+  data: data
+})
+
+const removedProjectListData = () => ({
+  type: REMOVED_PROJECT
+})
+
+const recoverProjectData = (data: AdvanceAny) => ({
+  type: RECOVER_PROJECT,
+  data: data
 })
 
 const importProjectData = (project: Project) => ({
@@ -86,9 +108,34 @@ export function fetchProject() {
     dispatch(fetchProjectData())
   }
 }
+
 export function allProjectList() {
   return (dispatch: Function) => {
     dispatch(allProjectListData())
+  }
+}
+
+export function fetchRemovedInterfaceList() {
+  return (dispatch: Function) => {
+    dispatch(removedInterfaceListData())
+  }
+}
+
+export function recoverInterface(data: AdvanceAny) {
+  return (dispatch: Function) => {
+    dispatch(recoverInterfaceData(data))
+  }
+}
+
+export function fetchRemovedProjectList() {
+  return (dispatch: Function) => {
+    dispatch(removedProjectListData())
+  }
+}
+
+export function recoverProject(data: AdvanceAny) {
+  return (dispatch: Function) => {
+    dispatch(recoverProjectData(data))
   }
 }
 

@@ -1,20 +1,31 @@
-import notification from 'antd/lib/notification';
 import {
   ADD_DOCUMENT,
   FETCH_DOCUMENT,
   FETCH_DOCUMENTMESSAGES,
+  RECOVER_DOCUMENT,
+  REMOVED_DOCUMENT,
   REMOVE_DOCUMENT,
   UPDATE_DOCUMENT
-  } from '../constants/document';
+} from '../constants/document';
+
+import notification from 'antd/lib/notification';
 
 const fetchDocumentData = () => ({
   type: FETCH_DOCUMENT,
-
 })
 
 const fetchDocumentMessagesData = (id: Id) => ({
   type: FETCH_DOCUMENTMESSAGES,
   data: id
+})
+
+const removedDocumentListData = () => ({
+  type: REMOVED_DOCUMENT
+})
+
+const recoverDocumentData = (data: AdvanceAny) => ({
+  type: RECOVER_DOCUMENT,
+  data: data
 })
 
 const addDocumentData = (document: Document) => ({
@@ -66,5 +77,17 @@ export function updateDocument(Document: Document) {
 export function addDocument(Document: Document) {
   return (dispatch: Function) => {
     dispatch(addDocumentData(Document))
+  }
+}
+
+export function fetchRemovedDocumentList() {
+  return (dispatch: Function) => {
+    dispatch(removedDocumentListData())
+  }
+}
+
+export function recoverDocument(data: AdvanceAny) {
+  return (dispatch: Function) => {
+    dispatch(recoverDocumentData(data))
   }
 }

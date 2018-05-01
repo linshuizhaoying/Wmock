@@ -3,7 +3,7 @@ const Project = require("../models/project");
 import { FindTeamByProjectId } from "./team";
 
 export const FindProjectListByUserId = async (userId: string) => {
-  const allProject = await Project.find({});
+  const allProject = await Project.find({ visible: true });
   // 返回与用户相关的所有项目
   const relatedProjectMap: any = new Map();
   await Promise.all(
@@ -30,7 +30,7 @@ export const FindProjectListByUserId = async (userId: string) => {
   return relatedProjectMap;
 };
 export const FindProjectDataListByUserId = async (userId: string) => {
-  const allProject = await Project.find({});
+  const allProject = await Project.find({ visible: true });
   // 返回与用户相关的所有项目
   const relatedProjectList: any = [];
   await Promise.all(
@@ -66,8 +66,13 @@ export const FindProjectById = async (projectId: string) => {
   return await Project.findOne({ _id: projectId });
 };
 export const AllProjectList = async () => {
-  return await Project.find();
+  return await Project.find({ visible: true });
 };
+
+export const RemovedProjectList = async () => {
+  return await Project.find({ visible: false })
+}
+
 
 export const DemoProject = async (userId: string) => {
   // const projectMap = await FindProjectListByUserId(userId)
@@ -80,7 +85,7 @@ export const DemoProject = async (userId: string) => {
   // }
 
   // return projectList
-  return await Project.find({ masterId: userId, type: "demo" });
+  return await Project.find({ masterId: userId, type: "demo" , visible: true });
 };
 
 export const UserProject = async (userId: string) => {
@@ -99,7 +104,7 @@ export const UserProject = async (userId: string) => {
 
 export const UnJoinProjectList = async (userId: string) => {
   // console.log(userId);
-  const allProject = await Project.find({});
+  const allProject = await Project.find({visible: true});
   const unJoinList: ProjectData[] = [];
   await Promise.all(
     allProject.map(async (oldItem: ProjectData) => {
@@ -174,7 +179,21 @@ export const UpdateProject = async (project: ProjectData) => {
 };
 
 export const RemoveProject = async (id: string) => {
-  return Project.remove({
+  return Project.update({
     _id: id
-  });
+  }, {
+    $set: {
+      visible: false
+    }
+  })
 };
+
+export const RecoverProject = async (projectId: string) => {
+  return Project.update({
+    _id: projectId
+  }, {
+    $set: {
+      visible: true
+    }
+  })
+}

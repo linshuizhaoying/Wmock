@@ -1,9 +1,10 @@
 import * as fetch from "../service/fetch";
+import * as io from "socket.io-client";
+
 import {
   ADD_INTERFACE,
   ADD_PROJECT,
   ALL_PROJECT,
-  RECEIVE_ALLPROJECT,
   CLONE_INTERFACE,
   CLONE_PROJECT,
   ERROR_PROJECT,
@@ -12,10 +13,17 @@ import {
   FETCH_UNJOINPROJECT,
   IMPORT_PROJECT,
   NOTHING,
+  RECEIVE_ALLPROJECT,
   RECEIVE_DEMO,
   RECEIVE_PROJECT,
+  RECEIVE_REMOVEDINTERFACE,
+  RECEIVE_REMOVEDPROJECT,
   RECEIVE_UNJOINPROJECT,
   RECEIVE_VERIFYPROJECT,
+  RECOVER_INTERFACE,
+  RECOVER_PROJECT,
+  REMOVED_INTERFACE,
+  REMOVED_PROJECT,
   REMOVE_INTERFACE,
   REMOVE_LOCALINTERFACE,
   REMOVE_LOCALPROJECT,
@@ -27,33 +35,37 @@ import {
   VERIFY_PROJECT
 } from "../constants/project";
 import {
+  LOADING_ERROR,
+  LOADING_START,
+  LOADING_SUCCESS
+} from "../constants/loading";
+import {
   addInterFace,
-  allProjectList,
   addProject,
+  allProjectList,
   cloneInterface,
   cloneProject,
   demoList,
   importProject,
   projectList,
+  recoverInterface,
+  recoverProject,
   removeInterFace,
   removeProject,
+  removedInterfaceList,
+  removedProjectList,
   unJoinProjectList,
   updateInterFace,
   updateProject,
   verifyProject
 } from "../service/api";
 import { errorMsg, successMsg } from "../actions/index";
-import { combineEpics } from "redux-observable";
-import {
-  LOADING_ERROR,
-  LOADING_START,
-  LOADING_SUCCESS
-} from "../constants/loading";
+
 import { Observable } from "rxjs/Observable";
 import { Response } from "./typing";
-
-import * as io from "socket.io-client";
 import { baseUrl } from "../service/api";
+import { combineEpics } from "redux-observable";
+
 const socket = io(baseUrl);
 
 export const loadingStart = () => ({ type: LOADING_START });
@@ -65,6 +77,14 @@ export const projectReceive = (data: Project) => ({
 });
 export const allProjectListReceive = (data: Project) => ({
   type: RECEIVE_ALLPROJECT,
+  data: data
+});
+export const removedInterfaceListReceive = (data: Project) => ({
+  type: RECEIVE_REMOVEDINTERFACE,
+  data: data
+});
+export const removedProjectListReceive = (data: Project) => ({
+  type: RECEIVE_REMOVEDPROJECT,
   data: data
 });
 export const demoReceive = (data: Project) => ({
@@ -123,6 +143,54 @@ export const fetchProject = (action$: EpicAction) =>
     );
   });
 
+export const fetchRemovedInterfaceList = (action$: EpicAction) =>
+  action$.ofType(REMOVED_INTERFACE).mergeMap((action: Action) => {
+    return (
+      fetch
+        .get(removedInterfaceList)
+        .map((response: Response) => {
+          if (response.state.code === 1) {
+            let temp = response.data.data;
+            return removedInterfaceListReceive(temp);
+          } else {
+            return errorMsg(response.state.msg);
+          }
+        })
+        // 只有服务器崩溃才捕捉错误
+        .catch((e: Error): Observable<Action> => {
+          return Observable.of({ type: ERROR_PROJECT }).startWith(
+            loadingError()
+          );
+        })
+        .startWith(loadingSuccess())
+        .delay(200)
+        .startWith(loadingStart())
+    );
+  });
+export const fetchRemovedProjectList = (action$: EpicAction) =>
+  action$.ofType(REMOVED_PROJECT).mergeMap((action: Action) => {
+    return (
+      fetch
+        .get(removedProjectList)
+        .map((response: Response) => {
+          if (response.state.code === 1) {
+            let temp = response.data.data;
+            return removedProjectListReceive(temp);
+          } else {
+            return errorMsg(response.state.msg);
+          }
+        })
+        // 只有服务器崩溃才捕捉错误
+        .catch((e: Error): Observable<Action> => {
+          return Observable.of({ type: ERROR_PROJECT }).startWith(
+            loadingError()
+          );
+        })
+        .startWith(loadingSuccess())
+        .delay(200)
+        .startWith(loadingStart())
+    );
+  });
 export const fetchAllProjectList = (action$: EpicAction) =>
   action$.ofType(ALL_PROJECT).mergeMap((action: Action) => {
     return (
@@ -147,7 +215,6 @@ export const fetchAllProjectList = (action$: EpicAction) =>
         .startWith(loadingStart())
     );
   });
-
 export const fetchUnJoinProject = (action$: EpicAction) =>
   action$.ofType(FETCH_UNJOINPROJECT).mergeMap((action: Action) => {
     return (
@@ -198,6 +265,50 @@ export const fetchDemo = (action$: EpicAction) =>
     );
   });
 
+export const ErecoverInterface = (action$: EpicAction) =>
+  action$.ofType(RECOVER_INTERFACE).mergeMap((action: Action) => {
+    return (
+      fetch
+        .post(recoverInterface, action.data)
+        .map((response: Response) => {
+          if (response.state.code === 1) {
+            successMsg(response.state.msg);
+            return nothing();
+          } else {
+            errorMsg(response.state.msg);
+            return nothing();
+          }
+        })
+        // 只有服务器崩溃才捕捉错误
+        .catch((e: Error): Observable<Action> => {
+          return Observable.of({ type: ERROR_PROJECT }).startWith(
+            loadingError()
+          );
+        })
+    );
+  });
+export const ErecoverProject = (action$: EpicAction) =>
+  action$.ofType(RECOVER_PROJECT).mergeMap((action: Action) => {
+    return (
+      fetch
+        .post(recoverProject, action.data)
+        .map((response: Response) => {
+          if (response.state.code === 1) {
+            successMsg(response.state.msg);
+            return nothing();
+          } else {
+            errorMsg(response.state.msg);
+            return nothing();
+          }
+        })
+        // 只有服务器崩溃才捕捉错误
+        .catch((e: Error): Observable<Action> => {
+          return Observable.of({ type: ERROR_PROJECT }).startWith(
+            loadingError()
+          );
+        })
+    );
+  });
 export const EupdateProject = (action$: EpicAction) =>
   action$.ofType(UPDATE_PROJECT).mergeMap((action: Action) => {
     return (
@@ -438,6 +549,10 @@ export default combineEpics(
   fetchProject,
   fetchUnJoinProject,
   fetchDemo,
+  fetchRemovedInterfaceList,
+  fetchRemovedProjectList,
+  ErecoverInterface,
+  ErecoverProject,
   EaddProject,
   EremoveProject,
   EupdateProject,

@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Document = require("../models/document");
 exports.AllDocument = () => __awaiter(this, void 0, void 0, function* () {
-    return yield Document.find()
+    return yield Document.find({ visible: true })
         .populate({
         path: "ownerName",
         select: "-_id userName"
@@ -20,6 +20,9 @@ exports.AllDocument = () => __awaiter(this, void 0, void 0, function* () {
             document.ownerName = document.ownerName.userName;
         });
     });
+});
+exports.RemovedDocumentList = () => __awaiter(this, void 0, void 0, function* () {
+    return yield Document.find({ visible: false });
 });
 exports.FindDocumentById = (documentId) => __awaiter(this, void 0, void 0, function* () {
     const result = yield Document.findOne({ _id: documentId }).populate({
@@ -59,8 +62,21 @@ exports.UpdateDocument = (document) => __awaiter(this, void 0, void 0, function*
     });
 });
 exports.RemoveDocument = (id) => __awaiter(this, void 0, void 0, function* () {
-    return Document.remove({
+    return Document.update({
         _id: id
+    }, {
+        $set: {
+            visible: false
+        }
+    });
+});
+exports.RecoverDocument = (DocumentId) => __awaiter(this, void 0, void 0, function* () {
+    return Document.update({
+        _id: DocumentId
+    }, {
+        $set: {
+            visible: true
+        }
     });
 });
 //# sourceMappingURL=document.js.map
