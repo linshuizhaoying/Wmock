@@ -1,20 +1,23 @@
+import './index.less';
+
 import * as React from 'react';
+
+import { imgBaseUrl, upload } from '../../../../service/api/index';
+
 import Button from 'antd/lib/button';
+import { ChangeEvent } from 'react';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
-import md5 from 'md5';
-import message from 'antd/lib/message';
-import Radio from 'antd/lib/radio';
+// import Radio from 'antd/lib/radio';
 import Upload from 'antd/lib/upload';
+import { UploadFile } from 'antd/es/upload/interface';
 import Validator from '../../../../util/validator';
 import { connect } from 'react-redux';
-import { imgBaseUrl, upload } from '../../../../service/api/index';
+import md5 from 'md5';
+import message from 'antd/lib/message';
 import { updateUser } from '../../../../actions/index';
-import './index.less';
-import { ChangeEvent } from 'react';
-import { UploadFile } from 'antd/es/upload/interface';
 
-const RadioGroup = Radio.Group;
+// const RadioGroup = Radio.Group;
 
 class EditableCell extends React.Component<EditableProps, EditableState> {
   state = {
@@ -253,7 +256,7 @@ export class UserInfo extends React.Component<AppProps, UserInfoState> {
               onChange={this.changeUserEmail()}
             />
           </li>
-          <li>
+          {/* <li>
             <h3>
               角色
               </h3>
@@ -261,7 +264,7 @@ export class UserInfo extends React.Component<AppProps, UserInfoState> {
               <Radio value={'front'}>前端工程师</Radio>
               <Radio value={'back'}>后端工程师</Radio>
             </RadioGroup>
-          </li>
+          </li> */}
           <li>
             <h3>
               修改密码
