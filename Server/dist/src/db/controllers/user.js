@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const User = require("../models/user");
+const md5 = require('md5');
 exports.FindUserById = (id) => __awaiter(this, void 0, void 0, function* () {
     // console.log("正在查找Id:");
     return yield User.findOne({ _id: id });
@@ -67,5 +68,17 @@ exports.UpdateUser = (user) => __awaiter(this, void 0, void 0, function* () {
             email: user.email
         }
     });
+});
+exports.initAdmin = () => __awaiter(this, void 0, void 0, function* () {
+    const exist = yield exports.FindUserByName("admin");
+    if (!exist) {
+        const user = {
+            userName: "admin",
+            passWord: md5("admin888"),
+            email: "admin@wmock.com",
+            role: "admin"
+        };
+        yield exports.AddRegUser(user);
+    }
 });
 //# sourceMappingURL=user.js.map

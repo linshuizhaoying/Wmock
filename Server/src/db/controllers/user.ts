@@ -1,5 +1,5 @@
 const User = require("../models/user");
-
+const md5 = require('md5');
 export const FindUserById = async (id: string) => {
   // console.log("正在查找Id:");
   return await User.findOne({ _id: id });
@@ -66,4 +66,17 @@ export const UpdateUser = async (user: UpdateUserData) => {
       }
     }
   );
+};
+
+export const initAdmin = async () => {
+  const exist = await FindUserByName("admin");
+  if (!exist) {
+    const user = {
+      userName: "admin",
+      passWord: md5("admin888"),
+      email: "admin@wmock.com",
+      role: "admin"
+    };
+    await AddRegUser(user);
+  }
 };

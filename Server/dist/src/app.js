@@ -4,6 +4,7 @@ const Cors = require("koa-cors");
 const Koa = require("koa");
 const routes_1 = require("./routes");
 const config_1 = require("./config");
+const user_1 = require("./db/controllers/user");
 const views = require("koa-views");
 const restc = require("restc");
 const path = require("path");
@@ -51,6 +52,9 @@ mongoose
     console.error("App starting error:", err.stack);
     process.exit(1);
 });
+// 初始化管理员账号
+user_1.initAdmin();
+// 静态资源
 const staticPath = "./";
 app.use(koaStatic(path.join(__dirname, staticPath)));
 app.use(restc.koa2());

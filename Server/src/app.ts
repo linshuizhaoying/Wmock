@@ -7,6 +7,7 @@ import * as https from "https";
 
 import { Router } from "./routes";
 import { config } from "./config";
+import { initAdmin } from './db/controllers/user'
 
 const views = require("koa-views");
 const restc = require("restc");
@@ -19,7 +20,6 @@ const middlewares = require('koa-middlewares');
 const bodyparser = require('koa-bodyparser')();
 const socketInit = require("./socket");
 const socket = socketInit();
-
 // 日志记录
 const logRecord = require("koa-logs-full");
 const logger = require("koa-logger");
@@ -67,6 +67,10 @@ mongoose
     process.exit(1);
   });
 
+// 初始化管理员账号
+initAdmin();
+
+// 静态资源
 const staticPath = "./";
 app.use(koaStatic(path.join(__dirname, staticPath)));
 app.use(restc.koa2());

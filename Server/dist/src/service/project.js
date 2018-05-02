@@ -353,7 +353,7 @@ exports.verifyProject = (ctx) => __awaiter(this, void 0, void 0, function* () {
 });
 exports.removedProjectList = (ctx) => __awaiter(this, void 0, void 0, function* () {
     const { userId } = ctx.tokenContent;
-    // 获取误删接口信息
+    // 获取误删项目信息
     const ProjectList = yield index_1.RemovedProjectList();
     const result = [];
     yield Promise.all(ProjectList.map((item) => __awaiter(this, void 0, void 0, function* () {
@@ -364,6 +364,7 @@ exports.removedProjectList = (ctx) => __awaiter(this, void 0, void 0, function* 
             version: item.version,
             interfaceName: item.interfaceName,
             projectUrl: item.projectUrl,
+            projectDesc: item.projectDesc,
             type: item.type,
             projectName: item.projectName,
         };

@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文件上传例子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no"/>
+    <link rel="stylesheet" href="upload.min.css">
+    <style>
+        body,html{
+            min-height:100%;
+        }
+        .drag-section{
+            margin:20px 0;
+            height:400px;
+            border:2px dashed #ccc;
+            line-height: 400px;
+            text-align: center;
+            font-size: 30px;
+        }
+        h2.title{
+           font-weight: 500;
+           color:#444;
+           margin-bottom: 30px;
+       }
+    </style>
+</head>
+<body>
+<h2 class="title">文件上传带进度条Demo,支持拖拽</h2>
+<div class="root">
+     <form method="post" name="upload-file-form" encType="multipart/form-data" className="upload-file-form">
+        <p>
+            文件名字: <span class="file-name"></span>
+            文件大小: <span class="file-size"></span>
+        </p>
+        <progress value="0" max="100"></progress>
+        上传进度:<span class="progress-text">--</span>%
+        <aside class="text-center mt2rem">
+            <input type="file" name="file" class="file-btn hidden">
+            <button type="button" class="btn btn-blue upload-select-btn">选择文件</button>
+            <button type="button" class="btn btn-primary upload-upload-btn">立即上传</button>
+        </aside>
+    </form>
+    <div class="drag-section">
+        将文件拖到这里
+    </div>
+</div>
+</body>
+<script src="jquery.min.js"></script>
+<script src="upload.min.js"></script>
+<script>
+    var fetchUrl = "http://127.0.0.1:9966/mock/5ae96e1235815148b21f0d5e/upload"
+    $(function () {
+        var upload = new Upload($(".root"));
+
+        upload.fileUpload({
+            url:fetchUrl,                                    //后端请求地址
+            form:$('form[name="upload-file-form"]'),         //表单
+            fileBtn:$('.file-btn'),                           //文件按钮
+            fileSelectBtn:$('.upload-select-btn'),            //美化后的文件按钮 可不填
+            fileUploadBtn:$('.upload-upload-btn'),            //文件上传按钮
+            maxSize:1024,                                 //文件大小   默认1024 单位 kb
+            drag:true,                                 //支持拖拽      默认true    
+            dragArea:$('.drag-section') ,                //响应拖拽的区域    
+            onChange:function(result){      //文件选择事件返回 文件的size,type,name,流
+                $('.file-name').html(result.name)
+                $('.file-size').html(result.size)
+            },
+            progress:function(progress){                    //正在传输  可以拿到 进度
+                $('.progress-text').html(progress)
+                $('progress').val(progress)
+            },
+            success:function(result){                       //成功回调  返回后端的数据
+                console.log(result)
+                upload.notice('上传成功!')
+            },
+            error:function(e){                            //错误回调
+                console.log('error',e)
+            }
+        })
+    })
+
+</script>
+</html>

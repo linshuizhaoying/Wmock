@@ -418,7 +418,7 @@ export const verifyProject = async (ctx: any) => {
 
 export const removedProjectList = async (ctx: any) => {
   const { userId } = ctx.tokenContent;
-  // 获取误删接口信息
+  // 获取误删项目信息
   const ProjectList = await RemovedProjectList();
   const result: any = [];
   await Promise.all(ProjectList.map(async (item: any) => {
@@ -429,6 +429,7 @@ export const removedProjectList = async (ctx: any) => {
       version: item.version,
       interfaceName: item.interfaceName,
       projectUrl: item.projectUrl,
+      projectDesc: item.projectDesc,
       type: item.type,
       projectName: item.projectName,
     }
